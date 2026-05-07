@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClocDot · 從桌邊到海邊，遠端打卡也能準點</title>
+  <meta name="description" content="ClocDot — 為 hybrid 與遠端團隊量身打造的打卡系統。" />
+  <meta property="og:title" content="ClocDot · 隨時隨地打卡的打卡系統" />
+  <meta property="og:description" content="為遠端與 hybrid 團隊設計，台灣勞基法即用即上手。" />
+  <meta name="theme-color" content="#10b981" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/dist/output.css" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+</head>
+<body class="overflow-x-hidden">
+
+  <!-- 紙片手撕邊緣 SVG filter，給 .paper-card / .paper-scrap 用 -->
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <defs>
+      <filter id="torn-edge" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02 0.04" numOctaves="4" seed="7" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="torn-edge-soft" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.03 0.05" numOctaves="3" seed="3" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+
+
+  <!-- ───── Header ───── -->
+  <header class="relative max-w-6xl mx-auto px-6 pt-8 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 group">
+      <img
+        src="/assets/logo.png"
+        alt="ClocDot logo"
+        class="w-9 h-9 object-contain drop-shadow-sm transition-transform group-hover:rotate-12"
+        style="transform: rotate(-4deg);"
+      />
+      <span class="text-xl font-black tracking-tight text-slate-800">ClocDot</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-7 text-sm font-zh text-slate-600">
+      <a href="#features" class="hover:text-emerald-600 transition-colors">功能</a>
+      <a href="#how" class="hover:text-emerald-600 transition-colors">怎麼用</a>
+      <a href="#pricing" class="hover:text-emerald-600 transition-colors">價格</a>
+      <a href="https://admin.clocdot.com/login" class="relative group">
+        <span class="absolute inset-0 bg-slate-800 translate-y-1 translate-x-1 rounded-md"></span>
+        <span class="relative inline-block px-4 py-1.5 bg-white border-2 border-slate-800 rounded-md font-black text-sm group-hover:-translate-y-0.5 group-hover:-translate-x-0.5 transition-transform">登入</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- ───── Hero ───── -->
+  <main class="relative max-w-6xl mx-auto px-6 pt-16 pb-24">
+    <section class="grid md:grid-cols-2 gap-12 items-center">
+      <!-- 左：標題與 CTA -->
+      <div class="relative">
+        <span class="inline-flex items-center gap-1.5 stamp text-cyan-600 px-3 py-1 mb-6 text-[10px] font-black uppercase tracking-[0.25em]" style="transform: rotate(-2deg);">
+          <span class="w-1.5 h-1.5 bg-cyan-500 rounded-full"></span>
+          Now in beta · 
+        </span>
+
+        <h1 class="text-5xl md:text-6xl font-black tracking-tight text-slate-800 leading-[1.1] mb-6">
+          從你的<span class="relative inline-block">
+            <span class="absolute inset-x-0 bottom-1 h-3 bg-amber-200/70 -z-10 -rotate-1"></span>桌邊
+          </span><br/>
+          到<span class="text-cyan-600">海邊</span><br/>
+          打卡都能準點
+        </h1>
+
+        <p class="text-base text-slate-600 leading-relaxed mb-10 max-w-md">
+          ClocDot 是專為<span class="font-black text-slate-700">遠端 / Hybrid</span> 團隊設計的打卡系統。
+          無論身在何方都能從從容容，游刃有餘。
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="#pricing" class="relative group active:scale-95 transition-transform">
+            <span class="absolute inset-0 bg-emerald-700 translate-y-[3px] rounded-md"></span>
+            <span class="relative inline-flex items-center gap-2 px-7 py-3.5 bg-emerald-500 text-white font-zh font-bold rounded-md group-hover:-translate-y-[1px] transition-transform">
+              開始免費試用
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </a>
+          <a href="#features" class="font-zh text-sm text-slate-500 hover:text-slate-800 underline underline-offset-4 decoration-dashed decoration-slate-300">
+            看看裡面有什麼
+          </a>
+        </div>
+
+        <!-- 手寫風小註解 -->
+        <p class="accent-handwritten text-2xl text-cyan-700/80 mt-10 -rotate-2 ml-4">
+          ⚓ 隨時隨地準時下班
+        </p>
+      </div>
+
+      <!-- 右：明信片 hero 卡 -->
+      <div class="relative animate-float-slow" style="--tw-rotate: 2deg;">
+        <!-- 主明信片 -->
+        <div class="relative bg-white p-8 paper-card" style="transform: rotate(2deg);">
+          <!-- 日期 -->
+          <div class="absolute -top-4 right-8 w-16 h-20 bg-coral border-2 border-coral-deep flex flex-col items-center justify-center text-white" style="border-radius: 4px; transform: rotate(8deg); background: var(--color-coral); border-color: var(--color-coral-deep);">
+            <span class="text-[8px] font-black uppercase tracking-widest">2026</span>
+            <span class="text-3xl font-black">5/1</span>
+          </div>
+          <!-- 上方膠帶 -->
+          <div class="absolute -top-3 left-12 w-20 h-6 tape" style="transform: rotate(-3deg);"></div>
+
+          <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-3">From 最愛公司的員工</p>
+          <h2 class="font-zh text-2xl text-slate-700 leading-relaxed mb-4">
+            親愛的老闆<br/>
+            <span class="accent-handwritten text-3xl text-cyan-700">今天我在峇里島</span><br/>
+            專案照進度進行中<br/>
+            別擔心 
+          </h2>
+          <div class="flex items-end justify-between mt-6">
+            <div>
+              <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Stamped at</p>
+              <p class="font-mono font-black text-slate-700 text-sm">09:02 · -8.7°S 115.2°E</p>
+              <span class="inline-flex items-center gap-1 mt-1.5 text-[9px] font-black uppercase tracking-widest bg-cyan-50 border border-cyan-200 text-cyan-700 px-1.5 py-0.5 rounded-full">
+                <svg class="w-2 h-2" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                Remote
+              </span>
+            </div>
+            <!-- 蓋章 -->
+            <div class="stamp text-emerald-600 px-3 py-2 text-center" style="transform: rotate(-8deg);">
+              <p class="text-[9px] font-black uppercase tracking-[0.2em]">Approved</p>
+              <p class="text-xl font-black">✓</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 後面襯一張小紙 -->
+        <div class="absolute -bottom-6 -left-4 w-32 h-20 paper-card" style="transform: rotate(-6deg); z-index: -1; --paper-bg: #fef3c7;"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 浪花分隔 -->
+  <div class="wave-divider"></div>
+
+  <!-- ───── Features ───── -->
+  <section id="features" class="relative max-w-6xl mx-auto px-6 py-24 bg-cyan-50/30">
+    <div class="text-center mb-16">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">What's inside</p>
+      <h2 class="text-4xl font-black text-slate-800 font-zh">三張紙片，<span class="text-cyan-600">解掉一個 HR 流程</span></h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Feature 1 -->
+      <article class="relative bg-white p-7 paper-card hover:shadow-xl transition-shadow" style="transform: rotate(-1.2deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-2deg);"></div>
+        <div class="w-12 h-12 bg-emerald-500 rounded-lg grid place-items-center shadow-md mb-5" style="transform: rotate(-4deg);">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3 class="font-zh font-black text-xl text-slate-800 mb-2">隨時隨地打卡</h3>
+        <p class="font-zh text-sm text-slate-500 leading-relaxed mb-4">
+          GPS 自動分辨「在公司」還是「遠端」。上下班時間、午休、辦公室地點 (自動 geocode)、假別額度 — 一次設定搞定。
+        </p>
+      </article>
+
+      <!-- Feature 2 -->
+      <article class="relative bg-white p-7 paper-card hover:shadow-xl transition-shadow" style="transform: rotate(0.8deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(3deg);"></div>
+        <div class="w-12 h-12 bg-amber-400 rounded-lg grid place-items-center shadow-md mb-5" style="transform: rotate(3deg);">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        </div>
+        <h3 class="font-zh font-black text-xl text-slate-800 mb-2">假別額度自動算</h3>
+        <p class="font-zh text-sm text-slate-500 leading-relaxed mb-4">
+          特休依到職比例、滿一年自動給滿。PWA 安裝到桌面 / 手機，一鍵打卡。連線斷了也能離線使用，連線恢復自動同步。。
+        </p>
+      </article>
+
+      <!-- Feature 3 -->
+      <article class="relative bg-white p-7 paper-card hover:shadow-xl transition-shadow" style="transform: rotate(-0.6deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-1deg);"></div>
+        <div class="w-12 h-12 bg-cyan-500 rounded-lg grid place-items-center shadow-md mb-5" style="transform: rotate(-3deg); background: var(--color-ocean);">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        </div>
+        <h3 class="font-zh font-black text-xl text-slate-800 mb-2">月底一鍵 CSV</h3>
+        <p class="font-zh text-sm text-slate-500 leading-relaxed mb-4">
+          每日明細含 Office/Remote 標記、扣完午休的工時。Excel 直接打開、繁中不亂碼，會計開心。
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 浪花分隔 -->
+  <div class="wave-divider rotate-180"></div>
+
+  <!-- ───── PWA Setup ───── -->
+  <section id="how" class="relative max-w-6xl mx-auto px-6 py-24">
+    <div class="text-center mb-14">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">PWA setup</p>
+      <h2 class="text-4xl font-black text-slate-800 font-zh">
+        把 ClocDot
+        <span class="relative inline-block">
+          <span class="absolute inset-x-0 bottom-1 h-3 bg-amber-200/70 -z-10 -rotate-1"></span>
+          裝到手機桌面
+        </span>
+      </h2>
+    </div>
+
+    <!-- 截圖明信片 -->
+    <div class="relative mx-auto">
+        <!-- 截圖外框 -->
+        <div class="relative overflow-hidden rounded-sm bg-slate-50 border border-slate-200/70">
+          <img
+            src="/assets/setup.png"
+            alt="ClocDot · PWA 安裝步驟示意"
+            class="block w-full h-auto select-none"
+            loading="lazy"
+            draggable="false"
+          />
+          <div class="pointer-events-none absolute inset-0" style="box-shadow: inset 0 0 80px rgba(15,23,42,0.07);"></div>
+        </div>
+    </div>
+  </section>
+
+  <!-- ───── Pricing teaser / CTA ───── -->
+  <section id="pricing" class="relative max-w-4xl mx-auto px-6 py-24">
+    <div class="relative bg-white paper-scrap p-12 md:p-16 text-center" style="transform: rotate(-0.8deg);">
+      <!-- 膠帶 -->
+      <div class="absolute -top-4 left-1/4 w-24 h-7 tape" style="transform: rotate(-4deg);"></div>
+      <div class="absolute -top-4 right-1/4 w-24 h-7 tape" style="transform: rotate(3deg);"></div>
+
+      <span class="inline-flex items-center gap-1.5 stamp text-amber-600 px-3 py-1 mb-6 text-[10px] font-black uppercase tracking-[0.25em]" style="transform: rotate(2deg);">
+        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
+        Limited launch · 2026 季度
+      </span>
+
+      <h2 class="text-4xl md:text-5xl font-black text-slate-800 font-zh leading-tight mb-4">
+        準備好讓<br class="md:hidden"/>
+        <span class="relative inline-block">
+          <span class="absolute inset-x-0 bottom-1 h-3 bg-cyan-200/70 -z-10 -rotate-1"></span>
+          打卡這件事
+        </span>
+        變得不讓人煩心了嗎？
+      </h2>
+
+      <p class="font-zh text-slate-500 text-base max-w-lg mx-auto mb-10">
+        前 50 名公司享 6 個月免費。5 人團隊以下完全免費，不收信用卡也不寄垃圾信。
+      </p>
+
+      <!-- 申請表單 -->
+      <form
+        id="apply-form"
+        class="flex flex-col gap-5 max-w-xl mx-auto text-left"
+        novalidate
+      >
+        <label class="flex items-center gap-4">
+          <span class="font-zh font-black text-sm text-slate-700 w-24 shrink-0 text-right">公司名稱<span class="text-coral-deep" style="color: var(--color-coral-deep);">*</span></span>
+          <input name="companyName" required maxlength="200" autocomplete="organization"
+            class="form-line flex-1" />
+        </label>
+        <label class="flex items-center gap-4">
+          <span class="font-zh font-black text-sm text-slate-700 w-24 shrink-0 text-right">聯絡人<span class="text-coral-deep" style="color: var(--color-coral-deep);">*</span></span>
+          <input name="contactName" required maxlength="100" autocomplete="name"
+            class="form-line flex-1" />
+        </label>
+        <div class="flex items-start gap-4">
+          <span class="font-zh font-black text-sm text-slate-700 w-24 shrink-0 text-right pt-2">Email<span class="text-coral-deep" style="color: var(--color-coral-deep);">*</span></span>
+          <div class="flex-1 flex flex-col gap-1">
+            <input name="email" type="email" required maxlength="254" autocomplete="email"
+              aria-describedby="email-error"
+              class="form-line w-full" />
+            <p id="email-error" data-email-error class="hidden text-xs font-zh text-coral-deep" style="color: var(--color-coral-deep);" role="alert"></p>
+          </div>
+        </div>
+        <label class="flex items-center gap-4">
+          <span class="font-zh font-black text-sm text-slate-700 w-24 shrink-0 text-right">團隊人數</span>
+          <input name="headcount" type="number" min="1" max="100000" inputmode="numeric"
+            class="form-line flex-1" />
+        </label>
+        <label class="flex items-center gap-4">
+          <span class="font-zh font-black text-sm text-slate-700 w-24 shrink-0 text-right">想說的話</span>
+          <input name="note" maxlength="2000"
+            class="form-line flex-1" />
+        </label>
+
+        <!-- honeypot：人類別填，bot 會填 -->
+        <input
+          name="website"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+          class="hidden"
+        />
+
+        <div class="flex flex-col items-center gap-3 mt-4">
+          <button type="submit" class="relative group active:scale-95 transition-transform">
+            <span class="absolute inset-0 bg-emerald-700 translate-y-[3px] rounded-md"></span>
+            <span class="relative inline-flex items-center gap-2 px-8 py-4 bg-emerald-500 text-white font-zh font-bold rounded-md group-hover:-translate-y-[1px] transition-transform">
+              <span data-label-default>送出申請</span>
+              <span data-label-loading class="hidden">送出中…</span>
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </button>
+          <p data-form-msg class="text-xs font-zh text-slate-500 min-h-[1rem]" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <p class="accent-handwritten text-2xl text-coral-deep/80 mt-10 -rotate-1" style="color: var(--color-coral-deep);">
+        🌴 See you soon.
+      </p>
+    </div>
+  </section>
+
+  <!-- ───── Footer ───── -->
+  <footer class="relative max-w-6xl mx-auto px-6 py-12 border-t border-dashed border-slate-300/60">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <img
+          src="/assets/logo.png"
+          alt="ClocDot logo"
+          class="w-7 h-7 object-contain drop-shadow-sm"
+          style="transform: rotate(-4deg);"
+        />
+        <span class="font-zh text-sm text-slate-500">© 2026 ClocDot · Powered by 醬瓜</span>
+      </div>
+      <div class="flex items-center gap-5 text-xs font-zh text-slate-400">
+        <a href="/privacy" class="hover:text-slate-700">隱私政策</a>
+        <a href="/terms" class="hover:text-slate-700">服務條款</a>
+        <a href="mailto:hello@clocdot.com" class="hover:text-slate-700">聯絡</a>
+      </div>
+    </div>
+  </footer>
+<script>
+    (function () {
+      const form = document.getElementById('apply-form');
+      if (!form) return;
+      const msg = form.querySelector('[data-form-msg]');
+      const btn = form.querySelector('button[type="submit"]');
+      const lblDefault = btn.querySelector('[data-label-default]');
+      const lblLoading = btn.querySelector('[data-label-loading]');
+      const emailInput = form.querySelector('input[name="email"]');
+      const emailError = form.querySelector('[data-email-error]');
+      const API_BASE = (window.__CLOCDOT_API_BASE__ || 'https://app.clocdot.com').replace(/\/$/, '');
+      const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      function setEmailError(text) {
+        if (text) {
+          emailError.textContent = text;
+          emailError.classList.remove('hidden');
+          emailInput.setAttribute('aria-invalid', 'true');
+          emailInput.style.borderBottomColor = 'var(--color-coral-deep)';
+        } else {
+          emailError.textContent = '';
+          emailError.classList.add('hidden');
+          emailInput.removeAttribute('aria-invalid');
+          emailInput.style.borderBottomColor = '';
+        }
+      }
+
+      emailInput.addEventListener('input', () => setEmailError(''));
+      emailInput.addEventListener('blur', () => {
+        const v = emailInput.value.trim();
+        if (!v) return setEmailError('Email 為必填欄位');
+        if (!EMAIL_RE.test(v)) return setEmailError('Email 格式不正確，例如 you@example.com');
+        setEmailError('');
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        msg.textContent = '';
+        msg.className = 'text-xs font-zh text-slate-500 min-h-[1rem]';
+
+        const fd = new FormData(form);
+        const headcountRaw = fd.get('headcount');
+        const payload = {
+          companyName: (fd.get('companyName') || '').toString().trim(),
+          contactName: (fd.get('contactName') || '').toString().trim(),
+          email: (fd.get('email') || '').toString().trim(),
+          note: (fd.get('note') || '').toString().trim() || undefined,
+          website: (fd.get('website') || '').toString(),
+        };
+        if (headcountRaw) {
+          const n = parseInt(headcountRaw, 10);
+          if (Number.isFinite(n) && n > 0) payload.headcount = n;
+        }
+
+        if (!payload.email) {
+          setEmailError('Email 為必填欄位');
+          emailInput.focus();
+          return;
+        }
+        if (!EMAIL_RE.test(payload.email)) {
+          setEmailError('Email 格式不正確，例如 you@example.com');
+          emailInput.focus();
+          return;
+        }
+        setEmailError('');
+
+        if (!payload.companyName || !payload.contactName) {
+          msg.textContent = '請填完必填欄位';
+          msg.classList.add('text-rose-600');
+          return;
+        }
+
+        btn.disabled = true;
+        lblDefault.classList.add('hidden');
+        lblLoading.classList.remove('hidden');
+
+        try {
+          const res = await fetch(API_BASE + '/api/apply', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (!res.ok) {
+            if (res.status === 429) throw new Error('送太快了，稍後再試');
+            throw new Error('送出失敗，請稍後再試');
+          }
+          form.reset();
+          msg.textContent = '✓ 收到了！會盡快回信給你';
+          msg.classList.add('text-emerald-600');
+        } catch (err) {
+          msg.textContent = err.message || '送出失敗';
+          msg.classList.add('text-rose-600');
+        } finally {
+          btn.disabled = false;
+          lblDefault.classList.remove('hidden');
+          lblLoading.classList.add('hidden');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
