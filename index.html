@@ -336,7 +336,7 @@
       const lblLoading = btn.querySelector('[data-label-loading]');
       const emailInput = form.querySelector('input[name="email"]');
       const emailError = form.querySelector('[data-email-error]');
-      const API_BASE = (window.__CLOCDOT_API_BASE__ || 'https://app.clocdot.com').replace(/\/$/, '');
+      const API_BASE = (window.__CLOCDOT_API_BASE__ || 'https://api.clocdot.com').replace(/\/$/, '');
       const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       function setEmailError(text) {
