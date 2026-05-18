@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>遠端打卡完整指南｜為 Remote / Hybrid 團隊設計的雲端打卡系統｜ClocDot</title>
+  <meta name="description" content="遠端打卡怎麼做？ClocDot 為 Remote / Hybrid 團隊打造的雲端打卡系統，用 GPS 自動分辨 Office / Remote、PWA 隨裝隨用、工時與假別自動計算，月底一鍵 CSV 匯出。" />
+  <link rel="canonical" href="https://clocdot.com/features/remote-work-attendance/" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta property="og:title" content="遠端打卡完整指南｜ClocDot" />
+  <meta property="og:description" content="ClocDot 是專為 Remote / Hybrid 團隊打造的雲端打卡系統，支援 GPS 打卡、PWA 安裝、工時統計與 CSV 匯出。" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://clocdot.com/features/remote-work-attendance/" />
+  <meta property="og:image" content="https://clocdot.com/assets/og-cover.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#10b981" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../dist/output.css" />
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "首頁", "item": "https://clocdot.com/" },
+          { "@type": "ListItem", "position": 2, "name": "功能", "item": "https://clocdot.com/features/" },
+          { "@type": "ListItem", "position": 3, "name": "遠端打卡", "item": "https://clocdot.com/features/remote-work-attendance/" }
+        ]
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://clocdot.com/features/remote-work-attendance/#webpage",
+        "url": "https://clocdot.com/features/remote-work-attendance/",
+        "name": "遠端打卡完整指南｜為 Remote / Hybrid 團隊設計的雲端打卡系統",
+        "inLanguage": "zh-TW",
+        "isPartOf": { "@type": "WebSite", "url": "https://clocdot.com/", "name": "ClocDot" },
+        "primaryImageOfPage": { "@type": "ImageObject", "url": "https://clocdot.com/assets/og-cover.png" },
+        "description": "遠端打卡完整指南：為什麼遠端與 Hybrid 團隊需要專屬打卡系統？ClocDot 如何用 GPS、PWA、自動工時統計解決遠端打卡的核心問題。"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "遠端打卡和傳統打卡有什麼不同？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "傳統打卡綁定實體機器或公司網路，員工必須回到辦公室才能打卡。遠端打卡透過手機 GPS 或 PWA 進行，無論員工在家、咖啡廳、外地出差或跨國工作，都能完成打卡並自動標記地點來源（Office / Remote）。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "員工在家打卡會不會作弊？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "ClocDot 會記錄打卡當下的 GPS 座標與時間戳記，並自動比對是否在公司範圍內。所有打卡記錄都會保留地點軌跡，主管可在後台檢視。重點不是「監控員工」，而是讓 Remote / Office 工時清楚分流，月底結算時不需要員工自己回報。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "沒有網路可以打卡嗎？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "可以。ClocDot 是 PWA 應用，安裝到手機桌面後支援離線打卡，連線恢復時會自動同步打卡紀錄到雲端，不會漏記。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "跨時區的遠端團隊怎麼處理打卡時間？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "ClocDot 以員工所在時區記錄打卡時間，月底 CSV 匯出可選擇以公司總部時區或員工本地時區呈現，方便跨國團隊的薪資計算與工時管理。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "小團隊使用要收費嗎？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "ClocDot 5 人以下團隊永久免費，前 50 名註冊公司另外享 6 個月免費。不需要綁信用卡。"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="overflow-x-hidden">
+
+  <!-- 紙片手撕邊緣 SVG filter，給 .paper-card / .paper-scrap 用 -->
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <defs>
+      <filter id="torn-edge" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02 0.04" numOctaves="4" seed="7" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="torn-edge-soft" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.03 0.05" numOctaves="3" seed="3" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- ───── Header ───── -->
+  <header class="relative max-w-6xl mx-auto px-6 pt-8 flex items-center justify-between">
+    <a href="../../" class="flex items-center gap-2 group">
+      <img
+        src="../../assets/logo.png"
+        alt="ClocDot logo"
+        width="1024"
+        height="1024"
+        fetchpriority="high"
+        class="w-9 h-9 object-contain drop-shadow-sm transition-transform group-hover:rotate-12"
+        style="transform: rotate(-4deg);"
+      />
+      <span class="text-xl font-black tracking-tight text-slate-800">ClocDot</span>
+    </a>
+    <nav class="flex items-center gap-4 md:gap-7 text-sm font-zh text-slate-600">
+      <a href="../../#features" class="hidden md:inline hover:text-emerald-600 transition-colors">功能</a>
+      <a href="../../#how" class="hidden md:inline hover:text-emerald-600 transition-colors">怎麼用</a>
+      <a href="../../#apply" class="hidden md:inline hover:text-emerald-600 transition-colors">申請</a>
+      <a href="https://app.clocdot.com/login" class="relative group">
+        <span class="absolute inset-0 bg-slate-800 translate-y-1 translate-x-1 rounded-md"></span>
+        <span class="relative inline-block px-3 py-1.5 md:px-4 bg-white border-2 border-slate-800 rounded-md font-black text-sm group-hover:-translate-y-0.5 group-hover:-translate-x-0.5 transition-transform">登入</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- ───── 麵包屑 ───── -->
+  <nav aria-label="麵包屑" class="max-w-6xl mx-auto px-6 pt-6">
+    <ol class="flex items-center gap-2 text-xs font-zh text-slate-500">
+      <li><a href="../../" class="hover:text-emerald-600">首頁</a></li>
+      <li class="text-slate-300">/</li>
+      <li><span class="text-slate-400">功能</span></li>
+      <li class="text-slate-300">/</li>
+      <li class="text-slate-700 font-bold">遠端打卡</li>
+    </ol>
+  </nav>
+
+  <!-- ───── Hero ───── -->
+  <main class="relative max-w-6xl mx-auto px-6 pt-10 pb-20">
+    <section class="grid md:grid-cols-2 gap-12 items-center">
+      <div class="relative">
+        <span class="inline-flex items-center gap-1.5 stamp text-cyan-600 px-3 py-1 mb-6 text-[10px] font-black uppercase tracking-[0.25em]" style="transform: rotate(-2deg);">
+          <span class="w-1.5 h-1.5 bg-cyan-500 rounded-full"></span>
+          Remote · Hybrid · Anywhere
+        </span>
+
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight text-slate-800 leading-[1.15] mb-6">
+          遠端打卡<br/>
+          為 <span class="text-cyan-600">Remote / Hybrid</span> 團隊設計的雲端打卡系統
+        </h1>
+
+        <p class="text-base text-slate-600 leading-relaxed mb-8 max-w-md">
+          員工不一定每天回辦公室，傳統打卡機派不上用場。ClocDot 用 <span class="font-black text-slate-700">GPS 自動分辨 Office / Remote</span>、PWA 隨裝隨用、工時與假別自動計算，月底一鍵 CSV 匯出。
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="../../#apply" class="relative group active:scale-95 transition-transform">
+            <span class="absolute inset-0 bg-emerald-700 translate-y-[3px] rounded-md"></span>
+            <span class="relative inline-flex items-center gap-2 px-7 py-3.5 bg-emerald-500 text-white font-zh font-bold rounded-md group-hover:-translate-y-[1px] transition-transform">
+              免費試用
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </a>
+          <a href="#faq" class="font-zh text-sm text-slate-500 hover:text-slate-800 underline underline-offset-4 decoration-dashed decoration-slate-300">
+            常見問題 →
+          </a>
+        </div>
+
+        <p class="accent-handwritten text-2xl text-cyan-700/80 mt-10 -rotate-2 ml-4">
+          ⚓ 在家、在咖啡廳、在峇里島都能準時打卡
+        </p>
+      </div>
+
+      <!-- 右：明信片 hero 卡 -->
+      <div class="relative animate-float-slow">
+        <div class="relative bg-white p-8 paper-card" style="transform: rotate(2deg);">
+          <div class="absolute -top-4 right-8 w-16 h-20 bg-coral border-2 border-coral-deep flex flex-col items-center justify-center text-white" style="border-radius: 4px; transform: rotate(8deg); background: var(--color-coral); border-color: var(--color-coral-deep);">
+            <span class="text-[8px] font-black uppercase tracking-widest">REMOTE</span>
+            <span class="text-3xl font-black">9:01</span>
+          </div>
+          <div class="absolute -top-3 left-12 w-20 h-6 tape" style="transform: rotate(-3deg);"></div>
+
+          <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-3">Clock-in record</p>
+          <h2 class="font-zh text-xl text-slate-700 leading-relaxed mb-4">
+            <span class="accent-handwritten text-2xl text-cyan-700">在家工作 ☕</span><br/>
+            GPS 自動標記 Remote<br/>
+            主管不用追、員工不用報
+          </h2>
+          <div class="flex items-end justify-between mt-6">
+            <div>
+              <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Auto-tagged</p>
+              <p class="font-mono font-black text-slate-700 text-sm">距離公司 18.3 km</p>
+              <span class="inline-flex items-center gap-1 mt-1.5 text-[9px] font-black uppercase tracking-widest bg-cyan-50 border border-cyan-200 text-cyan-700 px-1.5 py-0.5 rounded-full">
+                <svg class="w-2 h-2" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                Remote
+              </span>
+            </div>
+            <div class="stamp text-emerald-600 px-3 py-2 text-center" style="transform: rotate(-8deg);">
+              <p class="text-[9px] font-black uppercase tracking-[0.2em]">Logged</p>
+              <p class="text-xl font-black">✓</p>
+            </div>
+          </div>
+        </div>
+        <div class="absolute -bottom-6 -left-4 w-32 h-20 paper-card" style="transform: rotate(-6deg); z-index: -1; --paper-bg: #fef3c7;"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="wave-divider"></div>
+
+  <!-- ───── 為什麼需要遠端打卡系統 ───── -->
+  <section class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="mb-12">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Why remote attendance</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh leading-tight">為什麼<span class="text-cyan-600">遠端團隊</span>需要專屬的打卡系統？</h2>
+    </div>
+
+    <div class="space-y-6 text-slate-700 leading-relaxed font-zh">
+      <p>
+        過去打卡這件事很單純：員工早上到辦公室刷卡、晚上下班再刷一次，HR 月底拉報表結薪水。
+        但<strong>遠端工作 (Remote Work)</strong> 與<strong>混合辦公 (Hybrid Work)</strong> 普及後，傳統打卡方式碰到三個明顯斷點：
+      </p>
+
+      <ul class="list-disc list-inside space-y-2 ml-2">
+        <li>實體打卡機 / 公司 Wi-Fi 限制 — 員工在家工作根本打不到卡。</li>
+        <li>員工自填工時 — 主管不知道誰真的有上班、HR 不知道工時是否正確。</li>
+        <li>Office 與 Remote 工時混在一起 — 月底結薪、人力統計時無法區分。</li>
+      </ul>
+
+      <p>
+        遠端打卡系統解決的不是「監控員工」，而是<strong>讓工時資料自動化、可信、可追溯</strong>。
+        員工不必每天在群組裡發「打卡了」，主管不必追進度，HR 不必對單，會計也不必猜這個月誰請了幾天假。
+      </p>
+    </div>
+  </section>
+
+  <div class="wave-divider rotate-180"></div>
+
+  <!-- ───── 傳統打卡 vs ClocDot 比較 ───── -->
+  <section class="relative max-w-5xl mx-auto px-6 py-20 bg-cyan-50/30">
+    <div class="text-center mb-12">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Comparison</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh">傳統打卡 vs <span class="text-cyan-600">遠端打卡</span></h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8">
+      <article class="relative bg-white p-7 paper-card" style="transform: rotate(-1deg); --paper-bg: #fef3c7;">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-2deg);"></div>
+        <h3 class="font-zh font-black text-xl text-slate-800 mb-4">傳統實體打卡</h3>
+        <ul class="space-y-2.5 text-sm font-zh text-slate-600">
+          <li>✗ 需要回辦公室刷卡 / 卡鐘</li>
+          <li>✗ 員工在家工作無法打卡</li>
+          <li>✗ Wi-Fi 限制 = 出差 / 外勤打不到</li>
+          <li>✗ 紙本登記、月底人工統計</li>
+          <li>✗ 假別額度靠 HR 手動算</li>
+          <li>✗ 無法分辨 Office / Remote 工時</li>
+        </ul>
+      </article>
+
+      <article class="relative bg-white p-7 paper-card" style="transform: rotate(1deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(3deg);"></div>
+        <h3 class="font-zh font-black text-xl text-slate-800 mb-4">ClocDot 遠端打卡</h3>
+        <ul class="space-y-2.5 text-sm font-zh text-slate-600">
+          <li>✓ 手機 / 桌面 PWA 隨時打卡</li>
+          <li>✓ GPS 自動分辨 Office / Remote</li>
+          <li>✓ 離線可打卡，連線後自動同步</li>
+          <li>✓ 工時、午休、加班自動扣算</li>
+          <li>✓ 特休依到職日自動計算額度</li>
+          <li>✓ 月底一鍵 CSV，繁中不亂碼</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <div class="wave-divider"></div>
+
+  <!-- ───── ClocDot 怎麼解決 ───── -->
+  <section class="relative max-w-6xl mx-auto px-6 py-20">
+    <div class="text-center mb-14">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">How it works</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh">ClocDot 怎麼解決<span class="text-cyan-600">遠端打卡</span>的三個難題</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <article class="relative bg-white p-7 paper-card hover:shadow-xl transition-shadow" style="transform: rotate(-1.2deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-2deg);"></div>
+        <div class="w-12 h-12 bg-emerald-500 rounded-lg grid place-items-center shadow-md mb-5" style="transform: rotate(-4deg);">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3 class="font-zh font-black text-xl text-slate-800 mb-2">難題一：怎麼確認員工真的有上班？</h3>
+        <p class="font-zh text-sm text-slate-600 leading-relaxed">
+          GPS 自動記錄打卡座標，並比對辦公室地點，自動標記為 <strong>Office</strong> 或 <strong>Remote</strong>。
+          員工不必主動回報，主管不必追問，工時資料源於系統而非自填，可信度高。
+        </p>
+      </article>
+
+      <article class="relative bg-white p-7 paper-card hover:shadow-xl transition-shadow" style="transform: rotate(0.8deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(3deg);"></div>
+        <div class="w-12 h-12 bg-amber-400 rounded-lg grid place-items-center shadow-md mb-5" style="transform: rotate(3deg);">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+        </div>
+        <h3 class="font-zh font-black text-xl text-slate-800 mb-2">難題二：跨平台、跨裝置怎麼裝？</h3>
+        <p class="font-zh text-sm text-slate-600 leading-relaxed">
+          ClocDot 是 <strong>PWA</strong>，瀏覽器開啟就能加到桌面，iOS / Android / Windows / Mac 通用。
+          不必上架 App Store、不必員工各自裝 App。連線斷了也能離線打卡，恢復後自動同步。
+        </p>
+      </article>
+
+      <article class="relative bg-white p-7 paper-card hover:shadow-xl transition-shadow" style="transform: rotate(-0.6deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-1deg);"></div>
+        <div class="w-12 h-12 bg-cyan-500 rounded-lg grid place-items-center shadow-md mb-5" style="transform: rotate(-3deg); background: var(--color-ocean);">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        </div>
+        <h3 class="font-zh font-black text-xl text-slate-800 mb-2">難題三：月底結薪資怎麼結？</h3>
+        <p class="font-zh text-sm text-slate-600 leading-relaxed">
+          每日明細含 Office / Remote 標記、扣完午休的實際工時、假別與加班。月底一鍵匯出 <strong>CSV</strong>，
+          Excel 直接開、繁中不亂碼，會計不用對單，HR 不用算特休。
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <div class="wave-divider rotate-180"></div>
+
+  <!-- ───── 適合誰用 ───── -->
+  <section class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="mb-12">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Who it's for</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh">哪些團隊適合用<span class="text-cyan-600">遠端打卡系統</span>？</h2>
+    </div>
+
+    <div class="space-y-5 font-zh text-slate-700">
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(-0.4deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">🌍 全遠端 (Fully Remote) 團隊</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">公司沒有實體辦公室，或員工散佈各地。GPS 打卡可記錄員工實際所在城市，方便異地差勤管理。</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(0.5deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">🏢 混合辦公 (Hybrid) 團隊</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">員工部分時間進辦公室、部分時間在家。ClocDot 自動分辨並分流統計，不必員工自己標註。</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(-0.3deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">✈️ 跨時區 / 跨國團隊</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">員工分散在不同國家或時區。系統以員工本地時間記錄、彙整時可切換時區呈現。</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(0.4deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">🛵 外勤 / 業務團隊</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">業務、外勤、工程師到客戶端服務時無法刷卡。手機 GPS 打卡可記錄拜訪地點與時間。</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(-0.6deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">🚀 新創 / 小團隊</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">5 人以下永久免費，不需要 HR 系統那種複雜設定。註冊後 5 分鐘就能讓全團隊開始打卡。</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave-divider"></div>
+
+  <!-- ───── 如何開始 ───── -->
+  <section class="relative max-w-5xl mx-auto px-6 py-20 bg-cyan-50/30">
+    <div class="text-center mb-12">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Get started</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh">三步驟開始<span class="text-cyan-600">遠端打卡</span></h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="relative bg-white p-6 paper-card" style="transform: rotate(-1deg);">
+        <div class="absolute -top-4 -left-2 w-10 h-10 bg-emerald-500 rounded-full text-white font-black grid place-items-center text-lg shadow-md" style="transform: rotate(-8deg);">1</div>
+        <h3 class="font-zh font-black text-lg text-slate-800 mb-2 mt-2">註冊公司帳號</h3>
+        <p class="font-zh text-sm text-slate-600 leading-relaxed">填寫公司名稱與聯絡人 email，不需要信用卡，5 分鐘內收到開通通知。</p>
+      </div>
+      <div class="relative bg-white p-6 paper-card" style="transform: rotate(0.6deg);">
+        <div class="absolute -top-4 -left-2 w-10 h-10 bg-amber-400 rounded-full text-white font-black grid place-items-center text-lg shadow-md" style="transform: rotate(8deg);">2</div>
+        <h3 class="font-zh font-black text-lg text-slate-800 mb-2 mt-2">設定辦公室地點與班別</h3>
+        <p class="font-zh text-sm text-slate-600 leading-relaxed">輸入辦公室地址（自動 geocode）、上下班時段、午休、假別額度規則。</p>
+      </div>
+      <div class="relative bg-white p-6 paper-card" style="transform: rotate(-0.6deg);">
+        <div class="absolute -top-4 -left-2 w-10 h-10 bg-cyan-500 rounded-full text-white font-black grid place-items-center text-lg shadow-md" style="transform: rotate(-4deg); background: var(--color-ocean);">3</div>
+        <h3 class="font-zh font-black text-lg text-slate-800 mb-2 mt-2">員工安裝 PWA 開始打卡</h3>
+        <p class="font-zh text-sm text-slate-600 leading-relaxed">員工用手機開啟連結，加到主畫面即可。第一次打卡會請求 GPS 權限。</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave-divider rotate-180"></div>
+
+  <!-- ───── FAQ ───── -->
+  <section id="faq" class="relative max-w-3xl mx-auto px-6 py-20">
+    <div class="mb-12">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">FAQ</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh">關於<span class="text-cyan-600">遠端打卡</span>的常見問題</h2>
+    </div>
+
+    <div class="space-y-4 font-zh">
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.3deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">遠端打卡和傳統打卡有什麼不同？</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">傳統打卡綁定實體機器或公司網路，員工必須回到辦公室才能打卡。遠端打卡透過手機 GPS 或 PWA 進行，無論員工在家、咖啡廳、外地出差或跨國工作，都能完成打卡並自動標記地點來源（Office / Remote）。</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(0.3deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">員工在家打卡會不會作弊？</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">ClocDot 會記錄打卡當下的 GPS 座標與時間戳記，並自動比對是否在公司範圍內。所有打卡記錄都會保留地點軌跡，主管可在後台檢視。重點不是「監控員工」，而是讓 Remote / Office 工時清楚分流，月底結算時不需要員工自己回報。</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.4deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">沒有網路可以打卡嗎？</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">可以。ClocDot 是 PWA 應用，安裝到手機桌面後支援離線打卡，連線恢復時會自動同步打卡紀錄到雲端，不會漏記。</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(0.4deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">跨時區的遠端團隊怎麼處理打卡時間？</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">ClocDot 以員工所在時區記錄打卡時間，月底 CSV 匯出可選擇以公司總部時區或員工本地時區呈現，方便跨國團隊的薪資計算與工時管理。</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.2deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">小團隊使用要收費嗎？</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">ClocDot 5 人以下團隊永久免費，前 50 名註冊公司另外享 6 個月免費。不需要綁信用卡。</p>
+      </details>
+    </div>
+
+    <!-- 內部連結到相關頁面 -->
+    <div class="mt-12 p-5 bg-cyan-50/50 paper-scrap" style="transform: rotate(-0.2deg);">
+      <p class="text-xs font-black uppercase tracking-widest text-cyan-700 mb-2">延伸閱讀</p>
+      <a href="../gps-clock-in/" class="font-zh font-bold text-slate-800 hover:text-emerald-600 underline underline-offset-2 decoration-dashed">
+        GPS 打卡完整介紹 — 定位準確度、多據點、防作弊與隱私 →
+      </a>
+    </div>
+  </section>
+
+  <!-- ───── CTA ───── -->
+  <section class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="relative bg-white paper-scrap p-12 md:p-16 text-center" style="transform: rotate(-0.8deg);">
+      <div class="absolute -top-4 left-1/4 w-24 h-7 tape" style="transform: rotate(-4deg);"></div>
+      <div class="absolute -top-4 right-1/4 w-24 h-7 tape" style="transform: rotate(3deg);"></div>
+
+      <span class="inline-flex items-center gap-1.5 stamp text-amber-600 px-3 py-1 mb-6 text-[10px] font-black uppercase tracking-[0.25em]" style="transform: rotate(2deg);">
+        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
+        前 50 名 · 6 個月免費
+      </span>
+
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh leading-tight mb-4">
+        讓你的<br class="md:hidden"/>
+        <span class="relative inline-block">
+          <span class="absolute inset-x-0 bottom-1 h-3 bg-cyan-200/70 -z-10 -rotate-1"></span>
+          遠端團隊打卡
+        </span>
+        從今天起自動化
+      </h2>
+
+      <p class="font-zh text-slate-500 text-base max-w-lg mx-auto mb-8">
+        5 人團隊以下完全免費。不收信用卡也不寄垃圾信。
+      </p>
+
+      <a href="../../#apply" class="inline-block relative group active:scale-95 transition-transform">
+        <span class="absolute inset-0 bg-emerald-700 translate-y-[3px] rounded-md"></span>
+        <span class="relative inline-flex items-center gap-2 px-8 py-4 bg-emerald-500 text-white font-zh font-bold rounded-md group-hover:-translate-y-[1px] transition-transform">
+          申請免費試用
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+
+      <p class="accent-handwritten text-2xl text-coral-deep/80 mt-10 -rotate-1" style="color: var(--color-coral-deep);">
+        🌴 See you soon.
+      </p>
+    </div>
+  </section>
+
+  <!-- ───── Footer ───── -->
+  <footer class="relative max-w-6xl mx-auto px-6 py-12 border-t border-dashed border-slate-300/60">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <img
+          src="../../assets/logo.png"
+          alt="ClocDot logo"
+          width="1024"
+          height="1024"
+          loading="lazy"
+          decoding="async"
+          class="w-7 h-7 object-contain drop-shadow-sm"
+          style="transform: rotate(-4deg);"
+        />
+        <span class="font-zh text-sm text-slate-500">© 2026 ClocDot · Powered by 醬瓜</span>
+      </div>
+      <div class="flex items-center gap-5 text-xs font-zh text-slate-400">
+        <a href="../../privacy.html" class="hover:text-slate-700">隱私政策</a>
+        <a href="../../terms.html" class="hover:text-slate-700">服務條款</a>
+        <a href="mailto:rexa1224@gmail.com" class="hover:text-slate-700">聯絡</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
