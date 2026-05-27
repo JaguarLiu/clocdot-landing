@@ -108,6 +108,17 @@
     color: #cbd5e1; /* slate-300 */
   }
 
+  /* 部落格文章內文排版 */
+  .prose-blog h2 { @apply text-2xl font-black text-slate-800 mt-8 mb-3; }
+  .prose-blog h3 { @apply text-xl font-black text-slate-800 mt-6 mb-2; }
+  .prose-blog p { @apply mb-4; }
+  .prose-blog ul { @apply list-disc pl-6 mb-4 space-y-1; }
+  .prose-blog ol { @apply list-decimal pl-6 mb-4 space-y-1; }
+  .prose-blog a { @apply text-emerald-600 underline underline-offset-2 hover:text-emerald-700; }
+  .prose-blog code { @apply bg-slate-100 rounded px-1.5 py-0.5 text-sm; }
+  .prose-blog blockquote { @apply border-l-4 border-slate-300 pl-4 italic text-slate-600 my-4; }
+  .prose-blog img { @apply rounded-lg my-6; }
+
   /* Section 之間的浪花分隔 */
   .wave-divider {
     aspect-ratio: 60 / 4;

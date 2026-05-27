@@ -6,13 +6,17 @@
     "css:watch": "tailwindcss -i src/input.css -o dist/output.css --watch",
     "serve": "live-server --port=8080 --no-browser --ignore=node_modules",
     "dev": "concurrently -n css,web -c blue,green \"yarn css:watch\" \"yarn serve\"",
-    "build": "tailwindcss -i src/input.css -o dist/output.css --minify",
-    "preview": "npx serve -p 8080 ."
+    "build:blog": "node scripts/build-blog.mjs",
+    "build": "tailwindcss -i src/input.css -o dist/output.css --minify && yarn build:blog",
+    "preview": "npx serve -p 8080 .",
+    "test": "node --test"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.18",
     "concurrently": "^9.1.0",
+    "gray-matter": "^4.0.3",
     "live-server": "^1.2.2",
+    "marked": "^18.0.4",
     "tailwindcss": "^4.1.18"
   }
 }
