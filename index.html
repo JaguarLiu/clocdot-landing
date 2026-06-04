@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./dist/output.css?v=8d904690" />
+  <link rel="stylesheet" href="./dist/output.css?v=b7256a88" />
   <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
   <script type="application/ld+json">
   {
@@ -46,6 +46,13 @@
         "operatingSystem": "Web, iOS, Android (PWA)",
         "description": "為遠端與 hybrid 團隊設計的打卡系統，支援 GPS 自動分辨 Office/Remote、假別自動計算、月底 CSV 匯出。",
         "url": "https://clocdot.com/",
+        "featureList": [
+          "GPS 自動分辨在公司 (Office) 或遠端 (Remote)",
+          "辦公室地址自動 geocode、支援多個據點",
+          "特休假別額度依到職日自動計算",
+          "PWA 安裝到手機 / 桌面，支援離線打卡與自動同步",
+          "月底一鍵匯出 CSV 工時報表，Excel 繁中不亂碼"
+        ],
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -53,6 +60,37 @@
           "description": "5 人以下團隊永久免費；前 50 名公司享 6 個月免費"
         },
         "publisher": {"@id": "https://clocdot.com/#org"}
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://clocdot.com/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "ClocDot 是什麼？",
+            "acceptedAnswer": {"@type": "Answer", "text": "ClocDot 是一套專為遠端與 Hybrid 團隊設計的雲端打卡系統，支援 GPS 自動分辨在公司或遠端、假別額度自動計算，以及月底一鍵匯出 CSV 工時報表。"}
+          },
+          {
+            "@type": "Question",
+            "name": "GPS 打卡準確嗎？支援多個辦公室地點嗎？",
+            "acceptedAnswer": {"@type": "Answer", "text": "ClocDot 透過裝置 GPS 定位並自動 geocode 辦公室地址，支援設定多個據點，自動分辨員工目前是在公司還是遠端工作。"}
+          },
+          {
+            "@type": "Question",
+            "name": "ClocDot 要收費嗎？",
+            "acceptedAnswer": {"@type": "Answer", "text": "5 人以下團隊永久免費，不收信用卡。前 50 名註冊公司另享 6 個月免費。"}
+          },
+          {
+            "@type": "Question",
+            "name": "可以匯出工時報表給會計嗎？",
+            "acceptedAnswer": {"@type": "Answer", "text": "可以。月底一鍵匯出 CSV，每日明細包含 Office/Remote 標記與扣除午休後的實際工時，用 Excel 開啟繁體中文不亂碼。"}
+          },
+          {
+            "@type": "Question",
+            "name": "特休等假別額度怎麼計算？",
+            "acceptedAnswer": {"@type": "Answer", "text": "ClocDot 依員工到職日按比例自動計算特休額度，滿一年自動給滿，假別額度一次設定後即自動套用，不必每月手動結算。"}
+          }
+        ]
       }
     ]
   }
@@ -92,6 +130,7 @@
     <nav class="flex items-center gap-4 md:gap-7 text-sm font-zh text-slate-600">
       <a href="#features" class="hidden md:inline hover:text-emerald-600 transition-colors">功能</a>
       <a href="#how" class="hidden md:inline hover:text-emerald-600 transition-colors">怎麼用</a>
+      <a href="#faq" class="hidden md:inline hover:text-emerald-600 transition-colors">常見問題</a>
       <a href="#apply" class="hidden md:inline hover:text-emerald-600 transition-colors">申請</a>
       <a href="./blog/" class="inline hover:text-emerald-600 transition-colors">部落格</a>
       <a href="https://app.clocdot.com/login" class="relative group">
@@ -350,6 +389,57 @@
     </div>
   </section>
 
+  <!-- 浪花分隔 -->
+  <div class="wave-divider"></div>
+
+  <!-- ───── FAQ ───── -->
+  <section id="faq" class="relative max-w-5xl mx-auto px-6 py-24 bg-cyan-50/30">
+    <div class="text-center mb-14">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">FAQ</p>
+      <h2 class="text-4xl font-black text-slate-800 font-zh">常見問題</h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Q1 -->
+      <article class="relative bg-white paper-card p-6 md:p-7" style="transform: rotate(-0.6deg);">
+        <span class="absolute -top-3 left-6 stamp text-cyan-600 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]" style="transform: rotate(-3deg);">Q</span>
+        <h3 class="font-zh font-black text-lg text-slate-800 mb-2 mt-1">ClocDot 是什麼？</h3>
+        <p class="font-zh text-sm text-slate-600 leading-relaxed">ClocDot 是一套專為遠端與 Hybrid 團隊設計的雲端打卡系統，支援 GPS 自動分辨在公司或遠端、假別額度自動計算，以及月底一鍵匯出 CSV 工時報表。</p>
+      </article>
+
+      <!-- Q3 -->
+      <article class="relative bg-white paper-card p-6 md:p-7" style="transform: rotate(0.6deg);">
+        <span class="absolute -top-3 left-6 stamp text-amber-600 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]" style="transform: rotate(2deg);">Q</span>
+        <h3 class="font-zh font-black text-lg text-slate-800 mb-2 mt-1">GPS 打卡準確嗎？支援多個辦公室地點嗎？</h3>
+        <p class="font-zh text-sm text-slate-600 leading-relaxed">ClocDot 透過裝置 GPS 定位並自動 geocode 辦公室地址，支援設定多個據點，自動分辨員工目前是在公司還是遠端工作。</p>
+      </article>
+
+      <!-- Q4 -->
+      <article class="relative bg-white paper-card p-6 md:p-7" style="transform: rotate(-0.5deg);">
+        <span class="absolute -top-3 left-6 stamp text-emerald-600 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]" style="transform: rotate(-2deg);">Q</span>
+        <h3 class="font-zh font-black text-lg text-slate-800 mb-2 mt-1">ClocDot 要收費嗎？</h3>
+        <p class="font-zh text-sm text-slate-600 leading-relaxed">5 人以下團隊永久免費，不收信用卡。前 50 名註冊公司另享 6 個月免費。</p>
+      </article>
+
+      <!-- Q6 -->
+      <article class="relative bg-white paper-card p-6 md:p-7" style="transform: rotate(0.5deg);">
+        <span class="absolute -top-3 left-6 stamp text-cyan-600 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]" style="transform: rotate(3deg);">Q</span>
+        <h3 class="font-zh font-black text-lg text-slate-800 mb-2 mt-1">可以匯出工時報表給會計嗎？</h3>
+        <p class="font-zh text-sm text-slate-600 leading-relaxed">可以。月底一鍵匯出 CSV，每日明細包含 Office/Remote 標記與扣除午休後的實際工時，用 Excel 開啟繁體中文不亂碼。</p>
+      </article>
+
+      <!-- Q7 -->
+      <article class="relative bg-white paper-card p-6 md:p-7" style="transform: rotate(-0.3deg);">
+        <span class="absolute -top-3 left-6 stamp text-amber-600 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]" style="transform: rotate(-2deg);">Q</span>
+        <h3 class="font-zh font-black text-lg text-slate-800 mb-2 mt-1">特休等假別額度怎麼計算？</h3>
+        <p class="font-zh text-sm text-slate-600 leading-relaxed">ClocDot 依員工到職日按比例自動計算特休額度，滿一年自動給滿，假別額度一次設定後即自動套用，不必每月手動結算。</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 浪花分隔 -->
+  <div class="wave-divider rotate-180"></div>
+
   <!-- ───── Pricing teaser / CTA ───── -->
   <section id="apply" class="relative max-w-4xl mx-auto px-6 py-24">
     <div class="relative bg-white paper-scrap p-12 md:p-16 text-center" style="transform: rotate(-0.8deg);">
@@ -370,11 +460,6 @@
         </span>
         變得不讓人煩心了嗎？
       </h2>
-
-      <p class="font-zh text-slate-500 text-base max-w-lg mx-auto mb-10">
-        前 50 名公司享 6 個月免費。5 人團隊以下完全免費，不收信用卡也不寄垃圾信。
-      </p>
-
       <!-- 申請表單 -->
       <form
         id="apply-form"

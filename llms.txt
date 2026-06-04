@@ -1,0 +1,30 @@
+# ClocDot
+
+> ClocDot 是一套專為遠端與 Hybrid 團隊設計的雲端打卡系統。透過 GPS 自動分辨員工在公司 (Office) 或遠端 (Remote)，自動計算特休等假別額度，並可在月底一鍵匯出 CSV 工時報表。網頁式 PWA，支援 Web、iOS、Android，可離線打卡。主要面向台灣中小企業與新創團隊，介面與內容為繁體中文。
+
+## 核心功能
+- GPS 打卡：定位並自動 geocode 辦公室地址，支援多個據點，自動標記 Office / Remote。
+- 假別自動計算：特休依員工到職日按比例計算，滿一年自動給滿，設定一次後自動套用。
+- PWA 安裝：從瀏覽器安裝到手機或電腦桌面，不需上架原生 App；斷線可離線打卡，恢復後自動同步。
+- CSV 工時匯出：每日明細含 Office/Remote 標記與扣除午休後的實際工時，Excel 開啟繁中不亂碼。
+
+## 定價
+- 5 人以下團隊永久免費，不收信用卡。
+- 前 50 名註冊公司另享 6 個月免費。
+
+## 主要頁面
+- [首頁 / 產品總覽](https://clocdot.com/): ClocDot 是什麼、核心功能與申請試用。
+- [GPS 打卡完整介紹](https://clocdot.com/features/gps-clock-in/): 準確度、多據點與隱私說明。
+- [遠端打卡完整指南](https://clocdot.com/features/remote-work-attendance/): Remote / Hybrid 團隊的打卡解法。
+- [常見問題 FAQ](https://clocdot.com/#faq): 收費、支援裝置、匯出報表、假別計算等常見問答。
+
+## 部落格
+- [GPS 打卡系統怎麼選？](https://clocdot.com/blog/2026-06-04-gps-attendance-taiwan/): 台灣老闆挑選 GPS 打卡系統的踩坑筆記。
+- [ClocDot 關心您肝的健康！加班合規提醒](https://clocdot.com/blog/2026-06-04-overtime-compliance-update/): 踩到勞基法加班紅線前先提醒。
+- [ClocDot 新增加班功能](https://clocdot.com/blog/2026-06-02-overtime-settlement-update/): 加班時數自動結算。
+- [請假功能升級](https://clocdot.com/blog/2026-06-01-leave-update/): 請假流程更省心。
+- [ClocDot 部落格上線了](https://clocdot.com/blog/welcome-to-clocdot-blog/): 新功能釋出與維護公告。
+
+## 聯絡
+- Email: rexa1224@gmail.com
+- 申請試用: https://clocdot.com/#apply
