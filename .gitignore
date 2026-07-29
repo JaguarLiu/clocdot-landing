@@ -1,6 +1,7 @@
 node_modules/
 dist/
 /blog/
+/.demo-build/
 yarn.lock
 .claude/
 .yarn/
