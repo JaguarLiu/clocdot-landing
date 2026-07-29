@@ -1,0 +1,74 @@
+name: Deploy Landing to Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install deps
+        run: |
+          if [ -f yarn.lock ]; then
+            corepack enable
+            yarn install --frozen-lockfile
+          else
+            npm install
+          fi
+
+      - name: Build Tailwind CSS
+        run: |
+          if [ -f yarn.lock ]; then
+            yarn build
+          else
+            npm run build
+          fi
+
+      - name: Build demo apps
+        run: |
+          for app in client admin; do
+            (cd "demo/$app" && npm ci && npm run build)
+          done
+
+      # demo/ 在 repo 裡是原始碼，站上要的是 build 產物。
+      # vite 已把產物輸出到 .demo-build/<app>，這裡整個換掉 demo/，
+      # 讓 /demo/client/ 與 /demo/admin/ 直接對應各自的 index.html。
+      - name: Stage demo builds at /demo
+        run: |
+          rm -rf demo
+          mkdir -p demo
+          mv .demo-build/client demo/client
+          mv .demo-build/admin demo/admin
+          rm -rf .demo-build
+
+      - name: Strip node_modules from artifact
+        run: rm -rf node_modules
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
