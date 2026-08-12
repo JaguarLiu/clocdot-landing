@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../dist/output.css?v=f5cd3fe1" />
+  <link rel="stylesheet" href="../../dist/output.css?v=0d559c21" />
   <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
   <script type="application/ld+json">
   {
@@ -39,7 +39,8 @@
         "inLanguage": "zh-TW",
         "isPartOf": { "@type": "WebSite", "url": "https://clocdot.com/", "name": "ClocDot" },
         "primaryImageOfPage": { "@type": "ImageObject", "url": "https://clocdot.com/assets/og-cover.png" },
-        "description": "遠端打卡完整指南：為什麼遠端與 Hybrid 團隊需要專屬打卡系統？ClocDot 如何用 GPS、PWA、自動工時統計解決遠端打卡的核心問題。"
+        "dateModified": "2026-08-12",
+        "description": "遠端打卡完整指南：為什麼遠端與 Hybrid 團隊需要專屬打卡系統？五種打卡方式比較、遠距工作的出勤紀錄要求，以及 ClocDot 如何用 GPS、PWA、自動工時統計解決遠端打卡的核心問題。"
       },
       {
         "@type": "FAQPage",
@@ -81,7 +82,39 @@
             "name": "小團隊使用要收費嗎？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "ClocDot 5 人以下團隊永久免費，前 50 名註冊公司另外享 6 個月免費。不需要綁信用卡。"
+              "text": "ClocDot 5 人以下團隊永久免費，沒有使用期限，也不需要綁信用卡。現在申請並通過審核，前 6 個月免費。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "員工在家工作，還需要記出勤紀錄嗎？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "需要。出勤紀錄的要求不會因為工作地點改變而消失，居家辦公、遠距上班與外勤同樣要記錄，而且要逐日記載到分鐘、保存一定年限。用通訊軟體回報「我開始工作了」在紀錄上通常不夠，因為訊息散在對話串裡，難以整理成可查閱的出勤紀錄。以上僅供參考，實際要求請以主管機關公告為準。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "員工可以查自己的打卡紀錄嗎？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "可以。員工登入後就能看到自己完整的打卡明細與工時統計，不需要向 HR 申請。紀錄存放在雲端，不會因為換電腦、卡鐘故障或紙本遺失而消失，需要備查時 HR 也能一鍵匯出 CSV。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "原本用打卡鐘，可以直接換成遠端打卡嗎？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "可以，而且不需要汰換任何硬體，遠端打卡用的是員工自己的手機或電腦。導入流程是設定辦公室地點與班別、請員工把 PWA 加到主畫面，通常當天就能開始打卡。過渡期間也可以先讓部分團隊試跑，確認流程順了再全面切換。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "實體辦公日和遠距日，可以用不同的打卡方式嗎？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "可以，這也是混合辦公團隊最常見的組合：實體辦公日要求連上公司網路（WiFi / IP 驗證）才能打卡，確認人真的到場；遠距日則用 GPS 記錄打卡地點並自動標記為 Remote。兩種來源都會逐筆留存，月底匯出時 Office 與 Remote 工時是分開的。"
             }
           }
         ]
@@ -214,10 +247,31 @@
     </section>
   </main>
 
+  <!-- ───── 本頁目錄 ───── -->
+  <nav aria-label="本頁目錄" class="relative max-w-4xl mx-auto px-6 pb-4">
+    <div class="relative bg-white p-6 md:p-7 paper-scrap" style="transform: rotate(-0.4deg); --paper-bg: #fffdf7;">
+      <div class="absolute -top-3 left-10 w-20 h-6 tape" style="transform: rotate(-3deg);"></div>
+      <div class="flex flex-wrap items-baseline justify-between gap-2 mb-4 mt-1">
+        <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700">本頁目錄</p>
+        <p class="text-xs font-zh text-slate-400">最後更新：<time datetime="2026-08-12">2026 年 8 月</time></p>
+      </div>
+      <ol class="grid sm:grid-cols-2 gap-x-8 gap-y-2 text-sm font-zh text-slate-600 list-decimal list-inside">
+        <li><a href="#why" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">為什麼遠端團隊需要專屬打卡系統</a></li>
+        <li><a href="#comparison" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">五種打卡方式比較表</a></li>
+        <li><a href="#compliance" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">遠距工作也要打卡嗎？出勤紀錄要求</a></li>
+        <li><a href="#how" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">ClocDot 怎麼解決三個難題</a></li>
+        <li><a href="#who" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">哪些團隊適合用</a></li>
+        <li><a href="#start" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">三步驟開始</a></li>
+        <li><a href="#pricing" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">要花多少錢</a></li>
+        <li><a href="#faq" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">常見問題</a></li>
+      </ol>
+    </div>
+  </nav>
+
   <div class="wave-divider"></div>
 
   <!-- ───── 為什麼需要遠端打卡系統 ───── -->
-  <section class="relative max-w-4xl mx-auto px-6 py-20">
+  <section id="why" class="relative max-w-4xl mx-auto px-6 py-20">
     <div class="mb-12">
       <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Why remote attendance</p>
       <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh leading-tight">為什麼<span class="text-cyan-600">遠端團隊</span>需要專屬的打卡系統？</h2>
@@ -226,7 +280,7 @@
     <div class="space-y-6 text-slate-700 leading-relaxed font-zh">
       <p>
         過去打卡這件事很單純：員工早上到辦公室刷卡、晚上下班再刷一次，HR 月底拉報表結薪水。
-        但<strong>遠端工作 (Remote Work)</strong> 與<strong>混合辦公 (Hybrid Work)</strong> 普及後，傳統打卡方式碰到三個明顯斷點：
+        但<strong>遠距工作 (Remote Work)</strong> 與<strong>混合辦公 (Hybrid Work)</strong> 普及後，傳統打卡方式碰到三個明顯斷點：
       </p>
 
       <ul class="list-disc list-inside space-y-2 ml-2">
@@ -236,8 +290,17 @@
       </ul>
 
       <p>
+        這三個斷點在<strong>居家辦公</strong>成為常態之後更明顯。
+        很多團隊的過渡做法是「每天在群組回報上下班」，短期看起來可行，
+        但撐到三十人、或撐到月底要結算加班的時候就會發現：
+        訊息散在對話串裡，既難統計，也不構成完整的出勤紀錄。
+      </p>
+
+      <p>
         遠端打卡系統解決的不是「監控員工」，而是<strong>讓工時資料自動化、可信、可追溯</strong>。
         員工不必每天在群組裡發「打卡了」，主管不必追進度，HR 不必對單，會計也不必猜這個月誰請了幾天假。
+        對<strong>遠距上班</strong>的同事來說，這反而是保障 —— 他實際工作的時間有紀錄，
+        不會因為主管沒看見就被當成沒做事。
       </p>
     </div>
   </section>
@@ -245,10 +308,103 @@
   <div class="wave-divider rotate-180"></div>
 
   <!-- ───── 傳統打卡 vs ClocDot 比較 ───── -->
-  <section class="relative max-w-5xl mx-auto px-6 py-20 bg-cyan-50/30">
+  <section id="comparison" class="relative max-w-5xl mx-auto px-6 py-20 bg-cyan-50/30">
     <div class="text-center mb-12">
       <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Comparison</p>
       <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh">傳統打卡 vs <span class="text-cyan-600">遠端打卡</span></h2>
+    </div>
+
+    <div class="max-w-3xl mx-auto mb-10 space-y-4 text-slate-700 leading-relaxed font-zh">
+      <p>
+        在挑遠端打卡系統之前，先把市面上五種常見的打卡方式攤開來看。
+        每一種都有適合的場景，沒有絕對的優劣 —— 差別在於<strong>你的團隊是不是每天都在同一個地點上班</strong>。
+      </p>
+    </div>
+
+    <!-- 五種打卡方式比較表 -->
+    <div class="overflow-x-auto mb-12 border-2 border-dashed border-slate-300 rounded-lg bg-white/80">
+      <table class="w-full min-w-[46rem] text-sm font-zh border-collapse">
+        <caption class="sr-only">打卡鐘、指紋辨識、通訊軟體、GPS 打卡、WiFi 打卡五種方式比較</caption>
+        <thead>
+          <tr class="bg-cyan-50/80 text-slate-800">
+            <th scope="col" class="text-left font-black px-4 py-3 border-b-2 border-dashed border-slate-300">評估項目</th>
+            <th scope="col" class="text-left font-black px-4 py-3 border-b-2 border-l border-dashed border-slate-300">打卡鐘 / 紙卡</th>
+            <th scope="col" class="text-left font-black px-4 py-3 border-b-2 border-l border-dashed border-slate-300">指紋 / 人臉辨識</th>
+            <th scope="col" class="text-left font-black px-4 py-3 border-b-2 border-l border-dashed border-slate-300">通訊軟體回報</th>
+            <th scope="col" class="text-left font-black px-4 py-3 border-b-2 border-l border-dashed border-slate-300">APP + GPS 打卡</th>
+            <th scope="col" class="text-left font-black px-4 py-3 border-b-2 border-l border-dashed border-slate-300">WiFi / IP 打卡</th>
+          </tr>
+        </thead>
+        <tbody class="text-slate-600">
+          <tr>
+            <th scope="row" class="text-left font-black text-slate-700 px-4 py-3 border-b border-dashed border-slate-200 align-top">設備成本</th>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">需購置卡鐘與紙卡，另有耗材</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">辨識機單價高，多據點需各買一台</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">零成本，用現有群組</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">零硬體，用員工自己的手機</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">零硬體，用現有網路環境</td>
+          </tr>
+          <tr class="bg-slate-50/60">
+            <th scope="row" class="text-left font-black text-slate-700 px-4 py-3 border-b border-dashed border-slate-200 align-top">能否遠距 / 在家打卡</th>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✗ 必須到場</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✗ 必須到場</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✓ 可以，但靠自由心證</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✓ 在哪都能打，並標記地點</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✗ 離開公司網路就打不到</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-left font-black text-slate-700 px-4 py-3 border-b border-dashed border-slate-200 align-top">外勤 / 多據點</th>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✗ 每個點都要一台</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✗ 每個點都要一台</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">△ 打得到，但無從查證地點</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✓ 多據點自動判定，半徑可調</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">△ 每個據點須各自設定網段</td>
+          </tr>
+          <tr class="bg-slate-50/60">
+            <th scope="row" class="text-left font-black text-slate-700 px-4 py-3 border-b border-dashed border-slate-200 align-top">防代打能力</th>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">低，代刷幾乎無法察覺</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">高，生物特徵難以代替</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">低，訊息誰都能代發</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">中，座標與時間可勾稽</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">中，需人在公司網路內</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-left font-black text-slate-700 px-4 py-3 border-b border-dashed border-slate-200 align-top">出勤紀錄完整度</th>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">紙本留存，查閱與備份不易</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">依機器與軟體而定</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">散在對話紀錄，難整理成報表</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">逐筆記錄至分鐘，可匯出</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">逐筆記錄至分鐘，可匯出</td>
+          </tr>
+          <tr class="bg-slate-50/60">
+            <th scope="row" class="text-left font-black text-slate-700 px-4 py-3 border-b border-dashed border-slate-200 align-top">導入難度</th>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">低，但月底統計最耗人力</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">中，需安裝與建檔</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">最低，但後續整理最痛苦</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">低，員工開網頁即可</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">低，但需要固定 IP 或網段</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-left font-black text-slate-700 px-4 py-3 align-top">最適合誰</th>
+            <td class="px-4 py-3 border-l border-dashed border-slate-200 align-top">單一據點、人數少、全員到場</td>
+            <td class="px-4 py-3 border-l border-dashed border-slate-200 align-top">出入管制嚴格的廠辦</td>
+            <td class="px-4 py-3 border-l border-dashed border-slate-200 align-top">高度信任的極小團隊</td>
+            <td class="px-4 py-3 border-l border-dashed border-slate-200 align-top">遠距、混合辦公、外勤、多據點</td>
+            <td class="px-4 py-3 border-l border-dashed border-slate-200 align-top">實體辦公日要求人到場</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="max-w-3xl mx-auto mb-12 space-y-4 text-slate-700 leading-relaxed font-zh">
+      <p class="text-sm">
+        <strong>也說說 GPS 打卡的限制：</strong>
+        持續定位會增加手機耗電；在地下室、廠房內部或高樓密集區，定位誤差可能拉大到數十公尺；
+        部分員工也會對「公司知道我在哪」有疑慮。
+        所以 ClocDot 的設計是<strong>只在打卡當下取一次座標</strong>、不做全天候軌跡追蹤，
+        定位失敗時採取「標記」而不是「硬擋」—— 讓紀錄留下來，剩下的交給人判斷。
+        實務上，<strong>GPS 與 WiFi 兩種方式搭配</strong>（實體辦公日驗網路、遠距日驗座標）通常是最平衡的組合。
+      </p>
     </div>
 
     <div class="grid md:grid-cols-2 gap-8">
@@ -282,8 +438,65 @@
 
   <div class="wave-divider"></div>
 
+  <!-- ───── 勞基法與出勤紀錄 ───── -->
+  <section id="compliance" class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="mb-12">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Compliance</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh leading-tight">遠距工作也要打卡嗎？<span class="text-cyan-600">出勤紀錄</span>的基本要求</h2>
+    </div>
+
+    <div class="space-y-6 text-slate-700 leading-relaxed font-zh">
+      <p>
+        這是我們最常被問到的問題之一：<strong>「員工在家工作，還需要記出勤嗎？」</strong>
+        很多老闆直覺認為，人不在辦公室、工作又以成果計算，出勤紀錄就可以省略。
+        但實際上，<strong>勞基法對出勤紀錄的要求，並不會因為工作地點改變而消失</strong> ——
+        居家辦公、遠距上班、外勤，員工的出勤一樣要記。
+      </p>
+
+      <div class="relative bg-white p-7 paper-card my-8" style="transform: rotate(-0.6deg); --paper-bg: #fffdf7;">
+        <div class="absolute -top-3 left-10 w-20 h-6 tape" style="transform: rotate(-3deg);"></div>
+        <h3 class="font-zh font-black text-xl text-slate-800 mb-4 mt-2">出勤紀錄的三個重點</h3>
+        <ul class="space-y-3 text-sm font-zh text-slate-600">
+          <li><strong class="text-slate-800">逐日記載，且記到「分鐘」。</strong>
+            不是只記「有來」或「今天上班」，而是要能還原每一天實際的上下班時間。
+            這也是為什麼用通訊軟體回報「我開始工作了」在紀錄上不夠 —— 訊息散落在對話串裡，不構成可查閱的出勤紀錄。</li>
+          <li><strong class="text-slate-800">要保存一定年限。</strong>
+            出勤紀錄不是當月結完薪水就能丟，需要留存數年備查。
+            紙本卡片與散落的訊息紀錄，在這件事上風險最高 —— 東西還在不在、找不找得到，往往要到需要調閱時才知道。</li>
+          <li><strong class="text-slate-800">員工有權索取自己的紀錄。</strong>
+            當員工要求查閱或影印本人的出勤紀錄時，雇主應予提供。
+            所以系統要能讓員工看見自己的打卡明細，而不是只有 HR 後台看得到。</li>
+        </ul>
+      </div>
+
+      <p>
+        把這三點翻譯成「選系統時該看什麼」，其實就三個問題：
+        <strong>記錄的顆粒度夠不夠細、留得夠不夠久、員工調不調得到。</strong>
+        遠距團隊尤其要注意 —— 工作地點越分散，越沒有實體卡鐘幫你留下痕跡，
+        紀錄完不完整就完全取決於你用的工具。
+      </p>
+
+      <h3 class="font-zh font-black text-xl text-slate-800 pt-4">ClocDot 在這件事上怎麼做</h3>
+
+      <ul class="list-disc list-inside space-y-2 ml-2">
+        <li>每一筆打卡都記錄到分鐘，並保留當下的地點來源（Office / Remote / 外勤）與 IP。</li>
+        <li>紀錄存在雲端，不會因為換電腦、卡鐘壞掉或紙本遺失而消失。</li>
+        <li>員工在自己的頁面就能看到完整打卡明細，不需要向 HR 申請。</li>
+        <li>月底一鍵匯出 CSV，含每日明細與扣除午休後的實際工時，需要備查時直接調閱。</li>
+      </ul>
+
+      <p class="text-sm text-slate-500 border-l-4 border-dashed border-slate-300 pl-4 mt-8">
+        以上為一般性整理，僅供參考，不構成法律意見。
+        實際的法規要求與適用範圍請以勞動部及地方勞工行政主管機關公告為準，
+        個別情形建議諮詢專業人士或當地勞工局。
+      </p>
+    </div>
+  </section>
+
+  <div class="wave-divider rotate-180"></div>
+
   <!-- ───── ClocDot 怎麼解決 ───── -->
-  <section class="relative max-w-6xl mx-auto px-6 py-20">
+  <section id="how" class="relative max-w-6xl mx-auto px-6 py-20">
     <div class="text-center mb-14">
       <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">How it works</p>
       <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh">ClocDot 怎麼解決<span class="text-cyan-600">遠端打卡</span>的三個難題</h2>
@@ -331,16 +544,22 @@
   <div class="wave-divider rotate-180"></div>
 
   <!-- ───── 適合誰用 ───── -->
-  <section class="relative max-w-4xl mx-auto px-6 py-20">
+  <section id="who" class="relative max-w-4xl mx-auto px-6 py-20">
     <div class="mb-12">
       <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Who it's for</p>
       <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh">哪些團隊適合用<span class="text-cyan-600">遠端打卡系統</span>？</h2>
     </div>
 
+    <p class="mb-8 font-zh text-slate-700 leading-relaxed">
+      一句話判斷：<strong>只要你的團隊有人不是每天在同一個地點上班</strong>，遠端打卡就用得上。
+      不論那是全遠距、一週進辦公室兩天的混合制，還是天天在外跑的業務，
+      共同的問題都一樣 —— 沒有一台卡鐘能同時待在所有人身邊。
+    </p>
+
     <div class="space-y-5 font-zh text-slate-700">
       <div class="bg-white p-5 paper-scrap" style="transform: rotate(-0.4deg);">
-        <h3 class="font-black text-lg text-slate-800 mb-1.5">全遠端 (Fully Remote) 團隊</h3>
-        <p class="text-sm text-slate-600 leading-relaxed">公司沒有實體辦公室，或員工散佈各地。GPS 打卡可記錄員工實際所在城市，方便異地差勤管理。</p>
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">全遠距 (Fully Remote) 團隊</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">公司沒有實體辦公室，或員工散佈各地。GPS 打卡可記錄員工實際所在城市，方便異地差勤管理，也讓在家工作的同事不必每天回報。</p>
       </div>
 
       <div class="bg-white p-5 paper-scrap" style="transform: rotate(0.5deg);">
@@ -368,7 +587,7 @@
   <div class="wave-divider"></div>
 
   <!-- ───── 如何開始 ───── -->
-  <section class="relative max-w-5xl mx-auto px-6 py-20 bg-cyan-50/30">
+  <section id="start" class="relative max-w-5xl mx-auto px-6 py-20 bg-cyan-50/30">
     <div class="text-center mb-12">
       <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Get started</p>
       <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh">三步驟開始<span class="text-cyan-600">遠端打卡</span></h2>
@@ -394,6 +613,62 @@
   </section>
 
   <div class="wave-divider rotate-180"></div>
+
+  <!-- ───── 價格 ───── -->
+  <section id="pricing" class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="mb-12">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Pricing</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh leading-tight"><span class="text-cyan-600">遠端打卡系統</span>要花多少錢？</h2>
+    </div>
+
+    <div class="space-y-6 text-slate-700 leading-relaxed font-zh">
+      <p>
+        打卡這件事的成本，大致分成三種收法，各自的花費結構差很多：
+      </p>
+
+      <div class="grid md:grid-cols-3 gap-6 my-8">
+        <article class="relative bg-white p-6 paper-card" style="transform: rotate(-1deg); --paper-bg: #fef3c7;">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-2deg);"></div>
+          <h3 class="font-zh font-black text-lg text-slate-800 mb-2 mt-2">硬體一次性</h3>
+          <p class="text-sm font-zh text-slate-600 leading-relaxed">
+            打卡鐘、指紋機屬於這類。買斷看似便宜，但要加上耗材、維修、多據點各買一台，
+            以及月底人工統計的隱形人力成本。
+          </p>
+        </article>
+
+        <article class="relative bg-white p-6 paper-card" style="transform: rotate(0.8deg);">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(3deg);"></div>
+          <h3 class="font-zh font-black text-lg text-slate-800 mb-2 mt-2">按人頭月費</h3>
+          <p class="text-sm font-zh text-slate-600 leading-relaxed">
+            多數雲端 HR 系統的收法，通常還有最低人數門檻。
+            功能完整，但對十人以下的小團隊來說，常常是為了用不到的模組付錢。
+          </p>
+        </article>
+
+        <article class="relative bg-white p-6 paper-card" style="transform: rotate(-0.6deg); --paper-bg: #ecfdf5;">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-4deg);"></div>
+          <h3 class="font-zh font-black text-lg text-slate-800 mb-2 mt-2">ClocDot</h3>
+          <p class="text-sm font-zh text-slate-600 leading-relaxed">
+            <strong class="text-slate-800">5 人以下團隊永久免費</strong>，沒有使用期限、不綁信用卡。
+            現在申請並通過審核，<strong class="text-slate-800">前 6 個月免費</strong>。
+          </p>
+        </article>
+      </div>
+
+      <p>
+        遠距與混合辦公團隊的成本結構其實比較單純 —— 因為你不需要買任何硬體。
+        真正該算的是<strong>每個月花在整理工時上的時間</strong>：
+        對單、追打卡、算加班、compile 報表，這些通常比軟體授權費貴得多，
+        而且是每個月都要付一次的成本。
+      </p>
+
+      <p class="text-sm text-slate-500">
+        需要更多人數或有特殊需求，歡迎<a href="../../#apply" class="font-bold text-slate-700 hover:text-cyan-700 underline underline-offset-2 decoration-dashed">來信聊聊你們團隊的情況</a>，我們再一起看怎麼安排。
+      </p>
+    </div>
+  </section>
+
+  <div class="wave-divider"></div>
 
   <!-- ───── FAQ ───── -->
   <section id="faq" class="relative max-w-3xl mx-auto px-6 py-20">
@@ -425,7 +700,27 @@
 
       <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.2deg);">
         <summary class="font-black text-slate-800 cursor-pointer">小團隊使用要收費嗎？</summary>
-        <p class="text-sm text-slate-600 leading-relaxed mt-3">ClocDot 5 人以下團隊永久免費，前 50 名註冊公司另外享 6 個月免費。不需要綁信用卡。</p>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">ClocDot 5 人以下團隊永久免費，沒有使用期限，也不需要綁信用卡。現在申請並通過審核，前 6 個月免費。</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(0.3deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">員工在家工作，還需要記出勤紀錄嗎？</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">需要。出勤紀錄的要求不會因為工作地點改變而消失，居家辦公、遠距上班與外勤同樣要記錄，而且要逐日記載到分鐘、保存一定年限。用通訊軟體回報「我開始工作了」在紀錄上通常不夠，因為訊息散在對話串裡，難以整理成可查閱的出勤紀錄。詳細說明請看本頁的<a href="#compliance" class="font-bold text-slate-700 hover:text-cyan-700 underline underline-offset-2 decoration-dashed">出勤紀錄章節</a>。（僅供參考，實際要求請以主管機關公告為準。）</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.35deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">員工可以查自己的打卡紀錄嗎？</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">可以。員工登入後就能看到自己完整的打卡明細與工時統計，不需要向 HR 申請。紀錄存放在雲端，不會因為換電腦、卡鐘故障或紙本遺失而消失，需要備查時 HR 也能一鍵匯出 CSV。</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(0.25deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">原本用打卡鐘，可以直接換成遠端打卡嗎？</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">可以，而且不需要汰換任何硬體 —— 遠端打卡用的是員工自己的手機或電腦。導入流程是設定辦公室地點與班別、請員工把 PWA 加到主畫面，通常當天就能開始打卡。過渡期間也可以先讓部分團隊試跑，確認流程順了再全面切換。</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.3deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">實體辦公日和遠距日，可以用不同的打卡方式嗎？</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">可以，這也是混合辦公團隊最常見的組合：實體辦公日要求連上公司網路（WiFi / IP 驗證）才能打卡，確認人真的到場；遠距日則用 GPS 記錄打卡地點並自動標記為 Remote。兩種來源都會逐筆留存，月底匯出時 Office 與 Remote 工時是分開的。</p>
       </details>
     </div>
 
@@ -446,7 +741,7 @@
 
       <span class="inline-flex items-center gap-1.5 stamp text-amber-600 px-3 py-1 mb-6 text-[10px] font-black uppercase tracking-[0.25em]" style="transform: rotate(2deg);">
         <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
-        前 50 名 · 6 個月免費
+        申請通過 · 前 6 個月免費
       </span>
 
       <h2 class="text-3xl md:text-4xl font-black text-slate-800 font-zh leading-tight mb-4">
@@ -496,7 +791,7 @@
         <a href="../../blog/" class="hover:text-slate-700">部落格</a>
         <a href="../../privacy.html" class="hover:text-slate-700">隱私政策</a>
         <a href="../../terms.html" class="hover:text-slate-700">服務條款</a>
-        <a href="mailto:rexa1224@gmail.com" class="hover:text-slate-700">聯絡</a>
+        <a href="mailto:pm@clocdot.com" class="hover:text-slate-700">聯絡</a>
       </div>
     </div>
   </footer>

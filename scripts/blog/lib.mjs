@@ -106,11 +106,13 @@ function footer(prefix) {
              style="transform: rotate(-4deg);" />
         <span class="font-zh text-sm text-slate-500">© 2026 ClocDot · Powered by 醬瓜</span>
       </div>
-      <div class="flex items-center gap-5 text-xs font-zh text-slate-400">
+      <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-zh text-slate-400">
+        <a href="${prefix}features/remote-work-attendance/" class="hover:text-slate-700">遠端打卡指南</a>
+        <a href="${prefix}features/gps-clock-in/" class="hover:text-slate-700">GPS 打卡介紹</a>
         <a href="${prefix}blog/" class="hover:text-slate-700">部落格</a>
         <a href="${prefix}privacy.html" class="hover:text-slate-700">隱私政策</a>
         <a href="${prefix}terms.html" class="hover:text-slate-700">服務條款</a>
-        <a href="mailto:rexa1224@gmail.com" class="hover:text-slate-700">聯絡</a>
+        <a href="mailto:pm@clocdot.com" class="hover:text-slate-700">聯絡</a>
       </div>
     </div>
   </footer>`;
