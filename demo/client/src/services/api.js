@@ -1,3 +1,4 @@
+import { tr } from '../i18n/index.jsx'
 // DEMO 版 api.js — 無後端；request() 改為路由到 localStorage 假資料庫（見 mock/db.js）。
 // 對外 named export 與正式版完全一致，頁面/hook 無需改動。
 
@@ -16,9 +17,9 @@ function httpError(status, error) {
 }
 
 const HOLIDAYS = [
-  ['01-01', '元旦'], ['02-28', '和平紀念日'], ['04-04', '兒童節'],
-  ['04-05', '清明節'], ['05-01', '勞動節'], ['09-29', '中秋節'],
-  ['10-10', '國慶日'], ['10-25', '光復節'],
+  ['01-01', tr('seed.holidays.01-01')], ['02-28', tr('seed.holidays.02-28')], ['04-04', tr('seed.holidays.04-04')],
+  ['04-05', tr('seed.holidays.04-05')], ['05-01', tr('seed.holidays.05-01')], ['09-29', tr('seed.holidays.09-29')],
+  ['10-10', tr('seed.holidays.10-10')], ['10-25', tr('seed.holidays.10-25')],
 ]
 
 function buildSchedule(from, to) {
@@ -83,7 +84,7 @@ async function route(method, path, query, body) {
       const mine = db.leaveRequests
         .filter((r) => r.status === 'approved' && r.startDate <= to && r.endDate >= from)
         .map((r) => ({ name: db.user.name, startDate: r.startDate, endDate: r.endDate }))
-      const mate = { name: '李美華', startDate: addDays(dateStrOf(new Date()), 2), endDate: addDays(dateStrOf(new Date()), 3) }
+      const mate = { name: tr('seed.coworkerA'), startDate: addDays(dateStrOf(new Date()), 2), endDate: addDays(dateStrOf(new Date()), 3) }
       const mates = (mate.startDate <= to && mate.endDate >= from) ? [mate] : []
       return [...mine, ...mates]
     }
@@ -97,7 +98,7 @@ async function route(method, path, query, body) {
     if (path.startsWith('/payroll/me/')) {
       const month = path.split('/')[3]
       const slip = db.payslips[month]
-      if (!slip) throw httpError(404, '查無已發放薪資單')
+      if (!slip) throw httpError(404, tr('api.noPayslip'))
       return slip
     }
   }
@@ -106,7 +107,7 @@ async function route(method, path, query, body) {
     if (path === '/punch-in') {
       const today = dateStrOf(new Date())
       let rec = db.attendance.find((a) => a.dateStr === today)
-      if (rec?.punchIn) throw httpError(400, '今日已打過上班卡')
+      if (rec?.punchIn) throw httpError(400, tr('api.alreadyPunchedIn'))
       const punchIn = body.clientTime || localNaiveNow()
       if (!rec) {
         rec = {
@@ -125,7 +126,7 @@ async function route(method, path, query, body) {
     if (path === '/punch-out') {
       const today = dateStrOf(new Date())
       const rec = db.attendance.find((a) => a.dateStr === today)
-      if (!rec?.punchIn) throw httpError(400, '尚未打上班卡')
+      if (!rec?.punchIn) throw httpError(400, tr('api.notPunchedIn'))
       const punchOut = body.clientTime || localNaiveNow()
       rec.punchOut = punchOut
       rec.isEarlyLeave = punchOut.slice(11, 16) < DEFAULT_SHIFT.endTime
@@ -138,7 +139,7 @@ async function route(method, path, query, body) {
       const { workDate, time, type, reason } = body
       const item = {
         id: `cr-${Date.now()}`,
-        reason: `[${type === 'in' ? '上班' : '下班'}] ${time} - ${reason}`,
+        reason: `[${type === 'in' ? tr('common.clockIn') : tr('common.clockOut')}] ${time} - ${reason}`,
         status: 'pending', attendance: { workDate: naive(workDate, 0, 0) },
       }
       db.corrections.unshift(item)
@@ -159,7 +160,7 @@ async function route(method, path, query, body) {
     if (path.startsWith('/leave-requests/') && path.endsWith('/cancel-request')) {
       const id = path.split('/')[2]
       const r = db.leaveRequests.find((x) => x.id === id)
-      if (!r) throw httpError(404, '找不到該申請')
+      if (!r) throw httpError(404, tr('api.requestNotFound'))
       r.cancelRequested = true
       saveDb()
       return r
@@ -190,8 +191,8 @@ async function route(method, path, query, body) {
     if (path.startsWith('/leave-requests/')) {
       const id = path.split('/')[2]
       const r = db.leaveRequests.find((x) => x.id === id)
-      if (!r) throw httpError(404, '找不到該申請')
-      if (r.status !== 'pending') throw httpError(400, '已審核的申請無法撤回')
+      if (!r) throw httpError(404, tr('api.requestNotFound'))
+      if (r.status !== 'pending') throw httpError(400, tr('api.cannotWithdraw'))
       db.leaveRequests = db.leaveRequests.filter((x) => x.id !== id)
       saveDb()
       return { success: true }

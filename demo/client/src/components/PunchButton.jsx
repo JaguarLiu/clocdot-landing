@@ -1,8 +1,10 @@
 import { User, Hand } from 'lucide-react'
+import { useT, trArray } from '../i18n/index.jsx'
 
-const dayNames = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
+const dayNames = trArray('weekdays.long')
 
 export default function PunchButton({ isClockedIn, isPunching, currentTime, empNo, onClick }) {
+  const { t } = useT()
   return (
     <>
       {/* 打卡鐘互動容器 */}
@@ -76,7 +78,7 @@ export default function PunchButton({ isClockedIn, isPunching, currentTime, empN
         <div className="mt-5 flex flex-col items-center gap-1 animate-soft-bounce">
           <Hand size={16} className="text-slate-400" strokeWidth={2.5} />
           <p className="font-zh text-[13px] text-slate-500">
-            點一下機器{isClockedIn ? '打下班卡' : '打上班卡'}
+            {t('punch.hint', { action: isClockedIn ? t('punch.hintOut') : t('punch.hintIn') })}
           </p>
         </div>
       )}

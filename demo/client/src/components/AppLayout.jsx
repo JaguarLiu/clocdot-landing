@@ -1,21 +1,24 @@
 import { useLocation, Outlet } from 'react-router-dom'
 import { User } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth.js'
+import { useT } from '../i18n/index.jsx'
 import PaperPiece from './PaperPiece.jsx'
 import BottomNav from './BottomNav.jsx'
+import LanguageToggle from './LanguageToggle.jsx'
 
 export default function AppLayout() {
   const location = useLocation()
   const { user } = useAuth()
+  const { t } = useT()
 
   const headerTitles = {
-    '/': `${user?.name || '使用者'}，你好！`,
-    '/history': '歷史紀錄',
-    '/correction': '補打卡申請',
-    '/leave': '請假申請',
-    '/overtime': '加班申請',
-    '/payslip': '薪資單',
-    '/profile': '個人中心',
+    '/': t('titles.greeting', { name: user?.name || t('common.user') }),
+    '/history': t('titles.history'),
+    '/correction': t('titles.correction'),
+    '/leave': t('titles.leave'),
+    '/overtime': t('titles.overtime'),
+    '/payslip': t('titles.payslip'),
+    '/profile': t('titles.profile'),
   }
   const title = headerTitles[location.pathname] || 'ClocDot'
 
@@ -43,6 +46,7 @@ export default function AppLayout() {
                 )}
               </div>
               <span className="font-zh text-slate-700">{title}</span>
+              <LanguageToggle className="-mr-2" />
             </PaperPiece>
           </div>
         </header>

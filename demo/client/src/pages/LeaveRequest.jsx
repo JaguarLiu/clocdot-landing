@@ -9,6 +9,7 @@ import StatusStamp from '../components/StatusStamp.jsx'
 import { submitLeaveRequest, cancelLeaveRequest, requestLeaveCancellation, getLeaveCalendar, getHolidays, fetcher } from '../services/api.js'
 import { formatLeaveDuration } from '../utils/time.js'
 import { LEAVE_TYPES, LEAVE_TYPE_MAP } from '../utils/leaveTypes.js'
+import { useT, tr } from '../i18n/index.jsx'
 
 const LIST_ROTATIONS = ['-0.6deg', '0.5deg', '-0.4deg', '0.7deg', '-0.3deg']
 
@@ -17,7 +18,7 @@ function buildMonthOptions() {
   return Array.from({ length: 6 }, (_, i) => {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
     const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
-    const label = `${d.getFullYear()} 年 ${d.getMonth() + 1} 月`
+    const label = tr('common.monthLabel', { y: d.getFullYear(), m: d.getMonth() + 1 })
     return { value, label }
   })
 }
@@ -50,6 +51,7 @@ const DEFAULT_START_TIME = '09:00'
 const DEFAULT_END_TIME = '18:00'
 
 export default function LeaveRequest() {
+  const { t } = useT()
   const [searchParams, setSearchParams] = useSearchParams()
   const activeTab = searchParams.get('tab') === 'list' ? 'list' : 'apply'
 
@@ -61,14 +63,14 @@ export default function LeaveRequest() {
     <main className="w-full relative z-10 px-4 mt-4 animate-in slide-in-from-bottom-4 duration-300 pb-20">
       <div className="flex items-center gap-2 mb-6 px-2">
         <CalendarPlus size={24} className="text-sky-500" aria-hidden="true" />
-        <h3 className="font-zh text-2xl text-slate-700">請假服務</h3>
+        <h3 className="font-zh text-2xl text-slate-700">{t('leave.heading')}</h3>
       </div>
 
       {/* 子頁籤 */}
       <div
         className="flex mb-8 bg-slate-200/40 p-1 border border-slate-200"
         role="tablist"
-        aria-label="請假頁籤"
+        aria-label={t('leave.tabsLabel')}
       >
         <button
           type="button"
@@ -79,7 +81,7 @@ export default function LeaveRequest() {
             activeTab === 'apply' ? 'bg-white text-sky-500 shadow-sm' : 'text-slate-500'
           }`}
         >
-          提交申請
+          {t('common.submit')}
         </button>
         <button
           type="button"
@@ -90,7 +92,7 @@ export default function LeaveRequest() {
             activeTab === 'list' ? 'bg-white text-sky-500 shadow-sm' : 'text-slate-500'
           }`}
         >
-          申請紀錄
+          {t('correction.tabRecords')}
         </button>
       </div>
 
@@ -102,6 +104,7 @@ export default function LeaveRequest() {
 // ------- 提交申請 -------
 
 function LeaveApplyForm() {
+  const { t } = useT()
   const [leaveType, setLeaveType] = useState('annual')
   const [startDate, setStartDate] = useState(todayLocalISO)
   const [startTime, setStartTime] = useState(DEFAULT_START_TIME)
@@ -119,14 +122,14 @@ function LeaveApplyForm() {
 
   async function handleSubmit() {
     if (!startDate || !startTime || !endDate || !endTime) {
-      setToast({ variant: 'error', message: '請填寫開始與結束的日期及時間' })
+      setToast({ variant: 'error', message: t('leave.needDates') })
       return
     }
     setIsSubmitting(true)
     setOverlapWarning(null)
     try {
       const result = await submitLeaveRequest({ leaveType, startDate, startTime, endDate, endTime, reason })
-      setToast({ variant: 'success', message: '請假申請已送出，等待主管審核' })
+      setToast({ variant: 'success', message: t('leave.sent') })
       // Feature 3: non-blocking overlap warning
       if (result?.overlaps?.length > 0) {
         setOverlapWarning(result.overlaps.length)
@@ -138,7 +141,7 @@ function LeaveApplyForm() {
       setReason('')
       refreshBalance()
     } catch (err) {
-      setToast({ variant: 'error', message: err?.message || '送出失敗，請稍後再試' })
+      setToast({ variant: 'error', message: err?.message || t('common.submitFailed') })
     } finally {
       setIsSubmitting(false)
     }
@@ -177,13 +180,13 @@ function LeaveApplyForm() {
           <AlertCircle size={16} className="text-sky-400 shrink-0 mt-0.5" aria-hidden="true" />
           <div className="flex-1 min-w-0">
             <p className="text-[11px] font-bold text-sky-600 leading-relaxed font-zh">
-              同期已有 {overlapWarning} 位同事請假，申請已送出不受影響。
+              {t('leave.overlapWarning', { n: overlapWarning })}
             </p>
           </div>
           <button
             type="button"
             onClick={() => setOverlapWarning(null)}
-            aria-label="關閉提示"
+            aria-label={t('leave.dismissHint')}
             className="shrink-0 text-sky-400 hover:text-sky-600 active:scale-95 transition-all"
           >
             <X size={14} aria-hidden="true" />
@@ -195,14 +198,14 @@ function LeaveApplyForm() {
         <div className="space-y-6">
           <div>
             <div className="flex items-baseline justify-between mb-1 ml-1">
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">假別選擇</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('leave.selectType')}</label>
               {currentBalance && (
                 <span className="text-[10px] font-black tabular-nums">
                   <span className="text-slate-400 uppercase tracking-widest mr-1">Remaining</span>
                   <span className={currentBalance.remainingMinutes > 0 ? 'text-emerald-600' : 'text-red-500'}>
                     {(currentBalance.remainingMinutes / 60 / 8).toFixed(1)}
                   </span>
-                  <span className="text-slate-400 ml-0.5">/ {(currentBalance.quotaMinutes / 60 / 8).toFixed(1)} 天</span>
+                  <span className="text-slate-400 ml-0.5">{t('leave.quotaDays', { n: (currentBalance.quotaMinutes / 60 / 8).toFixed(1) })}</span>
                 </span>
               )}
             </div>
@@ -211,14 +214,14 @@ function LeaveApplyForm() {
               onChange={(e) => setLeaveType(e.target.value)}
               className="w-full bg-slate-50 border-b-2 border-slate-200 p-2 font-zh text-slate-700 rounded-none focus:outline-none focus:border-sky-400 transition-colors appearance-none"
             >
-              {LEAVE_TYPES.map((t) => (
-                <option key={t.value} value={t.value}>{t.label} ({t.en})</option>
+              {LEAVE_TYPES.map((lt) => (
+                <option key={lt.value} value={lt.value}>{t(`leaveType.${lt.value}`)} ({lt.en})</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">開始時間</label>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">{t('leave.startTime')}</label>
             <div className="flex gap-2">
               <input
                 type="date"
@@ -235,7 +238,7 @@ function LeaveApplyForm() {
             </div>
           </div>
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">結束時間</label>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">{t('leave.endTime')}</label>
             <div className="flex gap-2">
               <input
                 type="date"
@@ -253,10 +256,10 @@ function LeaveApplyForm() {
           </div>
 
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">請假事由</label>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">{t('leave.reason')}</label>
             <textarea
               rows="3"
-              placeholder="請描述請假原因 (選填)..."
+              placeholder={t('leave.reasonPlaceholder')}
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               className="w-full bg-slate-50 border-b-2 border-slate-200 p-3 font-zh text-slate-600 rounded-none focus:outline-none focus:border-sky-400 transition-colors resize-none"
@@ -273,7 +276,7 @@ function LeaveApplyForm() {
             style={{ width: '100%' }}
           >
             <Send size={20} aria-hidden="true" />
-            <span>{isSubmitting ? '送出中...' : '提交申請'}</span>
+            <span>{isSubmitting ? t('common.submitting') : t('common.submit')}</span>
           </MarkerButton>
         </div>
       </PaperPiece>
@@ -291,6 +294,7 @@ function LeaveApplyForm() {
 // ------- 申請紀錄 -------
 
 function LeaveList() {
+  const { t } = useT()
   const monthOptions = useMemo(() => buildMonthOptions(), [])
   const [selectedMonth, setSelectedMonth] = useState(monthOptions[0].value)
   const [statusFilter, setStatusFilter] = useState('all')
@@ -319,9 +323,9 @@ function LeaveList() {
       await cancelLeaveRequest(id)
       // 樂觀更新：本地先移除，再 revalidate
       mutate((prev) => (prev ?? []).filter((r) => r.id !== id), { revalidate: true })
-      setToast({ variant: 'success', message: '申請已撤回' })
+      setToast({ variant: 'success', message: t('leave.withdrawn') })
     } catch (err) {
-      setToast({ variant: 'error', message: err?.message || '撤回失敗，請稍後再試' })
+      setToast({ variant: 'error', message: err?.message || t('leave.withdrawFailed') })
     } finally {
       setCancelingId(null)
     }
@@ -336,9 +340,9 @@ function LeaveList() {
       mutate()
       setCancelRequestingId(null)
       setCancelReasonMap((prev) => { const n = { ...prev }; delete n[id]; return n })
-      setToast({ variant: 'success', message: '取消申請已送出，等待主管審核' })
+      setToast({ variant: 'success', message: t('leave.cancelSent') })
     } catch (err) {
-      setToast({ variant: 'error', message: err?.message || '送出失敗，請稍後再試' })
+      setToast({ variant: 'error', message: err?.message || t('common.submitFailed') })
     } finally {
       setCancelSubmittingId(null)
     }
@@ -369,11 +373,11 @@ function LeaveList() {
       </div>
 
       {isLoading ? (
-        <p className="text-center text-slate-500 text-xs py-20 font-zh">載入中...</p>
+        <p className="text-center text-slate-500 text-xs py-20 font-zh">{t('common.loading')}</p>
       ) : filtered.length === 0 ? (
         <div className="text-center py-20 opacity-40 flex flex-col items-center gap-2">
           <Inbox size={40} className="text-slate-400" aria-hidden="true" />
-          <p className="font-zh text-xs text-slate-500">本月沒有符合條件的紀錄</p>
+          <p className="font-zh text-xs text-slate-500">{t('common.noRecordsThisMonth')}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -400,14 +404,15 @@ function LeaveList() {
 }
 
 function StatusFilter({ value, onChange }) {
+  const { t } = useT()
   const options = [
-    { key: 'all',      label: '全部' },
-    { key: 'pending',  label: '審核中' },
-    { key: 'approved', label: '已通過' },
-    { key: 'rejected', label: '已駁回' },
+    { key: 'all',      label: t('common.all') },
+    { key: 'pending',  label: t('common.pending') },
+    { key: 'approved', label: t('common.approved') },
+    { key: 'rejected', label: t('common.rejected') },
   ]
   return (
-    <div className="flex items-center gap-1" role="tablist" aria-label="狀態篩選">
+    <div className="flex items-center gap-1" role="tablist" aria-label={t('common.statusFilter')}>
       {options.map((opt) => {
         const active = value === opt.key
         return (
@@ -432,12 +437,13 @@ function StatusFilter({ value, onChange }) {
 }
 
 function MonthSelect({ value, options, onChange }) {
+  const { t } = useT()
   return (
     <div className="relative">
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        aria-label="選擇月份"
+        aria-label={t('common.selectMonth')}
         className="appearance-none bg-white px-3 py-1.5 pr-7 border border-slate-200 shadow-sm text-[11px] font-black text-slate-500 tracking-tight focus:outline-none rounded-full"
       >
         {options.map((opt) => (
@@ -455,7 +461,8 @@ function LeaveCard({
   cancelRequestOpen, cancelReason, onToggleCancelRequest,
   onCancelReasonChange, onSubmitCancelRequest, isCancelSubmitting,
 }) {
-  const typeInfo = LEAVE_TYPE_MAP[req.leaveType] || { label: req.leaveType, en: '—' }
+  const { t } = useT()
+  const typeInfo = LEAVE_TYPE_MAP[req.leaveType] || { en: '—' }
 
   const dateRange = req.startDate === req.endDate
     ? formatDateFull(req.startDate)
@@ -484,7 +491,7 @@ function LeaveCard({
           type="button"
           onClick={() => onCancel(req.id)}
           disabled={isCanceling}
-          aria-label="撤回此申請"
+          aria-label={t('leave.withdraw')}
           className="absolute -top-2 -right-2 z-10 group active:scale-90 transition-transform disabled:opacity-60 disabled:pointer-events-none"
           style={{ transform: 'rotate(12deg)' }}
         >
@@ -503,7 +510,7 @@ function LeaveCard({
           className="shrink-0 flex flex-col items-center justify-center w-14 py-2 bg-sky-50 border border-sky-100"
           style={{ borderRadius: '10px 3px 12px 4px/4px 12px 3px 10px' }}
         >
-          <span className="font-zh text-[13px] text-sky-600 leading-tight">{typeInfo.label}</span>
+          <span className="font-zh text-[13px] text-sky-600 leading-tight">{t(`leaveType.${req.leaveType}`)}</span>
           <span className="font-black text-[8px] text-sky-400 uppercase tracking-widest mt-0.5">
             {typeInfo.en}
           </span>
@@ -530,7 +537,7 @@ function LeaveCard({
                 {req.reason}
               </p>
             ) : (
-              <p className="font-zh text-[11px] text-slate-400 italic">未填寫事由</p>
+              <p className="font-zh text-[11px] text-slate-400 italic">{t('leave.noReason')}</p>
             )}
           </div>
 
@@ -552,10 +559,10 @@ function LeaveCard({
             <span
               className="inline-flex flex-col items-center justify-center rounded-full border-2 border-slate-300 outline outline-2 outline-slate-200 bg-slate-50/70 w-[70px] h-[70px] font-black select-none"
               style={{ transform: 'rotate(-4deg)', outlineOffset: '-5px' }}
-              aria-label="已取消"
+              aria-label={t('common.cancelled')}
             >
               <Ban size={11} strokeWidth={3} className="text-slate-400" aria-hidden="true" />
-              <span className="font-zh text-xs text-slate-400 leading-none mt-0.5">已取消</span>
+              <span className="font-zh text-xs text-slate-400 leading-none mt-0.5">{t('common.cancelled')}</span>
               <span className="uppercase tracking-[0.15em] leading-none mt-0.5 opacity-70 text-[7px] text-slate-400">
                 CANCELLED
               </span>
@@ -567,10 +574,10 @@ function LeaveCard({
             <span
               className="inline-flex flex-col items-center justify-center rounded-full border-2 border-amber-500 outline outline-2 outline-amber-500 bg-amber-50/70 w-[70px] h-[70px] font-black select-none"
               style={{ transform: 'rotate(-5deg)', outlineOffset: '-5px' }}
-              aria-label="取消審核中"
+              aria-label={t('leave.cancelPending')}
             >
               <Clock size={11} strokeWidth={3} className="text-amber-600" aria-hidden="true" />
-              <span className="font-zh text-[10px] text-amber-600 leading-tight mt-0.5 text-center px-1">取消審核中</span>
+              <span className="font-zh text-[10px] text-amber-600 leading-tight mt-0.5 text-center px-1">{t('leave.cancelPending')}</span>
               <span className="uppercase tracking-[0.12em] leading-none mt-0.5 opacity-70 text-[6px] text-amber-500">
                 CANCEL REQ
               </span>
@@ -594,14 +601,14 @@ function LeaveCard({
               className="flex items-center gap-1.5 text-[11px] font-black text-amber-600 uppercase tracking-widest active:scale-95 transition-transform hover:text-amber-700"
             >
               <Ban size={12} strokeWidth={3} aria-hidden="true" />
-              申請取消
+              {t('leave.requestCancel')}
             </button>
           ) : (
             <div className="space-y-2 animate-in fade-in duration-200">
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">取消原因</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('leave.cancelReason')}</label>
               <textarea
                 rows="2"
-                placeholder="請說明取消請假的原因..."
+                placeholder={t('leave.cancelPlaceholder')}
                 value={cancelReason}
                 onChange={(e) => onCancelReasonChange(e.target.value)}
                 className="w-full bg-slate-50 border-b-2 border-slate-200 p-2 font-zh text-sm text-slate-600 rounded-none focus:outline-none focus:border-amber-400 transition-colors resize-none"
@@ -612,7 +619,7 @@ function LeaveCard({
                   onClick={onToggleCancelRequest}
                   className="text-[11px] font-black text-slate-400 uppercase tracking-widest active:scale-95 transition-transform px-3 py-1.5"
                 >
-                  取消
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="button"
@@ -622,7 +629,7 @@ function LeaveCard({
                   style={{ borderRadius: '6px 2px 8px 2px/2px 8px 2px 6px' }}
                 >
                   <Send size={11} aria-hidden="true" />
-                  {isCancelSubmitting ? '送出中...' : '送出申請'}
+                  {isCancelSubmitting ? t('common.submitting') : t('common.send')}
                 </button>
               </div>
             </div>
@@ -636,10 +643,11 @@ function LeaveCard({
 // ------- Feature 4: Company Calendar -------
 
 function CompanyCalendar({ ym, onPrev, onNext }) {
+  const { t } = useT()
   const { first, last, daysInMonth, startDow } = monthBounds(ym)
   const [ymLabel] = useMemo(() => {
     const [y, m] = ym.split('-').map(Number)
-    return [`${y} 年 ${m} 月`]
+    return [tr('common.monthLabel', { y, m })]
   }, [ym])
 
   const { data: calendarData, isLoading } = useSWR(
@@ -674,7 +682,7 @@ function CompanyCalendar({ ym, onPrev, onNext }) {
     return m
   }, [calendarData])
 
-  const DOW = ['日', '一', '二', '三', '四', '五', '六']
+  const DOW = [t('weekdays.short.0'), t('weekdays.short.1'), t('weekdays.short.2'), t('weekdays.short.3'), t('weekdays.short.4'), t('weekdays.short.5'), t('weekdays.short.6')]
 
   return (
     <div className="relative mb-4 mt-6">
@@ -684,7 +692,7 @@ function CompanyCalendar({ ym, onPrev, onNext }) {
         style={{ transform: 'translateX(-50%) rotate(-2deg)', boxShadow: '1px 1px 2px rgba(0,0,0,0.04)' }}
       >
         <Users size={15} className="text-slate-400" aria-hidden="true" />
-        <span className="font-zh text-[17px] font-bold text-slate-600">公司行事曆</span>
+        <span className="font-zh text-[17px] font-bold text-slate-600">{t('leave.calendar')}</span>
       </div>
 
       <PaperPiece color="white" rotate="-0.8deg" className="p-4 pt-8">
@@ -693,7 +701,7 @@ function CompanyCalendar({ ym, onPrev, onNext }) {
             <button
               type="button"
               onClick={onPrev}
-              aria-label="上個月"
+              aria-label={t('common.prevMonth')}
               className="p-1 text-slate-400 hover:text-slate-600 active:scale-95 transition-all"
             >
               <ChevronLeft size={16} aria-hidden="true" />
@@ -702,7 +710,7 @@ function CompanyCalendar({ ym, onPrev, onNext }) {
             <button
               type="button"
               onClick={onNext}
-              aria-label="下個月"
+              aria-label={t('common.nextMonth')}
               className="p-1 text-slate-400 hover:text-slate-600 active:scale-95 transition-all"
             >
               <ChevronRight size={16} aria-hidden="true" />
@@ -720,7 +728,7 @@ function CompanyCalendar({ ym, onPrev, onNext }) {
 
           {/* Day cells */}
           {isLoading ? (
-            <p className="text-center font-zh text-xs text-slate-400 py-4">載入中...</p>
+            <p className="text-center font-zh text-xs text-slate-400 py-4">{t('common.loading')}</p>
           ) : (
             <div className="grid grid-cols-7 gap-y-0.5">
               {/* Empty cells before first day */}
@@ -773,7 +781,7 @@ function CompanyCalendar({ ym, onPrev, onNext }) {
           )}
 
           <p className="mt-3 font-zh text-[10px] text-slate-400 text-center">
-            僅顯示同事姓名，不含假別 · 紅字為國定假日
+            {t('leave.calendarNote')}
           </p>
       </PaperPiece>
     </div>

@@ -1,3 +1,4 @@
+import { tr } from '../i18n/index.jsx'
 // DEMO 版 api.js（管理後台）— 無後端；request() 路由到 localStorage 假資料庫（見 mock/db.js）。
 // 對外 named export 與正式版一致，頁面/元件無需改動。CSV 匯出改為在瀏覽器端就地產生 blob。
 
@@ -9,8 +10,8 @@ const httpError = (status, error) => Object.assign(new Error(error || 'error'), 
 const uid = (p) => `${p}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
 
 const HOLIDAYS = [
-  ['01-01', '元旦'], ['02-28', '和平紀念日'], ['04-04', '兒童節'], ['04-05', '清明節'],
-  ['05-01', '勞動節'], ['09-29', '中秋節'], ['10-10', '國慶日'], ['10-25', '光復節'],
+  ['01-01', tr('seed.holidays.newYear')], ['02-28', tr('seed.holidays.peace')], ['04-04', tr('seed.holidays.children')], ['04-05', tr('seed.holidays.tomb')],
+  ['05-01', tr('seed.holidays.labor')], ['09-29', tr('seed.holidays.midAutumn')], ['10-10', tr('seed.holidays.national')], ['10-25', tr('seed.holidays.retrocession')],
 ]
 function holidaysInRange(from, to) {
   const year = Number(from.slice(0, 4))
@@ -109,7 +110,7 @@ async function route(method, path, query, body) {
     if (path.startsWith('/admin/payroll-runs/')) {
       const month = seg[3]
       const run = db.payrollRuns[month]
-      if (!run) throw httpError(404, '尚未結算')
+      if (!run) throw httpError(404, tr('status.notSettled'))
       return run
     }
     if (path.startsWith('/admin/departments/') && path.endsWith('/roles')) {
@@ -141,7 +142,7 @@ async function route(method, path, query, body) {
         hasPassword: true, departmentId: body.departmentId ?? null,
         departmentName: db.departments.find((d) => d.id === body.departmentId)?.name ?? null,
         roleId: body.roleId ?? null, roleName: null, isAdmin: false,
-        defaultShiftId: 's1', defaultShiftName: '日班', employmentType: body.employmentType || 'regular',
+        defaultShiftId: 's1', defaultShiftName: tr('seed.shiftDay'), employmentType: body.employmentType || 'regular',
       }
       db.users.push(u); saveDb(); return u
     }
@@ -151,7 +152,7 @@ async function route(method, path, query, body) {
     }
     if (path === '/admin/users/import') {
       const rows = body.rows ?? []
-      const created = rows.map((r, i) => ({ email: r.email ?? `import${i}@demo.app`, name: r.name ?? '匯入員工', password: 'Demo1234' }))
+      const created = rows.map((r, i) => ({ email: r.email ?? `import${i}@demo.app`, name: r.name ?? tr('employees.importEmployees'), password: 'Demo1234' }))
       return created
     }
     if (path.endsWith('/unlock') && path.startsWith('/admin/users/')) {
@@ -188,39 +189,39 @@ async function route(method, path, query, body) {
 
   if (method === 'PATCH') {
     if (path.startsWith('/admin/shifts/')) {
-      const s = db.shifts.find((x) => x.id === seg[3]); if (!s) throw httpError(404, '找不到班別')
+      const s = db.shifts.find((x) => x.id === seg[3]); if (!s) throw httpError(404, tr('shifts.notFound'))
       if (body.isDefault && !s.isDefault) db.shifts.forEach((x) => { x.isDefault = false })
       Object.assign(s, body); saveDb(); return s
     }
     if (path.startsWith('/admin/correction-requests/')) {
-      const r = db.correctionRequests.find((x) => x.id === seg[3]); if (!r) throw httpError(404, '找不到')
+      const r = db.correctionRequests.find((x) => x.id === seg[3]); if (!r) throw httpError(404, tr('common.notFound'))
       r.status = body.status; saveDb(); return r
     }
     if (path.startsWith('/admin/leave-requests/')) {
-      const r = db.leaveRequests.find((x) => x.id === seg[3]); if (!r) throw httpError(404, '找不到')
+      const r = db.leaveRequests.find((x) => x.id === seg[3]); if (!r) throw httpError(404, tr('common.notFound'))
       if (body.action === 'confirm-cancel') { r.status = 'cancelled'; r.cancelRequested = false }
       else if (body.action === 'reject-cancel') { r.cancelRequested = false }
       else { r.status = body.status; r.reviewNote = body.reviewNote ?? null }
       saveDb(); return r
     }
     if (path.startsWith('/admin/overtime-requests/')) {
-      const r = db.overtimeRequests.find((x) => x.id === seg[3]); if (!r) throw httpError(404, '找不到')
+      const r = db.overtimeRequests.find((x) => x.id === seg[3]); if (!r) throw httpError(404, tr('common.notFound'))
       r.status = body.status; saveDb(); return r
     }
     if (path === '/admin/company') { Object.assign(db.company, body); saveDb(); return db.company }
     if (path.startsWith('/admin/company-locations/')) {
-      const loc = db.companyLocations.find((x) => x.id === seg[3]); if (!loc) throw httpError(404, '找不到')
+      const loc = db.companyLocations.find((x) => x.id === seg[3]); if (!loc) throw httpError(404, tr('common.notFound'))
       Object.assign(loc, body); saveDb(); return loc
     }
     if (path.startsWith('/admin/users/')) {
-      const u = db.users.find((x) => x.id === seg[3]); if (!u) throw httpError(404, '找不到')
+      const u = db.users.find((x) => x.id === seg[3]); if (!u) throw httpError(404, tr('common.notFound'))
       Object.assign(u, body)
       if (body.departmentId !== undefined) u.departmentName = db.departments.find((d) => d.id === body.departmentId)?.name ?? null
       if (body.hireDate) u.hireDate = naive(body.hireDate, 0, 0)
       saveDb(); return u
     }
     if (path.startsWith('/admin/departments/')) {
-      const d = db.departments.find((x) => x.id === seg[3]); if (!d) throw httpError(404, '找不到')
+      const d = db.departments.find((x) => x.id === seg[3]); if (!d) throw httpError(404, tr('common.notFound'))
       Object.assign(d, body)
       if (body.managerId !== undefined) d.managerName = db.users.find((u) => u.id === body.managerId)?.name ?? null
       saveDb(); return d
@@ -233,7 +234,7 @@ async function route(method, path, query, body) {
     if (path.startsWith('/admin/payroll-runs/') && seg.includes('items')) {
       const month = seg[3]; const userId = seg[5]
       const run = db.payrollRuns[month]; const item = run?.items.find((i) => i.userId === userId)
-      if (!item) throw httpError(404, '找不到')
+      if (!item) throw httpError(404, tr('common.notFound'))
       item.adjustments = body.adjustments ?? []
       item.adjustmentsTotal = item.adjustments.reduce((s, a) => s + (a.amount ?? 0), 0)
       item.netPay = item.grossPay - item.totalDeductions + item.adjustmentsTotal
@@ -267,7 +268,7 @@ async function route(method, path, query, body) {
   if (method === 'DELETE') {
     if (path.startsWith('/admin/shifts/')) {
       const s = db.shifts.find((x) => x.id === seg[3])
-      if (s?.isDefault) throw httpError(400, '預設班別不可刪除，請先將其他班別設為預設')
+      if (s?.isDefault) throw httpError(400, tr('shifts.cannotDeleteDefault'))
       db.shifts = db.shifts.filter((x) => x.id !== seg[3]); saveDb(); return { ok: true }
     }
     if (path.startsWith('/admin/company-locations/')) { db.companyLocations = db.companyLocations.filter((x) => x.id !== seg[3]); saveDb(); return { ok: true } }
@@ -346,18 +347,18 @@ export const getSchedule = (month, departmentId) => request(`/admin/schedule?mon
 export const saveScheduleAssignments = (changes, { confirm = false } = {}) => request('/admin/schedule/assignments', { method: 'PUT', body: JSON.stringify({ changes, ...(confirm ? { confirm: true } : {}) }) })
 
 export async function downloadAttendanceCSV(month) {
-  const rows = [['員工', '出勤天', '總工時(分)', '遲到', '早退']]
+  const rows = [[tr('employees.label'), tr('fmt.attendDays'), tr('metrics.totalMinutes'), tr('metrics.late'), tr('metrics.earlyLeave')]]
   for (const r of loadDb().attendanceMonthly) rows.push([r.user.name, r.attendanceDays, r.totalWorkDuration, r.lateDays, r.earlyLeaveDays])
   csvDownload(`attendance-${month}.csv`, rows)
 }
 export async function downloadSettlementCSV(month) {
-  const rows = [['員工', '應出勤日', '實出勤日', '遲到', '早退', '請假(分)']]
+  const rows = [[tr('employees.label'), tr('metrics.expectedDayShort'), tr('metrics.actualDayShort'), tr('metrics.late'), tr('metrics.earlyLeave'), tr('metrics.leaveMinutes')]]
   for (const r of loadDb().settlement) rows.push([r.name, r.expectedWorkdays, r.actualWorkdays, r.lateCount, r.earlyLeaveCount, r.leaveMinutes])
   csvDownload(`settlement-${month}.csv`, rows)
 }
 export async function downloadPayrollCSV(month) {
   const run = loadDb().payrollRuns[month]
-  const rows = [['員工', '應發', '應扣', '實發']]
+  const rows = [[tr('employees.label'), tr('payroll.earnings'), tr('payroll.deductions'), tr('payroll.netPay')]]
   for (const i of run?.items ?? []) rows.push([i.name, i.grossPay, i.totalDeductions, i.netPay])
   csvDownload(`payroll-${month}.csv`, rows)
 }

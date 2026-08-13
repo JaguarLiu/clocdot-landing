@@ -14,13 +14,14 @@ import PaperToast from '../components/PaperToast.jsx'
 import StatusStamp from '../components/StatusStamp.jsx'
 import MarkerButton from '../components/MarkerButton.jsx'
 import { LEAVE_TYPE_MAP } from '../utils/leaveTypes.js'
+import { tr, useT } from '../i18n/index.jsx'
 
 // ─── constants ────────────────────────────────────────────────────────────────
 
 const TABS = [
-  { key: 'pending',  label: '待審核', accent: 'orange' },
-  { key: 'approved', label: '已通過', accent: 'emerald' },
-  { key: 'rejected', label: '已駁回', accent: 'red' },
+  { key: 'pending',  label: tr('dashboard.pendingReview'), accent: 'orange' },
+  { key: 'approved', label: tr('status.approved'), accent: 'emerald' },
+  { key: 'rejected', label: tr('status.rejected'), accent: 'red' },
 ]
 
 const TAB_ACCENT = {
@@ -58,11 +59,11 @@ function formatDuration(startDate, startTime, endDate, endTime) {
     const minutes = (eh * 60 + em) - (sh * 60 + sm)
     if (minutes <= 0) return '—'
     const hours = minutes / 60
-    if (hours >= 8) return '1 天'
-    return `${hours % 1 === 0 ? hours : hours.toFixed(1)} 小時`
+    if (hours >= 8) return tr('fmt.oneDay')
+    return tr('fmt.hours', { n: hours % 1 === 0 ? hours : hours.toFixed(1) })
   }
   const days = Math.round((new Date(endKey) - new Date(startKey)) / 86400000) + 1
-  return `${days} 天`
+  return tr('fmt.daysN', { n: days })
 }
 
 // Does [aStart,aEnd] intersect [bStart,bEnd]? (string YYYY-MM-DD comparison is fine)
@@ -73,7 +74,7 @@ function rangesOverlap(aStart, aEnd, bStart, bEnd) {
 // ─── sub-components ────────────────────────────────────────────────────────────
 
 // Review-note textarea — index-card style, matches §3.1 card variant
-function NoteTextarea({ value, onChange, placeholder = '審核備註（選填）' }) {
+function NoteTextarea({ value, onChange, placeholder = tr('reviews.noteOptional') }) {
   return (
     <textarea
       rows={2}
@@ -90,6 +91,7 @@ function NoteTextarea({ value, onChange, placeholder = '審核備註（選填）
 
 // Overlap count badge fetched lazily for a single pending request
 function OverlapCount({ req }) {
+  const { t } = useT()
   const start = toYMD(req.startDate)
   const end   = toYMD(req.endDate)
   const { data: events } = useSWR(
@@ -115,13 +117,14 @@ function OverlapCount({ req }) {
       style={{ borderRadius: '4px 1px 4px 1px' }}
     >
       <AlertTriangle size={9} strokeWidth={3} className="text-amber-500" />
-      同期 {count} 人請假
+      {t('fmt.sameDayLeave', { n: count })}
     </span>
   )
 }
 
 // Single review row card (pending)
 function PendingRow({ req, index, onDone }) {
+  const { t } = useT()
   const [processing, setProcessing]   = useState(false)
   const [note, setNote]               = useState('')
   const [noteOpen, setNoteOpen]       = useState(false)
@@ -140,9 +143,9 @@ function PendingRow({ req, index, onDone }) {
     setProcessing(true)
     try {
       await reviewLeaveRequest(req.id, status, note.trim() || undefined)
-      onDone(status === 'approved' ? '已通過申請' : '已駁回申請')
+      onDone(status === 'approved' ? t('reviews.approvedRequest') : t('reviews.rejectedRequest'))
     } catch (err) {
-      setToast({ variant: 'error', message: err?.message || '操作失敗' })
+      setToast({ variant: 'error', message: err?.message || t('common.actionFailed') })
       setProcessing(false)
     }
   }
@@ -215,9 +218,7 @@ function PendingRow({ req, index, onDone }) {
               onClick={() => initAction('approved')}
               disabled={processing}
             >
-              <Check size={13} strokeWidth={3} />
-              通過
-            </MarkerButton>
+              <Check size={13} strokeWidth={3} />{t('ui.approve')}</MarkerButton>
             <MarkerButton
               color="#ef4444"
               rotate="0.5deg"
@@ -225,9 +226,7 @@ function PendingRow({ req, index, onDone }) {
               onClick={() => initAction('rejected')}
               disabled={processing}
             >
-              <X size={13} strokeWidth={3} />
-              駁回
-            </MarkerButton>
+              <X size={13} strokeWidth={3} />{t('ui.reject')}</MarkerButton>
           </div>
         </div>
 
@@ -249,8 +248,8 @@ function PendingRow({ req, index, onDone }) {
                                 flex items-center gap-2 font-zh text-sm
                                 group-hover:-translate-y-[1px] transition-transform`}>
                   {pendingAction === 'approved'
-                    ? <><Check size={13} strokeWidth={3} />確認通過</>
-                    : <><X size={13} strokeWidth={3} />確認駁回</>}
+                    ? <><Check size={13} strokeWidth={3} />{t('ui.confirmApprove')}</>
+                    : <><X size={13} strokeWidth={3} />{t('ui.confirmReject')}</>}
                 </div>
               </button>
               <button
@@ -258,7 +257,7 @@ function PendingRow({ req, index, onDone }) {
                 onClick={() => { setNoteOpen(false); setPendingAction(null); setNote('') }}
                 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.15em] hover:text-slate-600 transition-colors px-2"
               >
-                取消
+                {t('common.cancel')}
               </button>
             </div>
           </div>
@@ -349,6 +348,7 @@ function ReviewedRow({ req, index }) {
 // ─── Cancellation section ──────────────────────────────────────────────────────
 
 function CancellationRow({ req, index, onDone }) {
+  const { t } = useT()
   const [processing, setProcessing] = useState(false)
   const [note, setNote]             = useState('')
   const [actionOpen, setActionOpen] = useState(false)
@@ -366,9 +366,9 @@ function CancellationRow({ req, index, onDone }) {
     setProcessing(true)
     try {
       await decideLeaveCancellation(req.id, action, note.trim() || undefined)
-      onDone(action === 'confirm-cancel' ? '已同意取消假單' : '已駁回取消申請')
+      onDone(action === 'confirm-cancel' ? t('reviews.approvedCancel') : t('reviews.rejectedCancel'))
     } catch (err) {
-      setToast({ variant: 'error', message: err?.message || '操作失敗' })
+      setToast({ variant: 'error', message: err?.message || t('common.actionFailed') })
       setProcessing(false)
     }
   }
@@ -419,7 +419,7 @@ function CancellationRow({ req, index, onDone }) {
 
           {/* 取消原因 */}
           <div className="flex-1 min-w-[160px] pl-5 border-l border-dashed border-amber-200">
-            <p className="text-[9px] font-black text-amber-400 uppercase tracking-widest mb-1">取消原因 Cancel Reason</p>
+            <p className="text-[9px] font-black text-amber-400 uppercase tracking-widest mb-1">{t('ui.cancelReason')}</p>
             <p className="font-zh text-sm text-slate-600 line-clamp-2">{req.cancelReason || '—'}</p>
           </div>
 
@@ -432,9 +432,7 @@ function CancellationRow({ req, index, onDone }) {
               onClick={() => initAction('confirm-cancel')}
               disabled={processing}
             >
-              <Check size={12} strokeWidth={3} />
-              同意取消
-            </MarkerButton>
+              <Check size={12} strokeWidth={3} />{t('ui.approveCancel')}</MarkerButton>
             <MarkerButton
               color="#64748b"
               rotate="0.5deg"
@@ -442,9 +440,7 @@ function CancellationRow({ req, index, onDone }) {
               onClick={() => initAction('reject-cancel')}
               disabled={processing}
             >
-              <X size={12} strokeWidth={3} />
-              駁回取消
-            </MarkerButton>
+              <X size={12} strokeWidth={3} />{t('ui.rejectCancel')}</MarkerButton>
           </div>
         </div>
 
@@ -455,7 +451,7 @@ function CancellationRow({ req, index, onDone }) {
             <NoteTextarea
               value={note}
               onChange={setNote}
-              placeholder="審核備註（選填）"
+              placeholder={t('reviews.noteOptional')}
             />
             <div className="flex items-center gap-3 mt-3">
               <button
@@ -469,8 +465,8 @@ function CancellationRow({ req, index, onDone }) {
                                 flex items-center gap-2 font-zh text-sm
                                 group-hover:-translate-y-[1px] transition-transform`}>
                   {pendingAction === 'confirm-cancel'
-                    ? <><Check size={13} strokeWidth={3} />確認同意取消</>
-                    : <><X size={13} strokeWidth={3} />確認駁回取消</>}
+                    ? <><Check size={13} strokeWidth={3} />{t('ui.confirmApproveCancel')}</>
+                    : <><X size={13} strokeWidth={3} />{t('ui.confirmRejectCancel')}</>}
                 </div>
               </button>
               <button
@@ -478,7 +474,7 @@ function CancellationRow({ req, index, onDone }) {
                 onClick={() => { setActionOpen(false); setPendingAction(null); setNote('') }}
                 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.15em] hover:text-slate-600 transition-colors px-2"
               >
-                取消
+                {t('common.cancel')}
               </button>
             </div>
           </div>
@@ -491,6 +487,7 @@ function CancellationRow({ req, index, onDone }) {
 // ─── Main page ─────────────────────────────────────────────────────────────────
 
 export default function LeaveReviews() {
+  const { t } = useT()
   const [tab, setTab] = useState('pending')
   const { data: requests, mutate } = useSWR(`/admin/leave-requests?status=${tab}`, fetcher)
   // For cancellation section: fetch approved list separately (always needed when tab=approved)
@@ -524,7 +521,7 @@ export default function LeaveReviews() {
           <CalendarCheck size={22} className="text-white" strokeWidth={2.5} />
         </div>
         <div>
-          <h2 className="text-3xl font-zh text-slate-800">請假審核</h2>
+          <h2 className="text-3xl font-zh text-slate-800">{t('nav.leaveReviews')}</h2>
           <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mt-1">
             Leave Requests Review
           </p>
@@ -539,9 +536,7 @@ export default function LeaveReviews() {
             <div className="p-1.5 rounded bg-amber-500 shadow-sm" style={{ transform: 'rotate(1deg)' }}>
               <FileX size={14} className="text-white" strokeWidth={2.5} />
             </div>
-            <h3 className="font-zh text-sm text-amber-700">
-              待處理取消申請
-            </h3>
+            <h3 className="font-zh text-sm text-amber-700">{t('ui.pendingCancels')}</h3>
             <span className="font-mono font-black text-[10px] tabular-nums text-amber-700 bg-amber-50 border border-dashed border-amber-300 px-2 py-0.5"
                   style={{ borderRadius: '3px 1px 3px 1px' }}>
               {cancellationList.length}
@@ -594,7 +589,7 @@ export default function LeaveReviews() {
         <div className="text-center py-24 opacity-40 flex flex-col items-center gap-3">
           <Inbox size={48} className="text-slate-300" />
           <p className="font-zh text-sm text-slate-400">
-            {tab === 'pending' ? '目前沒有待審核的請假' : '沒有相關紀錄'}
+            {tab === 'pending' ? t('reviews.noPendingLeave') : t('common.noRecords')}
           </p>
         </div>
       ) : (

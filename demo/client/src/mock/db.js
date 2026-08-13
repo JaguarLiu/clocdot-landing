@@ -1,3 +1,4 @@
+import { tr } from '../i18n/index.jsx'
 // Demo 假資料庫 — 全部存 localStorage，無任何後端。
 // 種子資料以「今天」為基準動態生成，讓 demo 永遠看起來是當期的。
 // 清除方式：主控台執行 window.__resetDemo() 或清掉此 key 後重整。
@@ -18,7 +19,7 @@ const addDays = (dateStr, n) => {
 }
 const minutesBetween = (aIso, bIso) => Math.round((new Date(aIso) - new Date(bIso)) / 60000)
 
-const DEFAULT_SHIFT = { name: '日班', startTime: '09:00', endTime: '18:00' }
+const DEFAULT_SHIFT = { name: tr('seed.shiftName'), startTime: '09:00', endTime: '18:00' }
 const DAYS = 8 * 60 // 一天工時分鐘（8h）
 const days = (n) => n * DAYS
 
@@ -73,7 +74,7 @@ function buildSeed() {
     meta: { payType: 'monthly' },
     earnings: {
       baseSalary: base,
-      allowances: [{ name: '伙食津貼', amount: 2400 }],
+      allowances: [{ name: tr('seed.allowanceMeal'), amount: 2400 }],
       overtime: { tiers: otAmount ? [{ rate: '1.34', minutes: 120, amount: otAmount }] : [] },
       grossPay: base + 2400 + otAmount,
     },
@@ -95,7 +96,7 @@ function buildSeed() {
 
   return {
     user: {
-      id: 'demo-user', email: 'demo@clocdot.app', name: '王小明', empNo: 1001,
+      id: 'demo-user', email: 'demo@clocdot.app', name: tr('seed.userName'), empNo: 1001,
       avatar: null, employmentType: 'operation', timezone: 'Asia/Taipei', companyId: 'demo-co',
     },
     company: { id: 'demo-co', timezone: 'Asia/Taipei', wifiCheckinEnabled: false },
@@ -104,20 +105,20 @@ function buildSeed() {
       {
         id: 'lv-1', leaveType: 'annual',
         startDate: recentWorkday(3), endDate: recentWorkday(2),
-        startTime: '09:00', endTime: '18:00', reason: '家庭旅遊',
+        startTime: '09:00', endTime: '18:00', reason: tr('seed.reasonTrip'),
         status: 'approved', cancelRequested: false, reviewNote: null,
       },
       {
         id: 'lv-2', leaveType: 'personal',
         startDate: addDays(todayStr, 4), endDate: addDays(todayStr, 4),
-        startTime: '14:00', endTime: '18:00', reason: '辦理證件',
+        startTime: '14:00', endTime: '18:00', reason: tr('seed.reasonDocs'),
         status: 'pending', cancelRequested: false, reviewNote: null,
       },
       {
         id: 'lv-3', leaveType: 'sick',
         startDate: recentWorkday(8), endDate: recentWorkday(8),
-        startTime: '09:00', endTime: '18:00', reason: '感冒就醫',
-        status: 'rejected', cancelRequested: false, reviewNote: '請補上診斷證明',
+        startTime: '09:00', endTime: '18:00', reason: tr('seed.reasonSick'),
+        status: 'rejected', cancelRequested: false, reviewNote: tr('seed.reviewNoteSick'),
       },
     ],
     leaveBalances: [
@@ -132,22 +133,22 @@ function buildSeed() {
     overtimeRequests: [
       {
         id: 'ot-1', workDate: recentWorkday(6), requestedMinutes: 120, derivedMinutes: 120,
-        dayType: 'workday', reason: '專案趕工', status: 'approved', tiers: [{ rate: '1.34', minutes: 120 }],
+        dayType: 'workday', reason: tr('seed.reasonCrunch'), status: 'approved', tiers: [{ rate: '1.34', minutes: 120 }],
       },
     ],
     corrections: [
-      { id: 'cr-1', reason: '[上班] 09:00 - 忘記打卡', status: 'pending', attendance: { workDate: naive(recentWorkday(1), 0, 0) } },
-      { id: 'cr-2', reason: '[下班] 18:00 - 系統當機沒打到', status: 'approved', attendance: { workDate: naive(recentWorkday(5), 0, 0) } },
+      { id: 'cr-1', reason: `[${tr('common.clockIn')}] 09:00 - ${tr('seed.reasonForgot')}`, status: 'pending', attendance: { workDate: naive(recentWorkday(1), 0, 0) } },
+      { id: 'cr-2', reason: `[${tr('common.clockOut')}] 18:00 - ${tr('seed.reasonCrash')}`, status: 'approved', attendance: { workDate: naive(recentWorkday(5), 0, 0) } },
     ],
     approvals: [
       {
-        stepId: 'ap-1', level: 1, requestType: 'leave', applicant: '李美華',
+        stepId: 'ap-1', level: 1, requestType: 'leave', applicant: tr('seed.coworkerA'),
         leaveType: 'annual', startDate: addDays(todayStr, 2), endDate: addDays(todayStr, 3),
-        startTime: '09:00', endTime: '18:00', reason: '返鄉',
+        startTime: '09:00', endTime: '18:00', reason: tr('seed.reasonHome'),
       },
       {
-        stepId: 'ap-2', level: 1, requestType: 'overtime', applicant: '陳大文',
-        workDate: recentWorkday(1), requestedMinutes: 120, reason: '趕出貨',
+        stepId: 'ap-2', level: 1, requestType: 'overtime', applicant: tr('seed.coworkerB'),
+        workDate: recentWorkday(1), requestedMinutes: 120, reason: tr('seed.reasonShipping'),
       },
     ],
     payrollMonths: [

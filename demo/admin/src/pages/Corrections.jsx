@@ -6,6 +6,7 @@ import PaperPiece from '../components/PaperPiece.jsx'
 import PaperToast from '../components/PaperToast.jsx'
 import StatusStamp from '../components/StatusStamp.jsx'
 import MarkerButton from '../components/MarkerButton.jsx'
+import { useT, tr } from '../i18n/index.jsx'
 
 function parseReason(reason) {
   const match = reason.match(/^\[(.+?)\]\s*(\d{1,2}:\d{2})\s*-\s*(.*)$/)
@@ -19,9 +20,9 @@ function formatDate(dateStr) {
 }
 
 const tabs = [
-  { key: 'pending',  label: '待審核', accent: 'orange' },
-  { key: 'approved', label: '已通過', accent: 'emerald' },
-  { key: 'rejected', label: '已駁回', accent: 'red' },
+  { key: 'pending',  label: tr('dashboard.pendingReview'), accent: 'orange' },
+  { key: 'approved', label: tr('status.approved'), accent: 'emerald' },
+  { key: 'rejected', label: tr('status.rejected'), accent: 'red' },
 ]
 
 const tabAccent = {
@@ -31,6 +32,7 @@ const tabAccent = {
 }
 
 export default function Corrections() {
+  const { t } = useT()
   const [tab, setTab] = useState('pending')
   const { data: requests, mutate } = useSWR(`/admin/correction-requests?status=${tab}`, fetcher)
   const [processing, setProcessing] = useState(null)
@@ -41,9 +43,9 @@ export default function Corrections() {
     try {
       await reviewCorrectionRequest(id, status)
       mutate()
-      setToast({ variant: 'success', message: status === 'approved' ? '已通過申請' : '已駁回申請' })
+      setToast({ variant: 'success', message: status === 'approved' ? t('reviews.approvedRequest') : t('reviews.rejectedRequest') })
     } catch (err) {
-      setToast({ variant: 'error', message: err?.message || '操作失敗' })
+      setToast({ variant: 'error', message: err?.message || t('common.actionFailed') })
     } finally {
       setProcessing(null)
     }
@@ -61,7 +63,7 @@ export default function Corrections() {
           <CheckCircle2 size={22} className="text-white" strokeWidth={2.5} />
         </div>
         <div>
-          <h2 className="text-3xl font-zh text-slate-800">補打卡審核</h2>
+          <h2 className="text-3xl font-zh text-slate-800">{t('nav.corrections')}</h2>
           <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mt-1">
             Correction Requests Review
           </p>
@@ -99,7 +101,7 @@ export default function Corrections() {
         <div className="text-center py-24 opacity-40 flex flex-col items-center gap-3">
           <Inbox size={48} className="text-slate-300" />
           <p className="font-zh text-sm text-slate-400">
-            {tab === 'pending' ? '目前沒有待審核的申請' : '沒有相關紀錄'}
+            {tab === 'pending' ? t('reviews.noPending') : t('common.noRecords')}
           </p>
         </div>
       ) : (
@@ -163,9 +165,7 @@ export default function Corrections() {
                         onClick={() => handleReview(req.id, 'approved')}
                         disabled={isProcessing}
                       >
-                        <Check size={13} strokeWidth={3} />
-                        通過
-                      </MarkerButton>
+                        <Check size={13} strokeWidth={3} />{t('ui.approve')}</MarkerButton>
                       <MarkerButton
                         color="#ef4444"
                         rotate="0.5deg"
@@ -173,9 +173,7 @@ export default function Corrections() {
                         onClick={() => handleReview(req.id, 'rejected')}
                         disabled={isProcessing}
                       >
-                        <X size={13} strokeWidth={3} />
-                        駁回
-                      </MarkerButton>
+                        <X size={13} strokeWidth={3} />{t('ui.reject')}</MarkerButton>
                     </div>
                   ) : (
                     <div className="shrink-0 pl-2">

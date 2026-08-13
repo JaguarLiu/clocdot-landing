@@ -6,6 +6,7 @@ import PaperPiece from '../components/PaperPiece.jsx'
 import MarkerButton from '../components/MarkerButton.jsx'
 import CompanyLeaveCalendar from '../components/CompanyLeaveCalendar.jsx'
 import ComplianceBadge from '../components/ComplianceBadge.jsx'
+import { useT } from '../i18n/index.jsx'
 
 const accentMap = {
   emerald: { icon: 'bg-emerald-500', text: 'text-emerald-700', soft: 'bg-emerald-50' },
@@ -44,6 +45,7 @@ function StatCard({ icon:Icon, label, value, accent, rotate, onClick }) {
 }
 
 export default function Dashboard() {
+  const { t } = useT()
   const navigate = useNavigate()
   const { data: pendingCorrections } = useSWR('/admin/correction-requests?status=pending', fetcher)
   const { data: pendingLeaves } = useSWR('/admin/leave-requests?status=pending', fetcher)
@@ -70,7 +72,7 @@ export default function Dashboard() {
     pendingCorrectionsCount > 0 && {
       key: 'corrections',
       count: pendingCorrectionsCount,
-      label: '筆補打卡申請等你審核',
+      label: t('dashboard.correctionCountSuffix'),
       en: 'Pending correction requests',
       path: '/corrections',
       accent: 'orange',
@@ -78,7 +80,7 @@ export default function Dashboard() {
     pendingLeavesCount > 0 && {
       key: 'leaves',
       count: pendingLeavesCount,
-      label: '筆請假申請等你審核',
+      label: t('dashboard.leaveCountSuffix'),
       en: 'Pending leave requests',
       path: '/leaves',
       accent: 'amber',
@@ -90,7 +92,7 @@ export default function Dashboard() {
       {/* 頁面標題 */}
       <div className="flex items-start justify-between mb-10">
         <div>
-          <h2 className="text-3xl font-zh text-slate-800">管理總覽</h2>
+          <h2 className="text-3xl font-zh text-slate-800">{t('ui.adminOverview')}</h2>
           <div className="flex items-center gap-2 mt-2">
             <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
             <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em]">
@@ -112,11 +114,11 @@ export default function Dashboard() {
 
       {/* 統計卡片 — 每張不同旋轉角度 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
-        <StatCard icon={Users}          label="出勤員工"    value={totalEmployees}        accent="emerald" rotate="-0.8deg" onClick={() => navigate('/attendance')} />
-        <StatCard icon={Clock}          label="總工時 (hr)" value={totalWorkHours}        accent="sky"     rotate="0.6deg"  onClick={() => navigate('/attendance')} />
-        <StatCard icon={CalendarSearch} label="遲到天數"    value={totalLateDays}         accent="orange"  rotate="-0.5deg" onClick={() => navigate('/attendance')} />
-        <StatCard icon={CheckCircle2}   label="待審核補卡"  value={pendingCorrectionsCount} accent="red"     rotate="0.9deg"  onClick={() => navigate('/corrections')} />
-        <StatCard icon={CalendarCheck}  label="待審核請假"  value={pendingLeavesCount}    accent="amber"   rotate="-0.6deg" onClick={() => navigate('/leaves')} />
+        <StatCard icon={Users}          label={t('dashboard.onDutyEmployees')}    value={totalEmployees}        accent="emerald" rotate="-0.8deg" onClick={() => navigate('/attendance')} />
+        <StatCard icon={Clock}          label={t('metrics.totalHours')} value={totalWorkHours}        accent="sky"     rotate="0.6deg"  onClick={() => navigate('/attendance')} />
+        <StatCard icon={CalendarSearch} label={t('metrics.lateCount')}    value={totalLateDays}         accent="orange"  rotate="-0.5deg" onClick={() => navigate('/attendance')} />
+        <StatCard icon={CheckCircle2}   label={t('dashboard.pendingCorrection')}  value={pendingCorrectionsCount} accent="red"     rotate="0.9deg"  onClick={() => navigate('/corrections')} />
+        <StatCard icon={CalendarCheck}  label={t('dashboard.pendingLeave')}  value={pendingLeavesCount}    accent="amber"   rotate="-0.6deg" onClick={() => navigate('/leaves')} />
       </div>
 
       {/* 加班合規警示 — 本月接近/超標名單 */}
@@ -133,14 +135,8 @@ export default function Dashboard() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-3 flex-wrap">
-                <p className="font-zh text-slate-700 text-[15px]">
-                  本月加班
-                  <span className="font-mono font-black mx-1 text-red-600">{exceedList.length}</span> 人超標、
-                  <span className="font-mono font-black mx-1 text-amber-600">{warnList.length}</span> 人接近上限
-                </p>
-                <MarkerButton color="#0ea5e9" rotate="-0.6deg" onClick={() => navigate('/monthly-report')}>
-                  查看報表
-                  <ArrowRight size={14} strokeWidth={2.5} aria-hidden="true" />
+                <p className="font-zh text-slate-700 text-[15px]">{t('ui.monthlyOvertime')}<span className="font-mono font-black mx-1 text-red-600">{exceedList.length}</span>{t('ui.peopleOver')}<span className="font-mono font-black mx-1 text-amber-600">{warnList.length}</span>{t('ui.peopleNear')}</p>
+                <MarkerButton color="#0ea5e9" rotate="-0.6deg" onClick={() => navigate('/monthly-report')}>{t('ui.viewReports')}<ArrowRight size={14} strokeWidth={2.5} aria-hidden="true" />
                 </MarkerButton>
               </div>
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-0.5">
@@ -178,16 +174,13 @@ export default function Dashboard() {
                     <AlertCircle size={20} className="text-white" strokeWidth={2.5} aria-hidden="true" />
                   </div>
                   <div className="flex-1">
-                    <p className="font-zh text-slate-700 text-[15px]">
-                      有 <span className={`font-mono font-black mx-1 ${textColor}`}>{b.count}</span> {b.label}
+                    <p className="font-zh text-slate-700 text-[15px]">{t('ui.has')}<span className={`font-mono font-black mx-1 ${textColor}`}>{b.count}</span> {b.label}
                     </p>
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-0.5">
                       {b.en}
                     </p>
                   </div>
-                  <MarkerButton color={markerColor} rotate="-0.6deg" onClick={() => navigate(b.path)}>
-                    前往審核
-                    <ArrowRight size={14} strokeWidth={2.5} aria-hidden="true" />
+                  <MarkerButton color={markerColor} rotate="-0.6deg" onClick={() => navigate(b.path)}>{t('ui.goReview')}<ArrowRight size={14} strokeWidth={2.5} aria-hidden="true" />
                   </MarkerButton>
                 </div>
               </PaperPiece>

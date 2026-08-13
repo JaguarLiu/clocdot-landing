@@ -8,20 +8,22 @@ import {
   getPayrollRun, generatePayrollRun, savePayrollAdjustments,
   lockPayrollRun, unlockPayrollRun, downloadPayrollCSV, cashoutPayroll,
 } from '../services/api.js'
+import { tr, useT } from '../i18n/index.jsx'
 
 function buildMonthOptions() {
   const now = new Date()
   return Array.from({ length: 12 }, (_, i) => {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
     const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
-    const label = `${d.getFullYear()} 年 ${d.getMonth() + 1} 月`
+    const label = tr('fmt.monthLabel', { y: d.getFullYear(), m: d.getMonth() + 1 })
     return { value, label }
   })
 }
 const money = (n) => (n ?? 0).toLocaleString('en-US')
-const fmtMin = (m) => `${Math.floor((m ?? 0) / 60)} 時 ${(m ?? 0) % 60} 分`
+const fmtMin = (m) => tr('fmt.hourMin', { h: Math.floor((m ?? 0) / 60), m: (m ?? 0) % 60 })
 
 export default function Payroll() {
+  const { t } = useT()
   const monthOptions = buildMonthOptions()
   const [month, setMonth] = useState(monthOptions[0].value)
   const [run, setRun] = useState(null)
@@ -46,7 +48,7 @@ export default function Payroll() {
       setSkipped(data.skipped ?? [])
     } catch (err) {
       if (err.status === 404) { setRun(null); setSkipped([]) }
-      else setToast({ variant: 'error', message: err.message || '載入失敗' })
+      else setToast({ variant: 'error', message: err.message || tr('common.loadFailed') })
     } finally {
       setLoading(false)
     }
@@ -60,9 +62,9 @@ export default function Payroll() {
       const data = await generatePayrollRun(month)
       setRun(data)
       setSkipped(data.skipped ?? [])
-      setToast({ variant: 'success', message: '已結算（草稿）' })
+      setToast({ variant: 'success', message: t('status.settledDraft') })
     } catch (err) {
-      setToast({ variant: 'error', message: err.message || '結算失敗' })
+      setToast({ variant: 'error', message: err.message || t('payroll.settleFailed') })
     } finally { setBusy(false); setConfirm(null) }
   }
 
@@ -71,9 +73,9 @@ export default function Payroll() {
     try {
       await lockPayrollRun(month)
       await load(month)
-      setToast({ variant: 'success', message: '已鎖定' })
+      setToast({ variant: 'success', message: t('status.locked') })
     } catch (err) {
-      setToast({ variant: 'error', message: err.message || '鎖定失敗' })
+      setToast({ variant: 'error', message: err.message || t('payroll.lockFailed') })
     } finally { setBusy(false); setConfirm(null) }
   }
 
@@ -82,9 +84,9 @@ export default function Payroll() {
     try {
       await unlockPayrollRun(month)
       await load(month)
-      setToast({ variant: 'success', message: '已解鎖' })
+      setToast({ variant: 'success', message: t('status.unlocked') })
     } catch (err) {
-      setToast({ variant: 'error', message: err.message || '解鎖失敗' })
+      setToast({ variant: 'error', message: err.message || t('payroll.unlockFailed') })
     } finally { setBusy(false); setConfirm(null) }
   }
 
@@ -92,9 +94,9 @@ export default function Payroll() {
     try {
       const updated = await savePayrollAdjustments(month, userId, adjustments)
       setRun((r) => ({ ...r, items: r.items.map((i) => (i.userId === userId ? updated : i)) }))
-      setToast({ variant: 'success', message: '調整已儲存' })
+      setToast({ variant: 'success', message: t('payroll.adjustmentSaved') })
     } catch (err) {
-      setToast({ variant: 'error', message: err.message || '儲存失敗' })
+      setToast({ variant: 'error', message: err.message || t('common.saveFailed') })
     }
   }
 
@@ -104,11 +106,11 @@ export default function Payroll() {
       const data = await cashoutPayroll(month, [...cashoutSel])
       setRun(data)
       setSkipped(data.skipped ?? [])
-      setToast({ variant: 'success', message: '特休換薪已套用' })
+      setToast({ variant: 'success', message: t('payroll.annualLeaveCashOut') })
       setCashoutOpen(false)
       setCashoutSel(new Set())
     } catch (err) {
-      setToast({ variant: 'error', message: err.message || '換薪失敗' })
+      setToast({ variant: 'error', message: err.message || t('employees.salaryChangeFailed') })
     } finally { setBusy(false) }
   }
 
@@ -124,7 +126,7 @@ export default function Payroll() {
             <Wallet size={22} className="text-white" strokeWidth={2.5} />
           </div>
           <div>
-            <h2 className="text-3xl font-zh text-slate-800">薪資結算</h2>
+            <h2 className="text-3xl font-zh text-slate-800">{t('nav.payroll')}</h2>
             <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mt-1">
               PAYROLL SETTLEMENT
             </p>
@@ -137,7 +139,7 @@ export default function Payroll() {
             <select
               value={month}
               onChange={(e) => setMonth(e.target.value)}
-              aria-label="選擇月份"
+              aria-label={t('common.selectMonth')}
               className="appearance-none bg-white px-4 py-2 pr-8 border border-slate-200 shadow-sm text-xs font-black text-slate-600 tracking-tight focus:outline-none"
             >
               {monthOptions.map((opt) => (
@@ -150,12 +152,12 @@ export default function Payroll() {
             <MarkerButton
               color="#10b981"
               onClick={() => setConfirm({
-                title: '結算薪資',
-                message: `確定結算 ${month}？將重算草稿（保留既有調整）。`,
+                title: t('payroll.settle'),
+                message: t('fmt.confirmSettle', { month }),
                 onConfirm: doGenerate,
               })}
             >
-              <RefreshCw size={14} /> {run ? '重算' : '結算'}
+              <RefreshCw size={14} /> {run ? t('payroll.recalc') : t('payroll.settleShort')}
             </MarkerButton>
           )}
           {run && !locked && (
@@ -163,39 +165,36 @@ export default function Payroll() {
               color="#10b981"
               onClick={() => { setCashoutSel(new Set(run.items.map((i) => i.userId))); setCashoutOpen(true) }}
             >
-              <CalendarClock size={14} /> 特休換薪
-            </MarkerButton>
+              <CalendarClock size={14} />{t('ui.cashout')}</MarkerButton>
           )}
           {run && !locked && (
             <MarkerButton
               color="#f59e0b"
               onClick={() => setConfirm({
-                title: '鎖定薪資',
-                message: `鎖定 ${month} 後將無法修改，確定？`,
+                title: t('payroll.lock'),
+                message: t('fmt.confirmLock', { month }),
                 onConfirm: doLock,
               })}
             >
-              <Lock size={14} /> 鎖定
-            </MarkerButton>
+              <Lock size={14} />{t('ui.lock')}</MarkerButton>
           )}
           {locked && (
             <MarkerButton
               color="#0ea5e9"
               onClick={() => setConfirm({
-                title: '解鎖薪資',
-                message: `解鎖 ${month} 回草稿？`,
+                title: t('payroll.unlock'),
+                message: t('fmt.confirmUnlock', { month }),
                 onConfirm: doUnlock,
               })}
             >
-              <LockOpen size={14} /> 解鎖
-            </MarkerButton>
+              <LockOpen size={14} />{t('ui.unlock')}</MarkerButton>
           )}
           {run && (
             <MarkerButton
               color="#64748b"
               onClick={() => downloadPayrollCSV(month).catch((e) => setToast({ variant: 'error', message: e.message }))}
             >
-              <Download size={14} /> 匯出
+              <Download size={14} /> {t('common.exportLabel')}
             </MarkerButton>
           )}
         </div>
@@ -215,21 +214,19 @@ export default function Payroll() {
         <PaperPiece color="#fef2f2" rotate="-0.4deg" variant="card" className="p-4 mb-6">
           <div className="flex items-center gap-2 mb-2">
             <AlertTriangle size={16} className="text-red-500" />
-            <span className="font-zh text-sm text-slate-700">未設薪資主檔（已略過）</span>
+            <span className="font-zh text-sm text-slate-700">{t('ui.noSalaryProfile')}</span>
           </div>
           <p className="font-zh text-xs text-slate-500">
-            {skipped.map((s) => s.name || s.empNo || s.userId).join('、')} — 請至員工管理設定後重算。
+            {t('fmt.skippedHint', { names: skipped.map((s) => s.name || s.empNo || s.userId).join(', ') })}
           </p>
         </PaperPiece>
       )}
 
       {/* 主體 */}
       {loading ? (
-        <p className="font-zh text-sm text-slate-400 py-12 text-center">載入中…</p>
+        <p className="font-zh text-sm text-slate-400 py-12 text-center">{t('ui.loading')}</p>
       ) : !run ? (
-        <p className="font-zh text-sm text-slate-400 py-12 text-center">
-          本月尚未結算，按「結算」產生草稿。
-        </p>
+        <p className="font-zh text-sm text-slate-400 py-12 text-center">{t('ui.notSettledHint')}</p>
       ) : (
         <div className="space-y-2">
           {run.items.map((item) => (
@@ -251,18 +248,16 @@ export default function Payroll() {
             <div onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center gap-2 mb-1">
                 <CalendarClock size={18} className="text-emerald-600" />
-                <h3 className="font-zh text-lg text-slate-800">特休換薪</h3>
+                <h3 className="font-zh text-lg text-slate-800">{t('ui.cashout')}</h3>
               </div>
-              <p className="font-zh text-xs text-slate-500 mb-4">
-                依各員目前剩餘特休 × 日薪((本薪+津貼)/30) 換算，金額併入本月薪資並結清特休餘額。
-              </p>
+              <p className="font-zh text-xs text-slate-500 mb-4">{t('ui.cashoutHelp')}</p>
               <label className="flex items-center gap-2 mb-2 font-zh text-sm text-slate-600">
                 <input
                   type="checkbox"
                   checked={cashoutSel.size === cashoutable.length && cashoutable.length > 0}
                   onChange={(e) => setCashoutSel(e.target.checked ? new Set(cashoutable.map((i) => i.userId)) : new Set())}
                 />
-                全選（{cashoutSel.size}/{cashoutable.length}）
+                {t('fmt.selectAll', { sel: cashoutSel.size, total: cashoutable.length })}
               </label>
               <div className="max-h-64 overflow-auto border border-dashed border-slate-200 divide-y divide-slate-100">
                 {cashoutable.map((i) => (
@@ -279,15 +274,15 @@ export default function Payroll() {
                     <span className="font-mono text-xs text-slate-400 w-10">{i.empNo ?? '—'}</span>
                     <span className="flex-1">{i.name}</span>
                     {i.payslip?.earnings?.leaveCashout && (
-                      <span className="font-mono text-xs text-emerald-700">已換 {money(i.payslip.earnings.leaveCashout.amount)}</span>
+                      <span className="font-mono text-xs text-emerald-700">{t('fmt.alreadyCashed', { amount: money(i.payslip.earnings.leaveCashout.amount) })}</span>
                     )}
                   </label>
                 ))}
               </div>
               <div className="flex items-center justify-end gap-3 mt-5">
-                <button type="button" onClick={() => setCashoutOpen(false)} className="font-zh text-sm text-slate-500 px-3 py-1.5">取消</button>
+                <button type="button" onClick={() => setCashoutOpen(false)} className="font-zh text-sm text-slate-500 px-3 py-1.5">{t('common.cancel')}</button>
                 <MarkerButton color="#10b981" disabled={busy || cashoutSel.size === 0} onClick={doCashout}>
-                  套用換薪（{cashoutSel.size} 人）
+                  {t('fmt.applyCashout', { n: cashoutSel.size })}
                 </MarkerButton>
               </div>
             </div>
@@ -316,6 +311,7 @@ export default function Payroll() {
 }
 
 function PayrollRow({ item, locked, expanded, onToggle, onSave }) {
+  const { t } = useT()
   const p = item.payslip
   // key includes updatedAt so the component remounts after a successful save,
   // resetting adj to the server-confirmed adjustments without needing a setState-in-effect.
@@ -337,16 +333,14 @@ function PayrollRow({ item, locked, expanded, onToggle, onSave }) {
           <span className="font-mono text-xs text-slate-400 w-12">{item.empNo ?? '—'}</span>
           <span className="font-zh text-sm text-slate-800">{item.name}</span>
           {p?.meta?.unpaidAbsentMonth && (
-            <span className="font-zh text-[10px] px-2 py-0.5 bg-red-50 text-red-600 border border-red-200">
-              整月零出勤·未計薪
-            </span>
+            <span className="font-zh text-[10px] px-2 py-0.5 bg-red-50 text-red-600 border border-red-200">{t('ui.zeroAttendance')}</span>
           )}
         </button>
         <div className="flex items-center gap-6 font-mono text-sm tabular-nums">
-          <span className="text-slate-500">毛 {money(item.grossPay)}</span>
-          <span className="text-red-500">扣 {money(item.totalDeductions)}</span>
-          <span className="text-sky-600">調 {money(item.adjustmentsTotal)}</span>
-          <span className="text-emerald-700 font-black w-28 text-right">實發 {money(item.netPay)}</span>
+          <span className="text-slate-500">{t('fmt.gross', { v: money(item.grossPay) })}</span>
+          <span className="text-red-500">{t('fmt.deduct', { v: money(item.totalDeductions) })}</span>
+          <span className="text-sky-600">{t('fmt.adjust', { v: money(item.adjustmentsTotal) })}</span>
+          <span className="text-emerald-700 font-black w-28 text-right">{t('fmt.net', { v: money(item.netPay) })}</span>
         </div>
       </div>
 
@@ -354,53 +348,52 @@ function PayrollRow({ item, locked, expanded, onToggle, onSave }) {
       {expanded && (
         <div className="mt-4 pt-4 border-t border-dashed border-slate-200 grid grid-cols-2 gap-x-8 gap-y-1 text-xs">
           {p.meta?.payType === 'hourly' ? (
-            <Line label={`時薪 $${money(p.earnings.hourlyRate)} × ${fmtMin(p.earnings.regularMinutes)}`} v={p.earnings.regularPay} />
+            <Line label={t('fmt.hourlyLine', { rate: money(p.earnings.hourlyRate), time: fmtMin(p.earnings.regularMinutes) })} v={p.earnings.regularPay} />
           ) : (
             <>
-              <Line label="本薪" v={p.earnings.baseSalary} />
+              <Line label={t('payroll.baseSalary')} v={p.earnings.baseSalary} />
               {(p.earnings.allowances ?? []).map((a, i) => (
-                <Line key={i} label={`加給·${a.name}`} v={a.amount} />
+                <Line key={i} label={t('fmt.allowanceLine', { name: a.name })} v={a.amount} />
               ))}
             </>
           )}
-          {(p.earnings.overtime?.tiers ?? []).map((t, i) => (
-            <Line key={i} label={`加班·${t.rate}(${t.minutes}分)`} v={t.amount} />
+          {(p.earnings.overtime?.tiers ?? []).map((tier, i) => (
+            <Line key={i} label={t('fmt.overtimeLine', { rate: tier.rate, min: tier.minutes })} v={tier.amount} />
           ))}
           {p.earnings.leaveCashout && (
-            <Line label={`特休換薪·${p.earnings.leaveCashout.days} 天`} v={p.earnings.leaveCashout.amount} />
+            <Line label={t('fmt.cashoutLine', { n: p.earnings.leaveCashout.days })} v={p.earnings.leaveCashout.amount} />
           )}
-          <Line label="應發毛額" v={p.earnings.grossPay} strong />
-          <Line label="勞保自付" v={-p.deductions.laborInsurance} />
-          <Line label="健保自付" v={-p.deductions.healthInsurance} />
-          <Line label="勞退自提" v={-p.deductions.pensionVoluntary} />
-          <Line label="所得稅" v={-p.deductions.incomeTax} />
+          <Line label={t('payroll.grossPay')} v={p.earnings.grossPay} strong />
+          <Line label={t('payroll.laborInsurance')} v={-p.deductions.laborInsurance} />
+          <Line label={t('payroll.healthInsurance')} v={-p.deductions.healthInsurance} />
+          <Line label={t('payroll.pension')} v={-p.deductions.pensionVoluntary} />
+          <Line label={t('payroll.incomeTax')} v={-p.deductions.incomeTax} />
           {p.deductions.attendanceDeduction > 0 && (
-            <Line label="遲到早退/缺勤" v={-p.deductions.attendanceDeduction} />
+            <Line label={t('payroll.attendanceDeduction')} v={-p.deductions.attendanceDeduction} />
           )}
           {p.deductions.leaveDeduction > 0 && (
-            <Line label="請假扣款" v={-p.deductions.leaveDeduction} />
+            <Line label={t('payroll.leaveDeduction')} v={-p.deductions.leaveDeduction} />
           )}
-          <Line label="應扣合計" v={-p.deductions.total} strong />
+          <Line label={t('payroll.deductionTotal')} v={-p.deductions.total} strong />
 
           {/* 手動調整區 */}
           <div className="col-span-2 mt-3">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="font-zh text-slate-500">手動調整</span>
+              <span className="font-zh text-slate-500">{t('ui.manualAdjust')}</span>
               {!locked && (
                 <button
                   type="button"
                   onClick={() => setAdj([...adj, { label: '', amount: 0 }])}
                   className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-sky-700 active:scale-[0.97]"
                 >
-                  <Plus size={12} /> 新增
-                </button>
+                  <Plus size={12} />{t('ui.add')}</button>
               )}
             </div>
             {adj.map((a, i) => (
               <div key={i} className="flex items-center gap-2 mb-1">
                 <input
                   disabled={locked}
-                  placeholder="說明"
+                  placeholder={t('common.help')}
                   value={a.label}
                   onChange={(e) =>
                     setAdj(adj.map((x, idx) => (idx === i ? { ...x, label: e.target.value } : x)))
@@ -410,7 +403,7 @@ function PayrollRow({ item, locked, expanded, onToggle, onSave }) {
                 <input
                   disabled={locked}
                   type="number"
-                  placeholder="金額(+/-)"
+                  placeholder={t('common.amountSigned')}
                   value={a.amount}
                   onChange={(e) =>
                     setAdj(adj.map((x, idx) => (idx === i ? { ...x, amount: e.target.value } : x)))
@@ -435,9 +428,7 @@ function PayrollRow({ item, locked, expanded, onToggle, onSave }) {
                   onClick={() =>
                     onSave(adj.map((a) => ({ label: a.label, amount: parseInt(a.amount, 10) || 0 })))
                   }
-                >
-                  儲存調整
-                </MarkerButton>
+                >{t('ui.saveAdjust')}</MarkerButton>
               </div>
             )}
           </div>

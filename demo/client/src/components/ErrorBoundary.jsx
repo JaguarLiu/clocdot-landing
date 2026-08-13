@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import { tr } from '../i18n/index.jsx'
 
 // 動態 import 失敗（部署新版後舊分頁載到已不存在的舊 chunk）時，
 // 各瀏覽器丟出的訊息不一，用關鍵字粗略辨識。
@@ -54,13 +55,13 @@ export default class ErrorBoundary extends Component {
     // 其餘錯誤顯示可手動重試的畫面
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-[#f3f0e6] px-6 text-center">
-        <p className="font-zh text-slate-600 text-base">頁面載入時發生問題</p>
+        <p className="font-zh text-slate-600 text-base">{tr('error.boundary')}</p>
         <button
           type="button"
           onClick={this.handleReload}
           className="font-zh text-sm text-white bg-emerald-500 px-5 py-2.5 active:scale-95 transition"
         >
-          重新整理
+          {tr('common.refresh')}
         </button>
       </div>
     )

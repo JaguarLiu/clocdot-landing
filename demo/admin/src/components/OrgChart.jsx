@@ -12,24 +12,26 @@ import PaperPiece from './PaperPiece.jsx'
 import ConfirmDialog from './ConfirmDialog.jsx'
 import MarkerButton from './MarkerButton.jsx'
 import { buildDepartmentTree } from '../lib/orgChart.js'
+import { tr, useT } from '../i18n/index.jsx'
 
 const EMPTY_DEPT_FORM = { name: '', parentId: '', managerId: '' }
 
 // 可授權給角色的後台模組（與 server services/rbac.js GRANTABLE_MODULES 一致）
 const GRANTABLE_MODULES = [
-  { key: 'monthly-report', label: '報表' },
-  { key: 'corrections', label: '補打卡審核' },
-  { key: 'leaves', label: '請假審核' },
-  { key: 'overtime-reviews', label: '加班審核' },
-  { key: 'employees', label: '員工管理' },
-  { key: 'payroll', label: '薪資結算' },
-  { key: 'schedule', label: '排班' },
+  { key: 'monthly-report', label: tr('nav.reports') },
+  { key: 'corrections', label: tr('nav.corrections') },
+  { key: 'leaves', label: tr('nav.leaveReviews') },
+  { key: 'overtime-reviews', label: tr('nav.overtimeReviews') },
+  { key: 'employees', label: tr('nav.employees') },
+  { key: 'payroll', label: tr('nav.payroll') },
+  { key: 'schedule', label: tr('nav.schedule') },
 ]
 
 const MODULE_LABEL = Object.fromEntries(GRANTABLE_MODULES.map((m) => [m.key, m.label]))
 
 // 部門角色管理 popup（admin 專屬）：定義角色名稱 + 勾選後台模組
 function RolesModal({ department, onClose, onToast }) {
+  const { t } = useT()
   const { data, mutate } = useSWR(`/admin/departments/${department.id}/roles`, fetcher)
   const roles = data ?? []
   const [name, setName] = useState('')
@@ -40,17 +42,17 @@ function RolesModal({ department, onClose, onToast }) {
     setPerms((p) => (p.includes(k) ? p.filter((x) => x !== k) : [...p, k]))
   }
   async function add() {
-    if (!name.trim()) { onToast({ variant: 'error', message: '角色名稱不可為空' }); return }
+    if (!name.trim()) { onToast({ variant: 'error', message: t('org.roleNameRequired') }); return }
     setBusy(true)
     try {
       await createDepartmentRole(department.id, { name: name.trim(), permissions: perms })
       setName(''); setPerms([]); mutate()
-      onToast({ variant: 'success', message: '已新增角色' })
-    } catch (err) { onToast({ variant: 'error', message: err?.message || '操作失敗' }) } finally { setBusy(false) }
+      onToast({ variant: 'success', message: t('org.roleAdded') })
+    } catch (err) { onToast({ variant: 'error', message: err?.message || t('common.actionFailed') }) } finally { setBusy(false) }
   }
   async function remove(r) {
-    try { await deleteRole(r.id); mutate(); onToast({ variant: 'success', message: '已刪除角色' }) }
-    catch (err) { onToast({ variant: 'error', message: err?.message || '刪除失敗' }) }
+    try { await deleteRole(r.id); mutate(); onToast({ variant: 'success', message: t('org.roleDeleted') }) }
+    catch (err) { onToast({ variant: 'error', message: err?.message || t('common.deleteFailed') }) }
   }
 
   return (
@@ -62,27 +64,27 @@ function RolesModal({ department, onClose, onToast }) {
             <ShieldCheck size={20} className="text-white" strokeWidth={2.5} />
           </div>
           <div className="min-w-0 pt-0.5">
-            <h3 className="font-zh text-lg text-slate-800">角色與後台權限</h3>
+            <h3 className="font-zh text-lg text-slate-800">{t('ui.rolesAndModules')}</h3>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] mt-1">{department.name}</p>
           </div>
         </div>
 
         <div className="space-y-2 mb-5">
           {roles.length === 0 ? (
-            <p className="font-zh text-sm text-slate-400 text-center py-3">尚未建立角色</p>
+            <p className="font-zh text-sm text-slate-400 text-center py-3">{t('ui.noRolesYet')}</p>
           ) : roles.map((r) => (
             <div key={r.id} className="flex items-start gap-2 bg-white border border-slate-200 p-3" style={{ borderRadius: '6px 2px 7px 3px/3px 7px 2px 6px' }}>
               <div className="min-w-0 flex-1">
-                <p className="font-zh text-sm text-slate-700">{r.name} <span className="text-[10px] text-slate-400">（{r.memberCount} 人）</span></p>
+                <p className="font-zh text-sm text-slate-700">{r.name} <span className="text-[10px] text-slate-400">{t('fmt.peopleParen', { n: r.memberCount })}</span></p>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {r.permissions.length === 0
-                    ? <span className="text-[10px] text-slate-400 font-zh">無模組</span>
+                    ? <span className="text-[10px] text-slate-400 font-zh">{t('ui.noModules')}</span>
                     : r.permissions.map((k) => (
                       <span key={k} className="text-[10px] font-zh bg-violet-50 border border-violet-200 text-violet-700 px-1.5 py-0.5 rounded">{MODULE_LABEL[k] || k}</span>
                     ))}
                 </div>
               </div>
-              <button type="button" onClick={() => remove(r)} className="text-slate-300 hover:text-red-500 shrink-0" aria-label="刪除角色">
+              <button type="button" onClick={() => remove(r)} className="text-slate-300 hover:text-red-500 shrink-0" aria-label={t('org.deleteRole')}>
                 <Trash2 size={14} strokeWidth={2.5} />
               </button>
             </div>
@@ -90,7 +92,7 @@ function RolesModal({ department, onClose, onToast }) {
         </div>
 
         <div className="bg-white border border-slate-200 p-3 space-y-2" style={{ borderRadius: '6px 2px 7px 3px/3px 7px 2px 6px' }}>
-          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="角色名稱（如 總監）"
+          <input value={name} onChange={(e) => setName(e.target.value)} placeholder={t('org.rolePlaceholder')}
             className="w-full px-2 py-1.5 bg-[#fdfbf4] border border-slate-200 outline-none focus:border-violet-400 font-zh text-sm" />
           <div className="flex flex-wrap gap-x-3 gap-y-1.5">
             {GRANTABLE_MODULES.map((m) => (
@@ -101,13 +103,13 @@ function RolesModal({ department, onClose, onToast }) {
             ))}
           </div>
           <MarkerButton as="button" type="button" color="#8b5cf6" rotate="-0.5deg" fontSize={12} onClick={add} disabled={busy}>
-            <Plus size={13} strokeWidth={3} />{busy ? '新增中…' : '新增角色'}
+            <Plus size={13} strokeWidth={3} />{busy ? t('common.add') : t('org.addRole')}
           </MarkerButton>
         </div>
 
         <div className="flex items-center justify-end pt-4">
           <MarkerButton color="#94a3b8" rotate="0.5deg" onClick={onClose}>
-            <X size={14} strokeWidth={3} />關閉
+            <X size={14} strokeWidth={3} />{t('common.close')}
           </MarkerButton>
         </div>
       </PaperPiece>
@@ -175,6 +177,7 @@ function MemberCard({ user, isManager, rotate, canDrag, onEditUser }) {
 }
 
 function DeptCard({ node, managerId, members, isAdmin, onEditDept, onDeleteDept, onManageRoles, onAssign, onEditUser }) {
+  const { t } = useT()
   const [over, setOver] = useState(false)
   const dragDepth = useRef(0) // enter/leave 計數，避免子元素造成 highlight 閃爍
 
@@ -225,16 +228,16 @@ function DeptCard({ node, managerId, members, isAdmin, onEditDept, onDeleteDept,
         {/* hover 部門操作 */}
         <div className="absolute top-1.5 right-1.5 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
           {isAdmin && (
-            <MarkerButton color="#8b5cf6" rotate="0.5deg" fontSize={11} onClick={() => onManageRoles(node)} title="角色與權限" ariaLabel="角色與權限" contentStyle={{ padding: '7px' }}>
+            <MarkerButton color="#8b5cf6" rotate="0.5deg" fontSize={11} onClick={() => onManageRoles(node)} title={t('org.rolesAndPermissions')} ariaLabel={t('org.rolesAndPermissions')} contentStyle={{ padding: '7px' }}>
               <ShieldCheck size={12} strokeWidth={3} />
             </MarkerButton>
           )}
           {isAdmin && (
             <>
-              <MarkerButton color="#10b981" rotate="-0.5deg" fontSize={11} onClick={() => onEditDept(node)} title="編輯部門" ariaLabel="編輯部門" contentStyle={{ padding: '7px' }}>
+              <MarkerButton color="#10b981" rotate="-0.5deg" fontSize={11} onClick={() => onEditDept(node)} title={t('org.editDepartment')} ariaLabel={t('org.editDepartment')} contentStyle={{ padding: '7px' }}>
                 <Pencil size={12} strokeWidth={3} />
               </MarkerButton>
-              <MarkerButton color="#ef4444" rotate="0.5deg" fontSize={11} onClick={() => onDeleteDept(node)} title="刪除部門" ariaLabel="刪除部門" contentStyle={{ padding: '7px' }}>
+              <MarkerButton color="#ef4444" rotate="0.5deg" fontSize={11} onClick={() => onDeleteDept(node)} title={t('org.deleteDepartment')} ariaLabel={t('org.deleteDepartment')} contentStyle={{ padding: '7px' }}>
                 <Trash2 size={12} strokeWidth={3} />
               </MarkerButton>
             </>
@@ -249,16 +252,14 @@ function DeptCard({ node, managerId, members, isAdmin, onEditDept, onDeleteDept,
               className="shrink-0 text-[10px] font-mono font-black tabular-nums text-amber-800 bg-amber-200/60 border border-amber-300 px-1.5 py-0.5"
               style={{ borderRadius: '4px 1px 5px 2px/2px 5px 1px 4px' }}
             >
-              {members.length} 人
+              {t('fmt.people', { n: members.length })}
             </span>
           </div>
 
           {/* 員工白卡 */}
           <div className="mt-2.5 pt-2.5 border-t border-dashed border-amber-400/40 space-y-1.5 max-h-56 overflow-y-auto custom-scrollbar">
             {sorted.length === 0 ? (
-              <p className="text-[10px] font-black uppercase tracking-[0.15em] text-amber-600/50 text-center py-3">
-                拖曳員工至此
-              </p>
+              <p className="text-[10px] font-black uppercase tracking-[0.15em] text-amber-600/50 text-center py-3">{t('ui.dragEmployeeHere')}</p>
             ) : (
               sorted.map((m, i) => (
                 <MemberCard
@@ -278,7 +279,7 @@ function DeptCard({ node, managerId, members, isAdmin, onEditDept, onDeleteDept,
       {/* 拖曳放置提示 */}
       {over && (
         <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none border-2 border-dashed border-emerald-500 bg-emerald-50/45 rounded-[14px]">
-          <span className="font-zh text-xs text-emerald-700 bg-white/90 px-2 py-1 shadow-sm">編入「{node.name}」</span>
+          <span className="font-zh text-xs text-emerald-700 bg-white/90 px-2 py-1 shadow-sm">{t('fmt.moveInto', { name: node.name })}</span>
         </div>
       )}
     </div>
@@ -326,6 +327,7 @@ function withDepth(nodes, depth = 0) {
 }
 
 export default function OrgChart({ onToast, onAssign, onEditUser, actions, leftPanel }) {
+  const { t } = useT()
   const { data: depts, mutate, isLoading } = useSWR('/admin/departments', fetcher)
   const { data: users, mutate: mutateUsers } = useSWR('/admin/users', fetcher)
   const [editing, setEditing] = useState(null) // null | 'new' | id
@@ -372,10 +374,10 @@ export default function OrgChart({ onToast, onAssign, onEditUser, actions, leftP
       if (editing === 'new') {
         const created = await createDepartment(payload)
         deptId = created?.id
-        onToast({ variant: 'success', message: '已新增部門' })
+        onToast({ variant: 'success', message: t('org.departmentAdded') })
       } else {
         await updateDepartment(editing, payload)
-        onToast({ variant: 'success', message: '已更新部門' })
+        onToast({ variant: 'success', message: t('org.departmentUpdated') })
       }
       // 指定主管者自動編入該部門，卡片才會出現在便條紙內
       if (payload.managerId && deptId) {
@@ -393,7 +395,7 @@ export default function OrgChart({ onToast, onAssign, onEditUser, actions, leftP
       mutate()
       cancel()
     } catch (err) {
-      onToast({ variant: 'error', message: err?.message || '操作失敗' })
+      onToast({ variant: 'error', message: err?.message || t('common.actionFailed') })
     } finally {
       setSubmitting(false)
     }
@@ -405,10 +407,10 @@ export default function OrgChart({ onToast, onAssign, onEditUser, actions, leftP
     try {
       await deleteDepartment(deleteTarget.id)
       mutate()
-      onToast({ variant: 'success', message: '已刪除部門' })
+      onToast({ variant: 'success', message: t('org.departmentDeleted') })
       setDeleteTarget(null)
     } catch (err) {
-      onToast({ variant: 'error', message: err?.message || '刪除失敗' })
+      onToast({ variant: 'error', message: err?.message || t('common.deleteFailed') })
     } finally {
       setDeleting(false)
     }
@@ -422,10 +424,10 @@ export default function OrgChart({ onToast, onAssign, onEditUser, actions, leftP
       <ConfirmDialog
         open={deleteTarget !== null}
         variant="danger"
-        title="刪除部門"
-        message={deleteTarget && `確定要刪除「${deleteTarget.name}」？若仍有子部門或成員將無法刪除。`}
-        confirmLabel="刪除"
-        cancelLabel="取消"
+        title={t('org.deleteDepartment')}
+        message={deleteTarget && t('fmt.confirmDeleteDept', { name: deleteTarget.name })}
+        confirmLabel={t('common.del')}
+        cancelLabel={t('common.cancel')}
         loading={deleting}
         onConfirm={confirmDelete}
         onCancel={() => !deleting && setDeleteTarget(null)}
@@ -439,7 +441,7 @@ export default function OrgChart({ onToast, onAssign, onEditUser, actions, leftP
         {actions}
         {isAdmin && editing === null && (
           <MarkerButton className="ml-auto" color="#f59e0b" rotate="-0.6deg" onClick={openNew}>
-            <Plus size={15} strokeWidth={3} />新增部門
+            <Plus size={15} strokeWidth={3} />{t('org.addDepartment')}
           </MarkerButton>
         )}
       </div>
@@ -452,36 +454,36 @@ export default function OrgChart({ onToast, onAssign, onEditUser, actions, leftP
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">部門名稱</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.deptName')}</span>
                 <input
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                  placeholder="業務部"
+                  placeholder={t('seed.deptSales')}
                   className="w-full px-3 py-2 bg-[#fdfbf4] border border-slate-200 focus:border-emerald-400 outline-none font-zh text-sm text-slate-700"
                 />
               </label>
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">上層部門</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.parentDept')}</span>
                 <select
                   value={form.parentId}
                   onChange={(e) => setForm((f) => ({ ...f, parentId: e.target.value }))}
                   className="w-full px-3 py-2 bg-[#fdfbf4] border border-slate-200 focus:border-emerald-400 outline-none font-zh text-sm text-slate-700"
                 >
-                  <option value="">（無，頂層）</option>
+                  <option value="">{t('ui.noneTopLevel')}</option>
                   {parentOptions.map((d) => (
                     <option key={d.id} value={d.id}>{d.name}</option>
                   ))}
                 </select>
               </label>
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">主管</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.manager')}</span>
                 <select
                   value={form.managerId}
                   onChange={(e) => setForm((f) => ({ ...f, managerId: e.target.value }))}
                   className="w-full px-3 py-2 bg-[#fdfbf4] border border-slate-200 focus:border-emerald-400 outline-none font-zh text-sm text-slate-700"
                 >
-                  <option value="">（未指定）</option>
+                  <option value="">{t('ui.unassigned')}</option>
                   {employees.map((u) => (
                     <option key={u.id} value={u.id}>{u.name || u.email}</option>
                   ))}
@@ -490,10 +492,10 @@ export default function OrgChart({ onToast, onAssign, onEditUser, actions, leftP
             </div>
             <div className="flex items-center gap-3 pt-1">
               <MarkerButton as="button" type="submit" color="#10b981" rotate="-0.5deg" disabled={submitting}>
-                <Check size={14} strokeWidth={3} />{submitting ? '儲存中…' : '儲存'}
+                <Check size={14} strokeWidth={3} />{submitting ? t('common.saving') : t('common.save')}
               </MarkerButton>
               <MarkerButton color="#94a3b8" rotate="0.5deg" onClick={cancel} disabled={submitting}>
-                <X size={14} strokeWidth={3} />取消
+                <X size={14} strokeWidth={3} />{t('common.cancel')}
               </MarkerButton>
             </div>
           </form>
@@ -505,11 +507,11 @@ export default function OrgChart({ onToast, onAssign, onEditUser, actions, leftP
 
         <div className="flex-1 min-w-0 w-full">
           {isLoading ? (
-            <p className="font-zh text-sm text-slate-400 py-10 text-center">載入中…</p>
+            <p className="font-zh text-sm text-slate-400 py-10 text-center">{t('ui.loading')}</p>
           ) : list.length === 0 ? (
             <div className="text-center py-16 opacity-40 flex flex-col items-center gap-3">
               <Inbox size={40} className="text-slate-300" />
-              <p className="font-zh text-sm text-slate-400">尚未設定任何部門</p>
+              <p className="font-zh text-sm text-slate-400">{t('ui.noDepartmentsYet')}</p>
             </div>
           ) : (
             <div className="overflow-x-auto custom-scrollbar pt-3 pb-6">

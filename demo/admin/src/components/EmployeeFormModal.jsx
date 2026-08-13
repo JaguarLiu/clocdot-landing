@@ -5,6 +5,7 @@ import { createUser, updateUser, fetcher } from '../services/api.js'
 import { formatShiftRange } from '../lib/shiftTime.js'
 import PaperPiece from './PaperPiece.jsx'
 import MarkerButton from './MarkerButton.jsx'
+import { useT } from '../i18n/index.jsx'
 
 const PASSWORD_MIN = 8
 
@@ -18,6 +19,7 @@ export default function EmployeeFormModal({
   open, mode, employee, departments, currentUser,
   onClose, onToast, onSaved, onPassword, onSalary, onDelete,
 }) {
+  const { t } = useT()
   const isNew = mode === 'new'
   const [form, setForm] = useState(() => ({
     email: employee?.email ?? '',
@@ -68,7 +70,7 @@ export default function EmployeeFormModal({
   async function submit(e) {
     e.preventDefault()
     if (isNew && form.password.length < PASSWORD_MIN) {
-      onToast({ variant: 'error', message: `密碼為必填，長度至少 ${PASSWORD_MIN} 碼` })
+      onToast({ variant: 'error', message: t('fmt.passwordMin', { n: PASSWORD_MIN }) })
       return
     }
     setSaving(true)
@@ -84,15 +86,15 @@ export default function EmployeeFormModal({
           employmentType: form.employmentType,
           password: form.password,
         })
-        onToast({ variant: 'success', message: '已新增員工' })
+        onToast({ variant: 'success', message: t('employees.added') })
       } else {
         await updateUser(employee.id, buildEditPayload())
-        onToast({ variant: 'success', message: '已更新員工' })
+        onToast({ variant: 'success', message: t('employees.updated') })
       }
       onSaved()
       onClose()
     } catch (err) {
-      onToast({ variant: 'error', message: err?.message || '操作失敗' })
+      onToast({ variant: 'error', message: err?.message || t('common.actionFailed') })
     } finally {
       setSaving(false)
     }
@@ -117,7 +119,7 @@ export default function EmployeeFormModal({
               : <Pencil size={20} className="text-white" strokeWidth={2.5} />}
           </div>
           <div className="min-w-0 pt-0.5">
-            <h3 className="font-zh text-lg text-slate-800">{isNew ? '新增員工' : '編輯員工'}</h3>
+            <h3 className="font-zh text-lg text-slate-800">{isNew ? t('employees.addEmployee') : t('employees.editEmployee')}</h3>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] mt-1">
               {isNew ? 'New Employee' : (employee?.email || 'Edit Employee')}
             </p>
@@ -128,7 +130,7 @@ export default function EmployeeFormModal({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <label className="block">
               <span className="font-zh text-xs text-slate-500 mb-1.5 block">
-                Email {!isNew && <span className="text-slate-400">(不可修改)</span>}
+                Email {!isNew && <span className="text-slate-400">{t('ui.notEditable')}</span>}
               </span>
               <input
                 type="email"
@@ -141,18 +143,18 @@ export default function EmployeeFormModal({
             </label>
 
             <label className="block">
-              <span className="font-zh text-xs text-slate-500 mb-1.5 block">姓名</span>
+              <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.fullName')}</span>
               <input
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                placeholder="王小明"
+                placeholder={t('seed.userA')}
                 className="w-full px-3 py-2 bg-white border border-slate-200 focus:border-emerald-400 outline-none font-zh text-sm text-slate-700"
               />
             </label>
 
             <label className="block">
-              <span className="font-zh text-xs text-slate-500 mb-1.5 block">員工編號 (選填)</span>
+              <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.empNo')}</span>
               <input
                 type="number"
                 value={form.empNo}
@@ -165,8 +167,7 @@ export default function EmployeeFormModal({
           </div>
 
           <label className="block">
-            <span className="font-zh text-xs text-slate-500 mb-1.5 block">
-              到職日 <span className="text-slate-400">(影響特休年資 / 週年制重置)</span>
+            <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.hireDate')}<span className="text-slate-400">{t('ui.hireDateNote')}</span>
             </span>
             <input
               type="date"
@@ -177,13 +178,13 @@ export default function EmployeeFormModal({
           </label>
 
           <label className="block">
-            <span className="font-zh text-xs text-slate-500 mb-1.5 block">部門</span>
+            <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.department')}</span>
             <select
               value={form.departmentId}
               onChange={(e) => setForm((f) => ({ ...f, departmentId: e.target.value, roleId: '' }))}
               className="w-full px-3 py-2 bg-white border border-slate-200 focus:border-emerald-400 outline-none font-zh text-sm text-slate-700"
             >
-              <option value="">（未編入部門）</option>
+              <option value="">{t('ui.noDepartment')}</option>
               {departments.map((d) => (
                 <option key={d.id} value={d.id}>{d.name}</option>
               ))}
@@ -191,29 +192,28 @@ export default function EmployeeFormModal({
           </label>
 
           <label className="block">
-            <span className="font-zh text-xs text-slate-500 mb-1.5 block">僱用類型</span>
+            <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.employmentType')}</span>
             <select
               value={form.employmentType}
               onChange={(e) => setForm((f) => ({ ...f, employmentType: e.target.value }))}
               className="w-full px-3 py-2 bg-white border border-slate-200 focus:border-emerald-400 outline-none font-zh text-sm text-slate-700"
             >
-              <option value="regular">正常班 — 固定吃預設班，不進排班</option>
-              <option value="operation">排班制 — 逐日排班</option>
-              <option value="parttime">兼職 — 逐日排班；請假不計額度</option>
+              <option value="regular">{t('ui.empTypeRegular')}</option>
+              <option value="operation">{t('ui.empTypeShift')}</option>
+              <option value="parttime">{t('ui.empTypePartTime')}</option>
             </select>
           </label>
 
           {!isNew && (
             <label className="block">
-              <span className="font-zh text-xs text-slate-500 mb-1.5 block">
-                預設班別 <span className="text-slate-400">(未排班的工作日套用)</span>
+              <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.defaultShift')}<span className="text-slate-400">{t('ui.defaultShiftNote')}</span>
               </span>
               <select
                 value={form.defaultShiftId}
                 onChange={(e) => setForm((f) => ({ ...f, defaultShiftId: e.target.value }))}
                 className="w-full px-3 py-2 bg-white border border-slate-200 focus:border-emerald-400 outline-none font-zh text-sm text-slate-700"
               >
-                <option value="">（無 — 不判定遲到/早退）</option>
+                <option value="">{t('ui.noShiftOption')}</option>
                 {shiftOptions.map((s) => (
                   <option key={s.id} value={s.id}>{s.name}（{formatShiftRange(s)}）</option>
                 ))}
@@ -223,17 +223,16 @@ export default function EmployeeFormModal({
 
           {isAdmin && (
             <label className="block">
-              <span className="font-zh text-xs text-slate-500 mb-1.5 block">
-                角色 <span className="text-slate-400">(後台權限)</span>
+              <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.role')}<span className="text-slate-400">{t('ui.roleNote')}</span>
               </span>
               <select
                 value={form.roleId}
                 onChange={(e) => setForm((f) => ({ ...f, roleId: e.target.value }))}
                 className="w-full px-3 py-2 bg-white border border-slate-200 focus:border-emerald-400 outline-none font-zh text-sm text-slate-700"
               >
-                <option value="">（一般員工）</option>
+                <option value="">{t('ui.roleStaff')}</option>
                 {currentUser?.adminRoleId != null && (
-                  <option value={String(currentUser.adminRoleId)}>管理員（Admin）</option>
+                  <option value={String(currentUser.adminRoleId)}>{t('ui.roleAdmin')}</option>
                 )}
                 {roleOptions.map((r) => (
                   <option key={r.id} value={r.id}>{r.name}</option>
@@ -244,8 +243,7 @@ export default function EmployeeFormModal({
 
           {isNew && (
             <label className="block">
-              <span className="font-zh text-xs text-slate-500 mb-1.5 block">
-                初始密碼 <span className="text-red-500">*</span> (至少 {PASSWORD_MIN} 碼)
+              <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.initialPassword')}<span className="text-red-500">*</span> {t('fmt.passwordMinHint', { n: PASSWORD_MIN })}
               </span>
               <input
                 type="password"
@@ -262,14 +260,12 @@ export default function EmployeeFormModal({
           {!isNew && (
             <div className="flex items-center gap-2 border-t border-dashed border-slate-200 mt-3 pt-3 flex-wrap">
               <MarkerButton color="#0ea5e9" rotate="0.5deg" fontSize={12} onClick={() => onPassword(employee)}>
-                <KeyRound size={12} strokeWidth={3} />密碼
-              </MarkerButton>
+                <KeyRound size={12} strokeWidth={3} />{t('ui.password')}</MarkerButton>
               <MarkerButton color="#10b981" rotate="-0.4deg" fontSize={12} onClick={openSalary}>
-                <Wallet size={12} strokeWidth={3} />薪資
-              </MarkerButton>
+                <Wallet size={12} strokeWidth={3} />{t('ui.salary')}</MarkerButton>
               {!isSelf && (
                 <MarkerButton color="#ef4444" rotate="0.5deg" fontSize={12} onClick={() => onDelete(employee)}>
-                  <Trash2 size={12} strokeWidth={3} />刪除
+                  <Trash2 size={12} strokeWidth={3} />{t('common.del')}
                 </MarkerButton>
               )}
             </div>
@@ -277,10 +273,10 @@ export default function EmployeeFormModal({
 
           <div className="flex items-center justify-end gap-3 pt-1">
             <MarkerButton color="#94a3b8" rotate="0.5deg" onClick={() => !saving && onClose()} disabled={saving}>
-              <X size={14} strokeWidth={3} />取消
+              <X size={14} strokeWidth={3} />{t('common.cancel')}
             </MarkerButton>
             <MarkerButton as="button" type="submit" color="#10b981" rotate="-0.5deg" disabled={saving}>
-              <Check size={14} strokeWidth={3} />{saving ? '儲存中…' : '儲存'}
+              <Check size={14} strokeWidth={3} />{saving ? t('common.saving') : t('common.save')}
             </MarkerButton>
           </div>
         </form>

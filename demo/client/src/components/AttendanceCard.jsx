@@ -1,5 +1,6 @@
 import { LogIn, LogOut, AlertCircle, Building2, MapPin, CircleHelp } from 'lucide-react'
 import PaperPiece from './PaperPiece.jsx'
+import { useT } from '../i18n/index.jsx'
 
 const locChip = {
   office:  { Icon: Building2, cls: 'bg-emerald-50 border-emerald-200 text-emerald-700', label: 'Office' },
@@ -8,6 +9,7 @@ const locChip = {
 }
 
 export default function AttendanceCard({ type, time, note, borderColor, rotate = "0deg", isAlert = false, locationType }) {
+  const { t } = useT()
   const chip = locationType && locChip[locationType]
   const accent = isAlert ? '#ef4444' : borderColor
 
@@ -39,8 +41,8 @@ export default function AttendanceCard({ type, time, note, borderColor, rotate =
             <div className="flex items-baseline gap-2">
               <span className={`text-xl font-black font-mono tracking-tight ${isAlert ? 'text-red-600' : 'text-slate-700'}`}>{time}</span>
               <span className={`text-[11px] font-zh ${isAlert ? 'text-red-400' : 'text-slate-400'}`}>
-                {type === 'in' ? '上班' : '下班'}
-                {isAlert && (type === 'in' ? ' (遲到)' : ' (早退)')}
+                {type === 'in' ? t('common.clockIn') : t('common.clockOut')}
+                {isAlert && (type === 'in' ? t('punch.lateShort') : t('punch.earlyLeaveShort'))}
               </span>
             </div>
             <div className="flex items-center gap-2 flex-wrap mt-0.5">

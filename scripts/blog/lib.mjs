@@ -11,6 +11,10 @@ export const STATIC_URLS = [
   { loc: 'https://clocdot.com/',                                  changefreq: 'weekly',  priority: '1.0' },
   { loc: 'https://clocdot.com/features/remote-work-attendance/',  changefreq: 'monthly', priority: '0.8' },
   { loc: 'https://clocdot.com/features/gps-clock-in/',            changefreq: 'monthly', priority: '0.8' },
+  // 英文版（/en/）。與中文頁互為 hreflang alternate，各自獨立收錄。
+  { loc: 'https://clocdot.com/en/',                                     changefreq: 'weekly',  priority: '0.9' },
+  { loc: 'https://clocdot.com/en/features/remote-work-attendance/',     changefreq: 'monthly', priority: '0.7' },
+  { loc: 'https://clocdot.com/en/features/gps-clock-in/',               changefreq: 'monthly', priority: '0.7' },
 ];
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;

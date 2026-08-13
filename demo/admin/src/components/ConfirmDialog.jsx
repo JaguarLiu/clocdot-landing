@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { AlertTriangle, Check, X } from 'lucide-react'
 import PaperPiece from './PaperPiece.jsx'
 import MarkerButton from './MarkerButton.jsx'
+import { tr, useT } from '../i18n/index.jsx'
 
 const variants = {
   danger:  { accent: 'red',     Icon: AlertTriangle },
@@ -18,14 +19,15 @@ const accentMap = {
 export default function ConfirmDialog({
   open,
   variant = 'danger',
-  title = '確認操作',
+  title = tr('common.confirmAction'),
   message,
-  confirmLabel = '確認',
-  cancelLabel = '取消',
+  confirmLabel = tr('common.confirm'),
+  cancelLabel = tr('common.cancel'),
   onConfirm,
   onCancel,
   loading = false,
 }) {
+  const { t } = useT()
   useEffect(() => {
     if (!open) return
     function onKey(e) {
@@ -103,7 +105,7 @@ export default function ConfirmDialog({
             disabled={loading}
           >
             <Check size={14} strokeWidth={3} />
-            {loading ? '處理中…' : confirmLabel}
+            {loading ? t('common.processing') : confirmLabel}
           </MarkerButton>
         </div>
       </PaperPiece>

@@ -8,6 +8,7 @@ import PaperToast from '../components/PaperToast.jsx'
 import ConfirmDialog from '../components/ConfirmDialog.jsx'
 import ShiftManagerModal from '../components/ShiftManagerModal.jsx'
 import { formatShiftRange } from '../lib/shiftTime.js'
+import { tr, useT } from '../i18n/index.jsx'
 
 // 班別顏色（依列表順序輪替）：[實色 bg, 實色 text, 淡色 bg, 淡色 text]
 const SHIFT_COLORS = [
@@ -33,9 +34,10 @@ function daysInMonth(month) {
   })
 }
 
-const DOW_ZH = ['日', '一', '二', '三', '四', '五', '六']
+const DOW_ZH = [tr('weekdays.short.0'), tr('weekdays.short.1'), tr('weekdays.short.2'), tr('weekdays.short.3'), tr('weekdays.short.4'), tr('weekdays.short.5'), tr('weekdays.short.6')]
 
 export default function Schedule() {
+  const { t } = useT()
   const [month, setMonth] = useState(() => monthStr(new Date()))
   const [departmentId, setDepartmentId] = useState('')
   const [selectedShiftId, setSelectedShiftId] = useState(null) // shift.id | 'clear' | null
@@ -86,7 +88,7 @@ export default function Schedule() {
     const sid = assignedByKey.get(key)
     if (sid) {
       // 停用班別不在 shiftById（列表不含已停用）→ 顯示為未知指派，仍可清除
-      return { shift: shiftById.get(sid) ?? { id: sid, name: '（已停用）', startTime: '', endTime: '' }, assigned: true, dirty: false }
+      return { shift: shiftById.get(sid) ?? { id: sid, name: t('shifts.suffixDisabled'), startTime: '', endTime: '' }, assigned: true, dirty: false }
     }
     return user.defaultShift ? { shift: user.defaultShift, assigned: false, dirty: false } : null
   }
@@ -116,13 +118,13 @@ export default function Schedule() {
       setPending(new Map())
       setComplianceWarning(null)
       mutate()
-      setToast({ variant: 'success', message: `已儲存 ${changes.length} 筆排班變更` })
+      setToast({ variant: 'success', message: t('fmt.scheduleSaved', { n: changes.length }) })
     } catch (err) {
       // 排班法規警告（七休一 / 輪班間隔）→ 顯示可覆寫的確認框，而非錯誤 toast
       if (err?.status === 409 && err?.info?.error === 'schedule_compliance_warning') {
         setComplianceWarning(err.info.violations ?? [])
       } else {
-        setToast({ variant: 'error', message: err?.message || '儲存失敗' })
+        setToast({ variant: 'error', message: err?.message || t('common.saveFailed') })
       }
     } finally {
       setSaving(false)
@@ -151,29 +153,29 @@ export default function Schedule() {
       <ConfirmDialog
         open={confirmMonthDelta !== null}
         variant="danger"
-        title="捨棄未儲存的變更"
-        message={`尚有 ${pending.size} 筆未儲存的排班變更，切換月份將捨棄，確定？`}
-        confirmLabel="捨棄並切換"
-        cancelLabel="取消"
+        title={t('settings.discardChanges')}
+        message={t('fmt.schedulePending', { n: pending.size })}
+        confirmLabel={t('common.discardAndSwitch')}
+        cancelLabel={t('common.cancel')}
         onConfirm={() => { applyMonthShift(confirmMonthDelta); setConfirmMonthDelta(null) }}
         onCancel={() => setConfirmMonthDelta(null)}
       />
       <ConfirmDialog
         open={complianceWarning !== null}
         variant="warning"
-        title="排班可能違反勞基法"
+        title={t('shifts.scheduleWarning')}
         loading={saving}
         message={
           <span className="block">
-            <span className="block mb-1.5">偵測到以下問題：</span>
+            <span className="block mb-1.5">{t('ui.issuesFound')}</span>
             {(complianceWarning ?? []).map((v, i) => (
               <span key={i} className="block mt-1 text-amber-700">・{v.message}</span>
             ))}
-            <span className="block mt-3 text-slate-500">確認員工已同意（例假出勤 / 加班）再儲存。仍要儲存嗎？</span>
+            <span className="block mt-3 text-slate-500">{t('ui.confirmConsent')}</span>
           </span>
         }
-        confirmLabel="仍要儲存"
-        cancelLabel="返回修改"
+        confirmLabel={t('common.saveAnyway')}
+        cancelLabel={t('common.goBack')}
         onConfirm={() => doSave(true)}
         onCancel={() => setComplianceWarning(null)}
       />
@@ -190,16 +192,16 @@ export default function Schedule() {
           <CalendarDays size={20} className="text-white" strokeWidth={2.5} />
         </div>
         <div>
-          <h2 className="font-zh text-xl text-slate-800">排班行事曆</h2>
+          <h2 className="font-zh text-xl text-slate-800">{t('ui.scheduleCalendar')}</h2>
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] mt-0.5">Shift Schedule</p>
         </div>
 
         <div className="flex items-center gap-2 ml-auto">
-          <button type="button" onClick={() => shiftMonth(-1)} aria-label="上個月" className="p-1.5 text-slate-400 hover:text-emerald-600 active:scale-90 transition-transform">
+          <button type="button" onClick={() => shiftMonth(-1)} aria-label={t('common.prevMonth')} className="p-1.5 text-slate-400 hover:text-emerald-600 active:scale-90 transition-transform">
             <ChevronLeft size={18} strokeWidth={3} />
           </button>
           <span className="font-mono font-black text-lg text-slate-700 tabular-nums">{month}</span>
-          <button type="button" onClick={() => shiftMonth(1)} aria-label="下個月" className="p-1.5 text-slate-400 hover:text-emerald-600 active:scale-90 transition-transform">
+          <button type="button" onClick={() => shiftMonth(1)} aria-label={t('common.nextMonth')} className="p-1.5 text-slate-400 hover:text-emerald-600 active:scale-90 transition-transform">
             <ChevronRight size={18} strokeWidth={3} />
           </button>
           <select
@@ -207,7 +209,7 @@ export default function Schedule() {
             onChange={(e) => setDepartmentId(e.target.value)}
             className="ml-2 px-3 py-2 bg-white border border-slate-200 focus:border-emerald-400 outline-none font-zh text-sm text-slate-700"
           >
-            <option value="">全部部門</option>
+            <option value="">{t('ui.allDepartments')}</option>
             {(depts ?? []).map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
           </select>
         </div>
@@ -218,7 +220,7 @@ export default function Schedule() {
       <div className="mb-10">
       <PaperPiece color="#fdfbf4" rotate="-0.2deg" variant="card" className="p-4">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-zh text-xs text-slate-500 mr-1">選擇班別後點格子塗抹：</span>
+          <span className="font-zh text-xs text-slate-500 mr-1">{t('ui.paintHint')}</span>
           {shiftList.map((s) => {
             const [solid] = colorByShift.get(s.id)
             const active = selectedShiftId === s.id
@@ -245,32 +247,30 @@ export default function Schedule() {
             className={`inline-flex items-center gap-1 px-2.5 py-1.5 font-zh text-xs bg-slate-200 text-slate-600 transition-transform active:scale-95 ${selectedShiftId === 'clear' ? 'ring-2 ring-offset-1 ring-slate-700' : 'opacity-80 hover:opacity-100'}`}
             style={{ borderRadius: '6px 2px 7px 3px/3px 7px 2px 6px' }}
           >
-            <Eraser size={12} strokeWidth={3} />清除指派
-          </button>
+            <Eraser size={12} strokeWidth={3} />{t('ui.clearAssignment')}</button>
           <button
             type="button"
             onClick={() => setShowShiftManager(true)}
             className="inline-flex items-center gap-1 px-2.5 py-1.5 font-zh text-xs text-slate-500 border-2 border-dashed border-slate-300 hover:text-emerald-600 hover:border-emerald-300 transition-colors active:scale-95"
             style={{ borderRadius: '6px 2px 7px 3px/3px 7px 2px 6px' }}
           >
-            <Pencil size={12} strokeWidth={3} />管理班別
-          </button>
+            <Pencil size={12} strokeWidth={3} />{t('ui.manageShifts')}</button>
 
-          <span className="font-zh text-[11px] text-slate-400 ml-auto">實色＝當日指派・淡色＝預設班</span>
+          <span className="font-zh text-[11px] text-slate-400 ml-auto">{t('ui.paintLegend')}</span>
           <MarkerButton as="button" type="button" color="#10b981" rotate="-0.5deg" fontSize={12} onClick={save} disabled={saving || pending.size === 0}>
             <Save size={13} strokeWidth={3} />
-            {saving ? '儲存中…' : `儲存變更${pending.size > 0 ? `（${pending.size}）` : ''}`}
+            {saving ? t('common.saving') : t('fmt.saveChanges', { suffix: pending.size > 0 ? ` (${pending.size})` : '' })}
           </MarkerButton>
         </div>
       </PaperPiece>
       </div>
 
       {isLoading ? (
-        <p className="font-zh text-sm text-slate-400 py-10 text-center">載入中…</p>
+        <p className="font-zh text-sm text-slate-400 py-10 text-center">{t('ui.loading')}</p>
       ) : users.length === 0 ? (
         <div className="text-center py-16 opacity-40 flex flex-col items-center gap-3">
           <Inbox size={40} className="text-slate-300" />
-          <p className="font-zh text-sm text-slate-400">沒有可排班的員工</p>
+          <p className="font-zh text-sm text-slate-400">{t('ui.noSchedulableStaff')}</p>
         </div>
       ) : (
         <PaperPiece color="white" rotate="0deg" variant="card" className="p-4">
@@ -278,7 +278,7 @@ export default function Schedule() {
             <table className="border-separate border-spacing-0 min-w-max">
               <thead>
                 <tr>
-                  <th className="sticky left-0 z-10 bg-white text-left font-zh text-xs text-slate-500 px-3 py-2 border-b-2 border-dashed border-slate-200 min-w-36">員工</th>
+                  <th className="sticky left-0 z-10 bg-white text-left font-zh text-xs text-slate-500 px-3 py-2 border-b-2 border-dashed border-slate-200 min-w-36">{t('employees.label')}</th>
                   {days.map((d) => (
                     <th
                       key={d.dateStr}
@@ -296,7 +296,7 @@ export default function Schedule() {
                     <td className="sticky left-0 z-10 bg-white px-3 py-1.5 border-b border-dashed border-slate-100">
                       <p className="font-zh text-xs text-slate-700 whitespace-nowrap">{u.name || '—'}</p>
                       <p className="text-[9px] font-mono text-slate-400">
-                        {u.empNo ?? ''}{u.defaultShift ? ` ・預設 ${u.defaultShift.name}` : ' ・無預設班'}
+                        {u.empNo ?? ''}{u.defaultShift ? t('fmt.defaultShiftSuffix', { name: u.defaultShift.name }) : t('fmt.noDefaultShift')}
                       </p>
                     </td>
                     {days.map((d) => {
@@ -312,7 +312,7 @@ export default function Schedule() {
                           key={d.dateStr}
                           onMouseDown={() => { setPainting(true); paintCell(u, d.dateStr) }}
                           onMouseEnter={() => { if (painting) paintCell(u, d.dateStr) }}
-                          title={cell ? `${cell.shift.name} ${formatShiftRange(cell.shift)}${cell.assigned ? '（指派）' : '（預設）'}` : '無班別'}
+                          title={cell ? `${cell.shift.name} ${formatShiftRange(cell.shift)}${cell.assigned ? t('shifts.suffixAssigned') : t('shifts.suffixDefault')}` : t('shifts.none')}
                           className={`border-b border-dashed border-slate-100 px-0.5 py-1 text-center align-middle ${selectedShiftId ? 'cursor-crosshair' : 'cursor-default'}`}
                         >
                           <span

@@ -7,22 +7,23 @@ import PaperToast from '../components/PaperToast.jsx'
 import MarkerButton from '../components/MarkerButton.jsx'
 import StatusStamp from '../components/StatusStamp.jsx'
 import { getOvertimePending, submitOvertimeRequest, getMyOvertimeCompliance, fetcher } from '../services/api.js'
+import { tr, useT } from '../i18n/index.jsx'
 
 const LIST_ROTATIONS = ['-0.6deg', '0.5deg', '-0.4deg', '0.7deg', '-0.3deg']
 
 const DAY_TYPE_LABEL = {
-  workday: '平日',
-  restday: '休息日',
-  national_holiday: '國定假日',
-  regular_leave: '例假',
+  workday: tr('overtime.dayType.workday'),
+  restday: tr('overtime.dayType.restday'),
+  national_holiday: tr('overtime.dayType.national_holiday'),
+  regular_leave: tr('overtime.dayType.regular_leave'),
 }
 
 const RATE_LABEL = {
   '1.34': '×1.34',
   '1.67': '×1.67',
   '2.67': '×2.67',
-  holiday: '假日加倍',
-  regular_leave: '例假',
+  holiday: tr('overtime.rate.holiday'),
+  regular_leave: tr('overtime.dayType.regular_leave'),
 }
 
 function formatDateFull(dateStr) {
@@ -35,6 +36,7 @@ function toHours(minutes) {
 }
 
 export default function Overtime() {
+  const { t } = useT()
   const [searchParams, setSearchParams] = useSearchParams()
   const activeTab = searchParams.get('tab') === 'list' ? 'list' : 'apply'
 
@@ -46,7 +48,7 @@ export default function Overtime() {
     <main className="w-full relative z-10 px-4 mt-4 animate-in slide-in-from-bottom-4 duration-300 pb-20">
       <div className="flex items-center gap-2 mb-6 px-2">
         <Timer size={24} className="text-amber-500" aria-hidden="true" />
-        <h3 className="font-zh text-2xl text-slate-700">加班申請</h3>
+        <h3 className="font-zh text-2xl text-slate-700">{t('titles.overtime')}</h3>
       </div>
 
       <ComplianceSummary />
@@ -54,7 +56,7 @@ export default function Overtime() {
       <div
         className="flex mb-8 bg-slate-200/40 p-1 border border-slate-200"
         role="tablist"
-        aria-label="加班頁籤"
+        aria-label={t('overtime.tabsLabel')}
       >
         <button
           type="button"
@@ -65,7 +67,7 @@ export default function Overtime() {
             activeTab === 'apply' ? 'bg-white text-amber-500 shadow-sm' : 'text-slate-500'
           }`}
         >
-          可申請
+          {t('overtime.tabAvailable')}
         </button>
         <button
           type="button"
@@ -76,7 +78,7 @@ export default function Overtime() {
             activeTab === 'list' ? 'bg-white text-amber-500 shadow-sm' : 'text-slate-500'
           }`}
         >
-          申請紀錄
+          {t('correction.tabRecords')}
         </button>
       </div>
 
@@ -88,6 +90,7 @@ export default function Overtime() {
 // ------- 可申請（虛擬草稿）-------
 
 function PendingList() {
+  const { t } = useT()
   const { data, isLoading, mutate } = useSWR('/overtime/pending', () => getOvertimePending())
   const [toast, setToast] = useState(null)
 
@@ -96,7 +99,7 @@ function PendingList() {
   function handleSubmitted(workDate) {
     // 送出成功後本地移除該日，並重新拉取
     mutate((prev) => (prev ?? []).filter((p) => p.workDate !== workDate), { revalidate: true })
-    setToast({ variant: 'success', message: '加班申請已送出，等待主管審核' })
+    setToast({ variant: 'success', message: t('overtime.sent') })
   }
 
   return (
@@ -106,16 +109,16 @@ function PendingList() {
       <div className="bg-amber-50 p-4 border-l-4 border-amber-400 flex gap-3 mb-6">
         <AlertCircle size={18} className="text-amber-400 shrink-0" aria-hidden="true" />
         <p className="text-[11px] font-bold text-amber-600 leading-relaxed">
-          系統依你的打卡時間自動算出超時時數，確認後送出即可。申請時數可往下調整，記得別超過系統算的喔。
+          {t('overtime.intro')}
         </p>
       </div>
 
       {isLoading ? (
-        <p className="text-center text-slate-500 text-xs py-20 font-zh">載入中...</p>
+        <p className="text-center text-slate-500 text-xs py-20 font-zh">{t('common.loading')}</p>
       ) : pending.length === 0 ? (
         <div className="text-center py-20 opacity-40 flex flex-col items-center gap-2">
           <Inbox size={40} className="text-slate-400" aria-hidden="true" />
-          <p className="font-zh text-xs text-slate-500">目前沒有可申請的加班，辛苦了！</p>
+          <p className="font-zh text-xs text-slate-500">{t('overtime.emptyAvailable')}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -135,6 +138,7 @@ function PendingList() {
 }
 
 function PendingCard({ item, rotate, onSubmitted, onError }) {
+  const { t } = useT()
   const maxHours = item.derivedMinutes / 60
   const [hours, setHours] = useState(maxHours.toFixed(1))
   const [reason, setReason] = useState('')
@@ -143,11 +147,11 @@ function PendingCard({ item, rotate, onSubmitted, onError }) {
   async function handleSubmit() {
     const requestedMinutes = Math.round(Number(hours) * 60)
     if (!Number.isFinite(requestedMinutes) || requestedMinutes <= 0) {
-      onError('請填寫有效的加班時數')
+      onError(t('overtime.invalidHours'))
       return
     }
     if (requestedMinutes > item.derivedMinutes) {
-      onError(`申請時數不可超過 ${toHours(item.derivedMinutes)} 小時`)
+      onError(t('overtime.exceedsDerived', { n: toHours(item.derivedMinutes) }))
       return
     }
     setSubmitting(true)
@@ -155,7 +159,7 @@ function PendingCard({ item, rotate, onSubmitted, onError }) {
       await submitOvertimeRequest({ workDate: item.workDate, requestedMinutes, reason })
       onSubmitted(item.workDate)
     } catch (err) {
-      onError(err?.message || '送出失敗，請稍後再試')
+      onError(err?.message || t('common.submitFailed'))
     } finally {
       setSubmitting(false)
     }
@@ -180,7 +184,7 @@ function PendingCard({ item, rotate, onSubmitted, onError }) {
               {formatDateFull(item.workDate)}
             </span>
             <span className="font-mono text-[11px] text-slate-400 tabular-nums">
-              系統推導 {toHours(item.derivedMinutes)} 小時
+              {t('overtime.derived', { n: toHours(item.derivedMinutes) })}
             </span>
           </div>
 
@@ -200,7 +204,7 @@ function PendingCard({ item, rotate, onSubmitted, onError }) {
           <div className="mt-3 space-y-2">
             <div>
               <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
-                申請時數（小時）
+                {t('overtime.requestedHours')}
               </label>
               <input
                 type="number"
@@ -214,7 +218,7 @@ function PendingCard({ item, rotate, onSubmitted, onError }) {
             </div>
             <input
               type="text"
-              placeholder="加班事由（選填）"
+              placeholder={t('overtime.reasonPlaceholder')}
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               className="w-full bg-slate-50 border-b-2 border-slate-200 px-1.5 py-2 font-zh text-sm text-slate-600 rounded-none focus:outline-none focus:border-amber-400 transition-colors"
@@ -229,7 +233,7 @@ function PendingCard({ item, rotate, onSubmitted, onError }) {
               style={{ width: '100%' }}
             >
               <Send size={16} aria-hidden="true" />
-              <span>{submitting ? '送出中...' : '送出申請'}</span>
+              <span>{submitting ? t('common.submitting') : t('common.send')}</span>
             </MarkerButton>
           </div>
         </div>
@@ -241,17 +245,18 @@ function PendingCard({ item, rotate, onSubmitted, onError }) {
 // ------- 申請紀錄 -------
 
 function OvertimeHistory() {
+  const { t } = useT()
   const { data, isLoading } = useSWR('/overtime-requests', fetcher)
   const list = useMemo(() => data ?? [], [data])
 
   return (
     <div className="animate-in fade-in duration-300 pb-10">
       {isLoading ? (
-        <p className="text-center text-slate-500 text-xs py-20 font-zh">載入中...</p>
+        <p className="text-center text-slate-500 text-xs py-20 font-zh">{t('common.loading')}</p>
       ) : list.length === 0 ? (
         <div className="text-center py-20 opacity-40 flex flex-col items-center gap-2">
           <Inbox size={40} className="text-slate-400" aria-hidden="true" />
-          <p className="font-zh text-xs text-slate-500">還沒有加班申請紀錄</p>
+          <p className="font-zh text-xs text-slate-500">{t('overtime.emptyRecords')}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -279,7 +284,7 @@ function OvertimeHistory() {
                       {formatDateFull(req.workDate)}
                     </span>
                     <span className="inline-flex items-center font-mono font-black text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded tabular-nums">
-                      {toHours(req.requestedMinutes)} 小時
+                      {toHours(req.requestedMinutes)} {t('common.hours')}
                     </span>
                   </div>
                   {req.reason && (
@@ -308,6 +313,7 @@ const COMPLIANCE_TONE = {
 }
 
 function ComplianceSummary() {
+  const { t } = useT()
   const { data, error } = useSWR('/overtime/compliance', getMyOvertimeCompliance)
 
   // 降級：載入中或失敗 → 不顯示，不阻斷主流程
@@ -319,10 +325,10 @@ function ComplianceSummary() {
       <div className="flex items-baseline justify-between gap-2 flex-wrap">
         <span className="flex items-center gap-1.5 font-zh text-sm text-slate-600">
           <tone.Icon size={15} className={tone.text} aria-hidden="true" />
-          本月已加班
+          {t('overtime.monthlyTotal')}
         </span>
         <span className={`font-mono font-black text-sm tabular-nums ${tone.num}`}>
-          {toHours(data.monthlyMinutes)} / {toHours(data.monthlyCap)} 小時
+          {toHours(data.monthlyMinutes)} / {toHours(data.monthlyCap)} {t('common.hours')}
         </span>
       </div>
       {data.status !== 'ok' && (data.reasons?.length ?? 0) > 0 && (

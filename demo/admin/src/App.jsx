@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth.js'
 import AdminLayout from './components/AdminLayout.jsx'
+import { tr } from './i18n/index.jsx'
 
 const Login = lazy(() => import('./pages/Login.jsx'))
 const Dashboard = lazy(() => import('./pages/Dashboard.jsx'))
@@ -17,7 +18,7 @@ const Schedule = lazy(() => import('./pages/Schedule.jsx'))
 function Loading() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f3f0e6]">
-      <div className="font-zh text-slate-400 text-sm">載入中...</div>
+      <div className="font-zh text-slate-400 text-sm">{tr('ui.loading')}</div>
     </div>
   )
 }

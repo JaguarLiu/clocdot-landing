@@ -6,12 +6,14 @@ import PaperPiece from './PaperPiece.jsx'
 import MarkerButton from './MarkerButton.jsx'
 import ConfirmDialog from './ConfirmDialog.jsx'
 import { formatShiftRange } from '../lib/shiftTime.js'
+import { useT } from '../i18n/index.jsx'
 
 const EMPTY_FORM = { name: '', startTime: '09:00', endTime: '18:00', breakMinutes: 60, isDefault: false }
 
 // 班別管理 popup（排班頁的「貼紙簿」）：清單 + 新增/編輯表單。
 // SWR key 與排班頁調色盤共用（/admin/shifts），這裡 mutate 後調色盤即時更新。
 export default function ShiftManagerModal({ open, onClose, onToast, onCreated, onDeleted }) {
+  const { t } = useT()
   const { data, mutate } = useSWR(open ? '/admin/shifts' : null, fetcher)
   const shifts = data ?? []
   const [editing, setEditing] = useState(null) // null | 'new' | shift.id
@@ -30,12 +32,12 @@ export default function ShiftManagerModal({ open, onClose, onToast, onCreated, o
   async function save(e) {
     e.preventDefault()
     const breakMin = Number(form.breakMinutes)
-    if (!form.name.trim()) { onToast({ variant: 'error', message: '班別名稱不可為空' }); return }
+    if (!form.name.trim()) { onToast({ variant: 'error', message: t('shifts.nameRequired') }); return }
     if (!form.startTime || !form.endTime || form.startTime === form.endTime) {
-      onToast({ variant: 'error', message: '上下班時間不可相同（結束時間早於開始時間即為跨日班）' }); return
+      onToast({ variant: 'error', message: t('shifts.sameTime') }); return
     }
     if (!Number.isInteger(breakMin) || breakMin < 0 || breakMin > 480) {
-      onToast({ variant: 'error', message: '午休分鐘數需為 0–480 的整數' }); return
+      onToast({ variant: 'error', message: t('shifts.breakRange') }); return
     }
     setSaving(true)
     try {
@@ -46,15 +48,15 @@ export default function ShiftManagerModal({ open, onClose, onToast, onCreated, o
       if (editing === 'new') {
         const created = await createShift(payload)
         onCreated?.(created)
-        onToast({ variant: 'success', message: '已新增班別，關閉視窗即可直接塗抹' })
+        onToast({ variant: 'success', message: t('shifts.added') })
       } else {
         await updateShift(editing, payload)
-        onToast({ variant: 'success', message: '已更新班別' })
+        onToast({ variant: 'success', message: t('shifts.updated') })
       }
       mutate()
       cancelEdit()
     } catch (err) {
-      onToast({ variant: 'error', message: err?.message || '操作失敗' })
+      onToast({ variant: 'error', message: err?.message || t('common.actionFailed') })
     } finally {
       setSaving(false)
     }
@@ -67,10 +69,10 @@ export default function ShiftManagerModal({ open, onClose, onToast, onCreated, o
       await deleteShift(deleteTarget.id)
       onDeleted?.(deleteTarget.id)
       mutate()
-      onToast({ variant: 'success', message: '已停用班別' })
+      onToast({ variant: 'success', message: t('shifts.disabled') })
       setDeleteTarget(null)
     } catch (err) {
-      onToast({ variant: 'error', message: err?.message || '刪除失敗' })
+      onToast({ variant: 'error', message: err?.message || t('common.deleteFailed') })
     } finally {
       setDeleting(false)
     }
@@ -87,19 +89,18 @@ export default function ShiftManagerModal({ open, onClose, onToast, onCreated, o
             <Clock3 size={20} className="text-white" strokeWidth={2.5} />
           </div>
           <div className="min-w-0 pt-0.5 flex-1">
-            <h3 className="font-zh text-lg text-slate-800">班別管理</h3>
+            <h3 className="font-zh text-lg text-slate-800">{t('ui.shiftManager')}</h3>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] mt-1">Shift Templates</p>
           </div>
           {editing === null && (
             <MarkerButton color="#10b981" rotate="-0.6deg" fontSize={12} onClick={openNew}>
-              <Plus size={13} strokeWidth={3} />新增班別
-            </MarkerButton>
+              <Plus size={13} strokeWidth={3} />{t('ui.addShift')}</MarkerButton>
           )}
         </div>
 
         <div className="space-y-2 mb-5">
           {shifts.length === 0 ? (
-            <p className="font-zh text-sm text-slate-400 text-center py-3">尚未建立班別</p>
+            <p className="font-zh text-sm text-slate-400 text-center py-3">{t('ui.noShiftsYet')}</p>
           ) : shifts.map((s) => (
             <div key={s.id} className="flex items-center gap-3 bg-white border border-slate-200 p-3" style={{ borderRadius: '6px 2px 7px 3px/3px 7px 2px 6px' }}>
               <div className="min-w-0 flex-1">
@@ -113,13 +114,13 @@ export default function ShiftManagerModal({ open, onClose, onToast, onCreated, o
                 </p>
                 <p className="font-mono font-black text-xs text-slate-500 tabular-nums mt-0.5">
                   {formatShiftRange(s)}
-                  <span className="font-zh font-normal text-slate-400 ml-2">午休 {s.breakMinutes} 分</span>
+                  <span className="font-zh font-normal text-slate-400 ml-2">{t('fmt.breakMin', { n: s.breakMinutes })}</span>
                 </p>
               </div>
-              <MarkerButton color="#10b981" rotate="-0.5deg" fontSize={11} onClick={() => openEdit(s)} title="編輯" ariaLabel="編輯班別" contentStyle={{ padding: '7px' }}>
+              <MarkerButton color="#10b981" rotate="-0.5deg" fontSize={11} onClick={() => openEdit(s)} title={t('common.edit')} ariaLabel={t('shifts.edit')} contentStyle={{ padding: '7px' }}>
                 <Pencil size={12} strokeWidth={3} />
               </MarkerButton>
-              <MarkerButton color="#ef4444" rotate="0.5deg" fontSize={11} onClick={() => setDeleteTarget(s)} title="停用" ariaLabel="停用班別" contentStyle={{ padding: '7px' }}>
+              <MarkerButton color="#ef4444" rotate="0.5deg" fontSize={11} onClick={() => setDeleteTarget(s)} title={t('common.disable')} ariaLabel={t('shifts.disable')} contentStyle={{ padding: '7px' }}>
                 <Trash2 size={12} strokeWidth={3} />
               </MarkerButton>
             </div>
@@ -132,18 +133,18 @@ export default function ShiftManagerModal({ open, onClose, onToast, onCreated, o
               {editing === 'new' ? 'New Shift' : 'Edit Shift'}
             </p>
             <label className="block">
-              <span className="font-zh text-xs text-slate-500 mb-1.5 block">班別名稱</span>
+              <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.shiftName')}</span>
               <input
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                placeholder="早班"
+                placeholder={t('seed.shiftMorning')}
                 className="w-full px-3 py-2 bg-[#fdfbf4] border border-slate-200 focus:border-emerald-400 outline-none font-zh text-sm text-slate-700"
               />
             </label>
             <div className="grid grid-cols-3 gap-3">
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">上班時間</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.startTime')}</span>
                 <input
                   type="time"
                   value={form.startTime}
@@ -152,7 +153,7 @@ export default function ShiftManagerModal({ open, onClose, onToast, onCreated, o
                 />
               </label>
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">下班時間</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.endTime')}</span>
                 <input
                   type="time"
                   value={form.endTime}
@@ -161,7 +162,7 @@ export default function ShiftManagerModal({ open, onClose, onToast, onCreated, o
                 />
               </label>
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">午休 (分鐘)</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.breakMinutes')}</span>
                 <input
                   type="number"
                   min={0}
@@ -178,16 +179,14 @@ export default function ShiftManagerModal({ open, onClose, onToast, onCreated, o
                 type="checkbox"
                 checked={form.isDefault}
                 onChange={(e) => setForm((f) => ({ ...f, isDefault: e.target.checked }))}
-              />
-              設為預設班別
-              <span className="font-zh text-xs text-slate-400">（未排班的工作日自動套用；新員工自動帶入）</span>
+              />{t('ui.setAsDefault')}<span className="font-zh text-xs text-slate-400">{t('ui.setAsDefaultNote')}</span>
             </label>
             <div className="flex items-center gap-3 pt-1">
               <MarkerButton as="button" type="submit" color="#10b981" rotate="-0.5deg" fontSize={12} disabled={saving}>
-                <Check size={13} strokeWidth={3} />{saving ? '儲存中…' : '儲存'}
+                <Check size={13} strokeWidth={3} />{saving ? t('common.saving') : t('common.save')}
               </MarkerButton>
               <MarkerButton color="#94a3b8" rotate="0.5deg" fontSize={12} onClick={cancelEdit} disabled={saving}>
-                <X size={13} strokeWidth={3} />取消
+                <X size={13} strokeWidth={3} />{t('common.cancel')}
               </MarkerButton>
             </div>
           </form>
@@ -195,7 +194,7 @@ export default function ShiftManagerModal({ open, onClose, onToast, onCreated, o
 
         <div className="flex items-center justify-end">
           <MarkerButton color="#94a3b8" rotate="0.5deg" onClick={() => !saving && onClose()}>
-            <X size={14} strokeWidth={3} />關閉
+            <X size={14} strokeWidth={3} />{t('common.close')}
           </MarkerButton>
         </div>
       </PaperPiece>
@@ -203,10 +202,10 @@ export default function ShiftManagerModal({ open, onClose, onToast, onCreated, o
       <ConfirmDialog
         open={deleteTarget !== null}
         variant="danger"
-        title="停用班別"
-        message={deleteTarget && `確定要停用「${deleteTarget.name}」？已停用的班別不能再排班，歷史紀錄會保留。`}
-        confirmLabel="停用"
-        cancelLabel="取消"
+        title={t('shifts.disable')}
+        message={deleteTarget && t('fmt.confirmDisableShift', { name: deleteTarget.name })}
+        confirmLabel={t('common.disable')}
+        cancelLabel={t('common.cancel')}
         loading={deleting}
         onConfirm={confirmDelete}
         onCancel={() => !deleting && setDeleteTarget(null)}

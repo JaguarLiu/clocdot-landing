@@ -7,6 +7,7 @@ import { useAttendanceHistory } from '../hooks/useAttendance.js'
 import PaperPiece from '../components/PaperPiece.jsx'
 import ChangePasswordModal from '../components/ChangePasswordModal.jsx'
 import { fetcher } from '../services/api.js'
+import { tr, useT } from '../i18n/index.jsx'
 
 function formatYMD(iso) {
   if (!iso) return '—'
@@ -24,10 +25,11 @@ function dayBefore(iso) {
 }
 
 const menuItems = [
-  { icon: Settings, text: '系統通知設定', color: 'text-slate-400', rotate: '0.8deg' },
+  { icon: Settings, text: tr('profile.notificationSettings'), color: 'text-slate-400', rotate: '0.8deg' },
 ]
 
 export default function Profile() {
+  const { t } = useT()
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [showChangePassword, setShowChangePassword] = useState(false)
@@ -55,31 +57,31 @@ export default function Profile() {
             )}
           </div>
           <div>
-            <h2 className="text-2xl font-black text-slate-700">{user?.name || '使用者'}</h2>
-            {user?.empNo && <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">工號: {user.empNo}</p>}
+            <h2 className="text-2xl font-black text-slate-700">{user?.name || t('common.user')}</h2>
+            {user?.empNo && <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t('profile.empNo', { no: user.empNo })}</p>}
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4 border-t border-dashed border-slate-100 pt-4">
           <div className="text-center">
-            <p className="text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-wider">本月出勤</p>
-            <p className="text-xl font-black text-slate-700">{attendanceDays} 天</p>
+            <p className="text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-wider">{t('profile.monthlyAttendance')}</p>
+            <p className="text-xl font-black text-slate-700">{attendanceDays} {t('common.days')}</p>
           </div>
           <div className="text-center">
-            <p className="text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-wider">遲到早退</p>
-            <p className="text-xl font-black text-orange-500">{lateOrEarlyCount} 次</p>
+            <p className="text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-wider">{t('profile.lateEarly')}</p>
+            <p className="text-xl font-black text-orange-500">{lateOrEarlyCount} {t('common.times')}</p>
           </div>
         </div>
 
         {balanceData && user?.employmentType !== 'parttime' && (
           <div className="grid grid-cols-2 gap-4 border-t border-dashed border-slate-100 pt-4 mt-4">
             <div className="text-center">
-              <p className="text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-wider">特休生效日</p>
+              <p className="text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-wider">{t('profile.annualStart')}</p>
               <p className="text-sm font-black font-mono tabular-nums text-emerald-600">
                 {formatYMD(annualEffective)}
               </p>
             </div>
             <div className="text-center">
-              <p className="text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-wider">特休失效日</p>
+              <p className="text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-wider">{t('profile.annualEnd')}</p>
               <p className="text-sm font-black font-mono tabular-nums text-red-500">
                 {formatYMD(annualExpiry)}
               </p>
@@ -95,7 +97,7 @@ export default function Profile() {
               <div className="p-2 rounded-lg bg-sky-50 border border-sky-100">
                 <History size={20} className="text-sky-500" />
               </div>
-              <span className="font-black text-slate-600 tracking-wide">打卡紀錄</span>
+              <span className="font-black text-slate-600 tracking-wide">{t('history.heading')}</span>
             </div>
             <ChevronRight size={18} className="text-slate-300" aria-hidden="true" />
           </PaperPiece>
@@ -107,7 +109,7 @@ export default function Profile() {
               <div className="p-2 rounded-lg bg-amber-50 border border-amber-100">
                 <Calendar size={20} className="text-amber-500" />
               </div>
-              <span className="font-black text-slate-600 tracking-wide">請假申請清單</span>
+              <span className="font-black text-slate-600 tracking-wide">{t('profile.leaveList')}</span>
             </div>
             <ChevronRight size={18} className="text-slate-300" aria-hidden="true" />
           </PaperPiece>
@@ -119,7 +121,7 @@ export default function Profile() {
               <div className="p-2 rounded-lg bg-amber-50 border border-amber-100">
                 <Timer size={20} className="text-amber-500" />
               </div>
-              <span className="font-black text-slate-600 tracking-wide">加班申請</span>
+              <span className="font-black text-slate-600 tracking-wide">{t('titles.overtime')}</span>
             </div>
             <ChevronRight size={18} className="text-slate-300" aria-hidden="true" />
           </PaperPiece>
@@ -131,7 +133,7 @@ export default function Profile() {
               <div className="p-2 rounded-lg bg-emerald-50 border border-emerald-100">
                 <Wallet size={20} className="text-emerald-500" />
               </div>
-              <span className="font-black text-slate-600 tracking-wide">薪資單</span>
+              <span className="font-black text-slate-600 tracking-wide">{t('titles.payslip')}</span>
             </div>
             <ChevronRight size={18} className="text-slate-300" aria-hidden="true" />
           </PaperPiece>
@@ -143,7 +145,7 @@ export default function Profile() {
               <div className="p-2 rounded-lg bg-sky-50 border border-sky-100">
                 <ClipboardCheck size={20} className="text-sky-500" />
               </div>
-              <span className="font-black text-slate-600 tracking-wide">待簽核</span>
+              <span className="font-black text-slate-600 tracking-wide">{t('profile.approvals')}</span>
             </div>
             <ChevronRight size={18} className="text-slate-300" aria-hidden="true" />
           </PaperPiece>
@@ -155,7 +157,7 @@ export default function Profile() {
               <div className="p-2 rounded-lg bg-orange-50 border border-orange-100">
                 <KeyRound size={20} className="text-orange-500" />
               </div>
-              <span className="font-black text-slate-600 tracking-wide">修改密碼</span>
+              <span className="font-black text-slate-600 tracking-wide">{t('profile.changePassword')}</span>
             </div>
             <ChevronRight size={18} className="text-slate-300" aria-hidden="true" />
           </PaperPiece>

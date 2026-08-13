@@ -3,9 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import { Mail, Lock } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth.js'
 import PaperPiece from '../components/PaperPiece.jsx'
+import LanguageToggle from '../components/LanguageToggle.jsx'
 import MarkerButton from '../components/MarkerButton.jsx'
+import { useT } from '../i18n/index.jsx'
 
 export default function Login() {
+  const { t } = useT()
   const navigate = useNavigate()
   const { login } = useAuth()
   const [email, setEmail] = useState('')
@@ -16,7 +19,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!email || !password) {
-      setError('請輸入 Email 與密碼')
+      setError(t('auth.needBoth'))
       return
     }
 
@@ -26,13 +29,13 @@ export default function Login() {
     try {
       const userData = await login(email, password)
       if (!userData?.isAdmin && !(userData?.permissions?.length)) {
-        setError('此帳號沒有後台權限')
+        setError(t('auth.noAdminRights'))
         setIsLoading(false)
         return
       }
       navigate('/')
     } catch (err) {
-      setError(err.message || '登入失敗，請稍後再試')
+      setError(err.message || t('auth.failed'))
       setIsLoading(false)
     }
   }
@@ -121,19 +124,17 @@ export default function Login() {
           </div>
         </form>
 
-        <p className="mt-10 text-center text-[10px] font-black text-slate-300 uppercase tracking-[0.25em] italic">
-          僅限管理員帳號
-        </p>
+        <p className="mt-10 text-center text-[10px] font-black text-slate-300 uppercase tracking-[0.25em] italic">{t('ui.adminOnly')}</p>
 
         <div className="mt-6 text-center">
           <a
             href={import.meta.env.VITE_CLIENT_URL || 'https://clocdot-client.zeabur.app'}
             className="text-xs font-bold text-slate-400 hover:text-slate-600 underline decoration-dotted underline-offset-4 transition-colors font-zh"
-          >
-            用戶登入請點這裡
-          </a>
+          >{t('ui.userLoginLink')}</a>
         </div>
       </PaperPiece>
+
+      <LanguageToggle className="mt-6 z-10" />
     </div>
   )
 }

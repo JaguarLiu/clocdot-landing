@@ -18,6 +18,7 @@ import PaperToast from '../components/PaperToast.jsx'
 import ConfirmDialog from '../components/ConfirmDialog.jsx'
 import MarkerButton from '../components/MarkerButton.jsx'
 import { LEAVE_TYPES, LEAVE_TYPE_MAP, DEFAULT_LEAVE_DEDUCT_RATE, minutesToDays, daysToMinutes } from '../utils/leaveTypes.js'
+import { tr, useT } from '../i18n/index.jsx'
 
 const EMPTY_LOC_FORM = { name: '', address: '', radius: 100 }
 
@@ -45,6 +46,7 @@ function SectionHeader({ icon, title, subtitle, action }) {
 }
 
 function CompanyCard({ onToast }) {
+  const { t } = useT()
   const { data: company, mutate } = useSWR('/admin/company', fetcher)
   const [editing, setEditing] = useState(false)
   const [form, setForm] = useState({
@@ -74,14 +76,14 @@ function CompanyCard({ onToast }) {
   async function save(e) {
     e.preventDefault()
     if (!form.name.trim()) {
-      onToast({ variant: 'error', message: '公司名稱不可為空' })
+      onToast({ variant: 'error', message: t('settings.companyNameRequired') })
       return
     }
     setSaving(true)
     try {
       const breakMin = Number(form.breakMinutes)
       if (!Number.isInteger(breakMin) || breakMin < 0 || breakMin > 480) {
-        onToast({ variant: 'error', message: '午休分鐘數需為 0–480 的整數' })
+        onToast({ variant: 'error', message: t('shifts.breakRange') })
         setSaving(false)
         return
       }
@@ -96,9 +98,9 @@ function CompanyCard({ onToast }) {
       })
       mutate()
       setEditing(false)
-      onToast({ variant: 'success', message: '已更新公司資料' })
+      onToast({ variant: 'success', message: t('settings.companyUpdated') })
     } catch (err) {
-      onToast({ variant: 'error', message: err?.message || '更新失敗' })
+      onToast({ variant: 'error', message: err?.message || t('common.updateFailed') })
     } finally {
       setSaving(false)
     }
@@ -107,7 +109,7 @@ function CompanyCard({ onToast }) {
   const editBtn = !editing && company && (
     <MarkerButton color="#0ea5e9" rotate="0.5deg" fontSize={12} onClick={openEdit}>
       <Pencil size={12} strokeWidth={3} />
-      編輯
+      {t('common.edit')}
     </MarkerButton>
   )
 
@@ -115,30 +117,30 @@ function CompanyCard({ onToast }) {
     <section className="mb-10">
       <SectionHeader
         icon={<Building2 size={18} className="text-white" strokeWidth={2.5} />}
-        title="公司資料"
+        title={t('settings.companyInfo')}
         subtitle="Company Profile"
         action={editBtn}
       />
 
       <PaperPiece color="white" rotate="-0.2deg" variant="card" className="p-6">
         {!company ? (
-          <p className="font-zh text-sm text-slate-400">載入中…</p>
+          <p className="font-zh text-sm text-slate-400">{t('ui.loading')}</p>
         ) : editing ? (
           <form onSubmit={save} className="space-y-4">
             <label className="block">
-              <span className="font-zh text-xs text-slate-500 mb-1.5 block">公司名稱</span>
+              <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.companyName')}</span>
               <input
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                placeholder="ClocDot 股份有限公司"
+                placeholder={t('seed.companyFullName')}
                 className="w-full px-3 py-2 bg-[#fdfbf4] border border-slate-200 focus:border-sky-400 outline-none font-zh text-sm text-slate-700"
               />
             </label>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">午休 (分鐘)</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.breakMinutes')}</span>
                 <input
                   type="number"
                   min={0}
@@ -152,19 +154,19 @@ function CompanyCard({ onToast }) {
             </div>
 
             <label className="block">
-              <span className="font-zh text-xs text-slate-500 mb-1.5 block">假別年度重置</span>
+              <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.leaveYearReset')}</span>
               <select
                 value={form.leavePolicyYearReset}
                 onChange={(e) => setForm((f) => ({ ...f, leavePolicyYearReset: e.target.value }))}
                 className="w-full px-3 py-2 bg-[#fdfbf4] border border-slate-200 focus:border-sky-400 outline-none font-zh text-sm text-slate-700"
               >
-                <option value="anniversary">週年制 — 每位員工到職週年日重置</option>
-                <option value="calendar">曆年制 — 每年 1/1 統一重置</option>
+                <option value="anniversary">{t('ui.resetAnniversary')}</option>
+                <option value="calendar">{t('ui.resetCalendar')}</option>
               </select>
             </label>
 
             <label className="block">
-              <span className="font-zh text-xs text-slate-500 mb-1.5 block">簽核層數（沿部門主管往上）</span>
+              <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.approvalLevels')}</span>
               <input
                 type="number"
                 min={1}
@@ -176,27 +178,27 @@ function CompanyCard({ onToast }) {
             </label>
 
             <label className="block">
-              <span className="font-zh text-xs text-slate-500 mb-1.5 block">工時類型（影響遲到/早退扣薪）</span>
+              <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.workTimeType')}</span>
               <select
                 value={form.workHourType}
                 onChange={(e) => setForm((f) => ({ ...f, workHourType: e.target.value }))}
                 className="w-full px-3 py-2 bg-[#fdfbf4] border border-slate-200 focus:border-sky-400 outline-none font-zh text-sm text-slate-700"
               >
-                <option value="flexible">變形工時 — 做滿制定工時即不扣薪</option>
-                <option value="fixed">固定工時 — 遲到/早退依規則扣薪</option>
+                <option value="flexible">{t('ui.variableType')}</option>
+                <option value="fixed">{t('ui.fixedType')}</option>
               </select>
             </label>
 
             {form.workHourType === 'fixed' && (
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">扣薪方式</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.deductionMethod')}</span>
                 <select
                   value={form.lateDeductMode}
                   onChange={(e) => setForm((f) => ({ ...f, lateDeductMode: e.target.value }))}
                   className="w-full px-3 py-2 bg-[#fdfbf4] border border-slate-200 focus:border-sky-400 outline-none font-zh text-sm text-slate-700"
                 >
-                  <option value="per_minute">按分鐘比例 — 遲退分鐘 ÷ 制定工時 × 日薪</option>
-                  <option value="per_hour">按小時進位比例 — 遲退分鐘進位整小時後計算</option>
+                  <option value="per_minute">{t('ui.deductByMinute')}</option>
+                  <option value="per_hour">{t('ui.deductByHour')}</option>
                 </select>
               </label>
             )}
@@ -206,7 +208,7 @@ function CompanyCard({ onToast }) {
                 type="button"
                 onClick={() => setForm((f) => ({ ...f, flexibleOvertime: !f.flexibleOvertime }))}
                 aria-pressed={form.flexibleOvertime}
-                aria-label="彈性工時"
+                aria-label={t('settings.flexTime')}
                 className="mt-0.5 shrink-0 w-5 h-5 border-2 flex items-center justify-center active:scale-95 transition-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
                 style={{
                   borderColor: form.flexibleOvertime ? '#10b981' : '#cbd5e1',
@@ -216,21 +218,19 @@ function CompanyCard({ onToast }) {
                 {form.flexibleOvertime && <Check size={13} strokeWidth={4} className="text-white" />}
               </button>
               <span>
-                <span className="font-zh text-sm text-slate-700">彈性工時（變形）</span>
-                <span className="font-zh text-xs text-slate-400 block mt-0.5">
-                  開啟後月加班上限 46h → 54h，並啟用每 3 個月 138h 預警
-                </span>
+                <span className="font-zh text-sm text-slate-700">{t('ui.flexVariable')}</span>
+                <span className="font-zh text-xs text-slate-400 block mt-0.5">{t('ui.flexHelp')}</span>
               </span>
             </div>
 
             <div className="flex items-center gap-3 pt-1">
               <MarkerButton as="button" type="submit" color="#10b981" rotate="-0.5deg" disabled={saving}>
                 <Check size={14} strokeWidth={3} />
-                {saving ? '儲存中…' : '儲存'}
+                {saving ? t('common.saving') : t('common.save')}
               </MarkerButton>
               <MarkerButton color="#94a3b8" rotate="0.5deg" onClick={cancel} disabled={saving}>
                 <X size={14} strokeWidth={3} />
-                取消
+                {t('common.cancel')}
               </MarkerButton>
             </div>
           </form>
@@ -245,35 +245,33 @@ function CompanyCard({ onToast }) {
                 <Clock size={10} strokeWidth={3} />
                 Work Hours
               </p>
-              <Link to="/schedule" className="font-zh text-sm text-emerald-600 underline decoration-dashed underline-offset-4 hover:text-emerald-700">
-                於「排班」頁管理班別
-              </Link>
+              <Link to="/schedule" className="font-zh text-sm text-emerald-600 underline decoration-dashed underline-offset-4 hover:text-emerald-700">{t('ui.manageShiftsInSchedule')}</Link>
             </div>
             <div className="pl-8 border-l border-dashed border-slate-200">
               <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Break</p>
               <p className="font-mono font-black text-base text-slate-700 tabular-nums">
                 {company.breakMinutes ?? 60}
-                <span className="text-slate-400 text-xs font-zh ml-1">分鐘</span>
+                <span className="text-slate-400 text-xs font-zh ml-1">{t('ui.minutes')}</span>
               </p>
             </div>
             <div className="pl-8 border-l border-dashed border-slate-200">
               <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Year Reset</p>
               <p className="font-zh text-base text-slate-700">
-                {company.leavePolicyYearReset === 'calendar' ? '曆年制 (1/1)' : '週年制'}
+                {company.leavePolicyYearReset === 'calendar' ? t('settings.calendarYear') : t('settings.anniversary')}
               </p>
             </div>
             <div className="pl-8 border-l border-dashed border-slate-200">
               <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">OT Cap</p>
               <p className="font-zh text-base text-slate-700">
-                {company.flexibleOvertime ? '54h（變形）' : '46h'}
+                {company.flexibleOvertime ? t('settings.variable54h') : '46h'}
               </p>
             </div>
             <div className="pl-8 border-l border-dashed border-slate-200">
               <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Work Hour Type</p>
               <p className="font-zh text-base text-slate-700">
                 {company.workHourType === 'fixed'
-                  ? `固定工時（${company.lateDeductMode === 'per_hour' ? '按小時進位' : '按分鐘比例'}）`
-                  : '變形工時'}
+                  ? t('fmt.fixedMode', { mode: company.lateDeductMode === 'per_hour' ? t('payroll.byHourRoundUp') : t('payroll.byMinuteRatio') })
+                  : t('settings.variableHours')}
               </p>
             </div>
           </div>
@@ -284,6 +282,7 @@ function CompanyCard({ onToast }) {
 }
 
 function LocationsSection({ onToast }) {
+  const { t } = useT()
   const { data, mutate, isLoading } = useSWR('/admin/company-locations', fetcher)
   const [editing, setEditing] = useState(null) // null | 'new' | location.id
   const [form, setForm] = useState(EMPTY_LOC_FORM)
@@ -309,7 +308,7 @@ function LocationsSection({ onToast }) {
   async function handleSubmit(e) {
     e.preventDefault()
     if (!form.name.trim() || !form.address.trim()) {
-      onToast({ variant: 'error', message: '地點名稱與地址為必填' })
+      onToast({ variant: 'error', message: t('settings.locationRequired') })
       return
     }
     setSubmitting(true)
@@ -325,12 +324,12 @@ function LocationsSection({ onToast }) {
       mutate()
       closeForm()
       if (saved?.lat == null || saved?.lng == null) {
-        onToast({ variant: 'error', message: '已儲存，但地址無法解析經緯度，請確認地址' })
+        onToast({ variant: 'error', message: t('settings.geocodeFailed') })
       } else {
-        onToast({ variant: 'success', message: editing === 'new' ? '已新增地點' : '已更新地點' })
+        onToast({ variant: 'success', message: editing === 'new' ? t('settings.locationAdded') : t('settings.locationUpdated') })
       }
     } catch (err) {
-      onToast({ variant: 'error', message: err?.message || '操作失敗' })
+      onToast({ variant: 'error', message: err?.message || t('common.actionFailed') })
     } finally {
       setSubmitting(false)
     }
@@ -342,10 +341,10 @@ function LocationsSection({ onToast }) {
     try {
       await deleteCompanyLocation(confirmTarget.id)
       mutate()
-      onToast({ variant: 'success', message: '已刪除地點' })
+      onToast({ variant: 'success', message: t('settings.locationDeleted') })
       setConfirmTarget(null)
     } catch (err) {
-      onToast({ variant: 'error', message: err?.message || '刪除失敗' })
+      onToast({ variant: 'error', message: err?.message || t('common.deleteFailed') })
     } finally {
       setDeleting(false)
     }
@@ -353,16 +352,14 @@ function LocationsSection({ onToast }) {
 
   const addBtn = editing === null && (
     <MarkerButton color="#0ea5e9" rotate="-0.5deg" onClick={openNew}>
-      <Plus size={15} strokeWidth={3} />
-      新增地點
-    </MarkerButton>
+      <Plus size={15} strokeWidth={3} />{t('ui.addLocation')}</MarkerButton>
   )
 
   return (
     <section class="mb-10">
       <SectionHeader
         icon={<MapPin size={18} className="text-white" strokeWidth={2.5} />}
-        title="公司地點"
+        title={t('settings.locations')}
         subtitle="Office Locations"
         action={addBtn}
       />
@@ -370,10 +367,10 @@ function LocationsSection({ onToast }) {
       <ConfirmDialog
         open={confirmTarget !== null}
         variant="danger"
-        title="刪除公司地點"
-        message={confirmTarget && `確定要刪除「${confirmTarget.name}」？此操作無法復原。`}
-        confirmLabel="刪除"
-        cancelLabel="取消"
+        title={t('settings.deleteLocation')}
+        message={confirmTarget && t('fmt.confirmDeleteGeneric', { name: confirmTarget.name })}
+        confirmLabel={t('common.del')}
+        cancelLabel={t('common.cancel')}
         loading={deleting}
         onConfirm={confirmDelete}
         onCancel={() => !deleting && setConfirmTarget(null)}
@@ -390,17 +387,17 @@ function LocationsSection({ onToast }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">地點名稱</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.locationName')}</span>
                 <input
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                  placeholder="台北總部 / 高雄分公司"
+                  placeholder={t('seed.locationsExample')}
                   className="w-full px-3 py-2 bg-[#fdfbf4] border border-slate-200 focus:border-sky-400 outline-none font-zh text-sm text-slate-700"
                 />
               </label>
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">允許打卡半徑 (公尺)</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.radiusMeters')}</span>
                 <input
                   type="number"
                   min={10}
@@ -413,12 +410,12 @@ function LocationsSection({ onToast }) {
             </div>
 
             <label className="block">
-              <span className="font-zh text-xs text-slate-500 mb-1.5 block">地址（送出後自動轉為經緯度）</span>
+              <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.addressField')}</span>
               <input
                 type="text"
                 value={form.address}
                 onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
-                placeholder="台北市信義區市府路 1 號"
+                placeholder={t('seed.hqAddress')}
                 className="w-full px-3 py-2 bg-[#fdfbf4] border border-slate-200 focus:border-sky-400 outline-none font-zh text-sm text-slate-700"
               />
             </label>
@@ -426,11 +423,11 @@ function LocationsSection({ onToast }) {
             <div className="flex items-center gap-3 pt-1">
               <MarkerButton as="button" type="submit" color="#10b981" rotate="-0.5deg" disabled={submitting}>
                 <Check size={14} strokeWidth={3} />
-                {submitting ? '儲存中…' : '儲存'}
+                {submitting ? t('common.saving') : t('common.save')}
               </MarkerButton>
               <MarkerButton color="#94a3b8" rotate="0.5deg" onClick={closeForm} disabled={submitting}>
                 <X size={14} strokeWidth={3} />
-                取消
+                {t('common.cancel')}
               </MarkerButton>
             </div>
           </form>
@@ -439,11 +436,11 @@ function LocationsSection({ onToast }) {
       )}
 
       {isLoading ? (
-        <p className="font-zh text-sm text-slate-400 py-10 text-center">載入中…</p>
+        <p className="font-zh text-sm text-slate-400 py-10 text-center">{t('ui.loading')}</p>
       ) : list.length === 0 ? (
         <div className="text-center py-20 opacity-40 flex flex-col items-center gap-3">
           <Inbox size={48} className="text-slate-300" />
-          <p className="font-zh text-sm text-slate-400">尚未設定任何公司地點</p>
+          <p className="font-zh text-sm text-slate-400">{t('ui.noLocationsYet')}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -496,11 +493,11 @@ function LocationsSection({ onToast }) {
                   <div className="flex items-center gap-3 shrink-0">
                     <MarkerButton color="#0ea5e9" rotate="-0.5deg" fontSize={12} onClick={() => openEdit(loc)}>
                       <Pencil size={12} strokeWidth={3} />
-                      編輯
+                      {t('common.edit')}
                     </MarkerButton>
                     <MarkerButton color="#ef4444" rotate="0.5deg" fontSize={12} onClick={() => setConfirmTarget(loc)}>
                       <Trash2 size={12} strokeWidth={3} />
-                      刪除
+                      {t('common.del')}
                     </MarkerButton>
                   </div>
                 </div>
@@ -514,6 +511,7 @@ function LocationsSection({ onToast }) {
 }
 
 function LeavePolicySection({ onToast }) {
+  const { t } = useT()
   const { data, mutate, isLoading } = useSWR('/admin/leave-policies', fetcher)
   const [editing, setEditing] = useState(false)
   const [form, setForm] = useState({}) // leaveType -> days string ('' = 不設限)
@@ -564,7 +562,7 @@ function LeavePolicySection({ onToast }) {
       if (rateRaw !== '' && rateRaw !== undefined) {
         const pct = Number(rateRaw)
         if (Number.isNaN(pct) || pct < 0 || pct > 100) {
-          onToast({ variant: 'error', message: `${p.label} 的扣薪比例需為 0–100 的數字` })
+          onToast({ variant: 'error', message: t('fmt.deductPctInvalid', { label: p.label }) })
           return
         }
         deductRate = pct / 100
@@ -576,7 +574,7 @@ function LeavePolicySection({ onToast }) {
       }
       const days = Number(raw)
       if (Number.isNaN(days) || days < 0) {
-        onToast({ variant: 'error', message: `${p.label} 的天數需為 ≥ 0 的數字` })
+        onToast({ variant: 'error', message: t('fmt.daysInvalid', { label: p.label }) })
         return
       }
       policies.push({ leaveType: p.leaveType, annualQuotaMinutes: daysToMinutes(days), deductRate })
@@ -586,9 +584,9 @@ function LeavePolicySection({ onToast }) {
       await updateLeavePolicies(policies)
       mutate()
       setEditing(false)
-      onToast({ variant: 'success', message: '已更新假別政策' })
+      onToast({ variant: 'success', message: t('settings.leavePolicyUpdated') })
     } catch (err) {
-      onToast({ variant: 'error', message: err?.message || '更新失敗' })
+      onToast({ variant: 'error', message: err?.message || t('common.updateFailed') })
     } finally {
       setSaving(false)
     }
@@ -602,7 +600,7 @@ function LeavePolicySection({ onToast }) {
       onClick={openEdit}
     >
       {isFirstSetup ? <Sparkles size={12} strokeWidth={3} /> : <Pencil size={12} strokeWidth={3} />}
-      {isFirstSetup ? '第一次設定 — 套用法定預設' : '編輯'}
+      {isFirstSetup ? t('settings.applyStatutoryDefaults') : t('common.edit')}
     </MarkerButton>
   )
 
@@ -610,18 +608,16 @@ function LeavePolicySection({ onToast }) {
     <section className="mb-10">
       <SectionHeader
         icon={<CalendarHeart size={18} className="text-white" strokeWidth={2.5} />}
-        title="假別政策"
+        title={t('settings.leavePolicy')}
         subtitle="Leave Policies"
         action={editBtn}
       />
-      <p className="font-zh text-xs text-slate-500 mb-3 pl-1">
-        每個假別的年度額度；留空代表不設上限。單位為日 (每日 8 小時)。
-        <span className="ml-1 text-slate-400">特休對未滿 1 年的員工會自動依到職日比例給予 (無條件進位)，滿 1 年自動給滿。</span>
+      <p className="font-zh text-xs text-slate-500 mb-3 pl-1">{t('ui.quotaHelp')}<span className="ml-1 text-slate-400">{t('ui.annualProrataHelp')}</span>
       </p>
 
       <PaperPiece color="white" rotate="-0.25deg" variant="card" className="p-6">
         {isLoading ? (
-          <p className="font-zh text-sm text-slate-400">載入中…</p>
+          <p className="font-zh text-sm text-slate-400">{t('ui.loading')}</p>
         ) : editing ? (
           <form onSubmit={save} className="space-y-4">
             {isFirstSetup && (
@@ -631,20 +627,15 @@ function LeavePolicySection({ onToast }) {
               >
                 <Sparkles size={16} className="text-amber-600 mt-0.5 shrink-0" strokeWidth={2.5} />
                 <div className="flex-1 min-w-0">
-                  <p className="font-zh text-sm text-amber-900">
-                    第一次設定 — 已依勞基法 / 性平法預設天數帶入。
-                  </p>
+                  <p className="font-zh text-sm text-amber-900">{t('ui.statutoryLoaded')}</p>
                   <p className="font-zh text-xs text-amber-700 mt-0.5">
-                    <b>婚假 / 喪假 / 公假</b> 因實際情況差異大，留空由公司自行設定；所有欄位皆可調整。
-                  </p>
+                    <b>{t('ui.specialLeaves')}</b>{t('ui.specialLeavesHelp')}</p>
                 </div>
                 <button
                   type="button"
                   onClick={applyStatutoryDefaults}
                   className="font-zh text-xs px-3 py-1.5 bg-white border border-amber-300 text-amber-700 hover:bg-amber-100 transition-colors shrink-0"
-                >
-                  重新帶入預設
-                </button>
+                >{t('ui.reloadDefaults')}</button>
               </div>
             )}
 
@@ -665,7 +656,7 @@ function LeavePolicySection({ onToast }) {
                       placeholder="—"
                       className="w-full px-2 py-2 bg-[#fdfbf4] border border-slate-200 focus:border-sky-400 outline-none font-mono tabular-nums text-sm text-slate-700"
                     />
-                    <span className="text-[10px] font-black text-slate-400 uppercase">天</span>
+                    <span className="text-[10px] font-black text-slate-400 uppercase">{t('ui.days')}</span>
                   </div>
                   <div className="flex items-center gap-1 mt-1">
                     <input
@@ -678,7 +669,7 @@ function LeavePolicySection({ onToast }) {
                       placeholder={String(Math.round((DEFAULT_LEAVE_DEDUCT_RATE[t.value] ?? 0) * 100))}
                       className="w-full px-2 py-1.5 bg-[#fdfbf4] border border-slate-200 focus:border-sky-400 outline-none font-mono tabular-nums text-xs text-slate-700"
                     />
-                    <span className="text-[10px] font-black text-slate-400 uppercase">扣日薪%</span>
+                    <span className="text-[10px] font-black text-slate-400 uppercase">{t('ui.dailyDeductPct')}</span>
                   </div>
                   {t.note && (
                     <p className="font-zh text-[10px] text-slate-400 mt-1 leading-tight">{t.note}</p>
@@ -690,11 +681,11 @@ function LeavePolicySection({ onToast }) {
             <div className="flex items-center gap-3 pt-2">
               <MarkerButton as="button" type="submit" color="#10b981" rotate="-0.5deg" disabled={saving}>
                 <Check size={14} strokeWidth={3} />
-                {saving ? '儲存中…' : '儲存'}
+                {saving ? t('common.saving') : t('common.save')}
               </MarkerButton>
               <MarkerButton color="#94a3b8" rotate="0.5deg" onClick={() => setEditing(false)} disabled={saving}>
                 <X size={14} strokeWidth={3} />
-                取消
+                {t('common.cancel')}
               </MarkerButton>
             </div>
           </form>
@@ -709,13 +700,13 @@ function LeavePolicySection({ onToast }) {
                   ) : (
                     <>
                       <span className="text-slate-700">{minutesToDays(p.annualQuotaMinutes)}</span>
-                      <span className="text-slate-400 text-xs font-zh ml-1">天</span>
+                      <span className="text-slate-400 text-xs font-zh ml-1">{t('ui.days')}</span>
                     </>
                   )}
                 </p>
                 <p className="font-zh text-[10px] text-slate-400 mt-0.5">
-                  扣日薪 {Math.round((p.deductRate ?? DEFAULT_LEAVE_DEDUCT_RATE[p.leaveType] ?? 0) * 100)}%
-                  {p.deductRate == null && <span className="text-slate-300"> (預設)</span>}
+                  {t('fmt.dailyDeduct', { n: Math.round((p.deductRate ?? DEFAULT_LEAVE_DEDUCT_RATE[p.leaveType] ?? 0) * 100) })}
+                  {p.deductRate == null && <span className="text-slate-300">{t('ui.isDefault')}</span>}
                 </p>
               </div>
             ))}
@@ -728,13 +719,13 @@ function LeavePolicySection({ onToast }) {
 
 // ISO weekday: 1=Mon..7=Sun
 const WEEKDAY_LABELS = [
-  { iso: 1, zh: '一', en: 'MON' },
-  { iso: 2, zh: '二', en: 'TUE' },
-  { iso: 3, zh: '三', en: 'WED' },
-  { iso: 4, zh: '四', en: 'THU' },
-  { iso: 5, zh: '五', en: 'FRI' },
-  { iso: 6, zh: '六', en: 'SAT' },
-  { iso: 7, zh: '日', en: 'SUN' },
+  { iso: 1, zh: tr('weekdays.short.1'), en: 'MON' },
+  { iso: 2, zh: tr('weekdays.short.2'), en: 'TUE' },
+  { iso: 3, zh: tr('weekdays.short.3'), en: 'WED' },
+  { iso: 4, zh: tr('weekdays.short.4'), en: 'THU' },
+  { iso: 5, zh: tr('weekdays.short.5'), en: 'FRI' },
+  { iso: 6, zh: tr('weekdays.short.6'), en: 'SAT' },
+  { iso: 7, zh: tr('common.day'), en: 'SUN' },
 ]
 
 function toDateInputValue(d) {
@@ -773,6 +764,7 @@ function ChipBox({ active, accent = 'emerald', rotate = '0deg', children, onClic
 }
 
 function OnsiteScheduleSection({ onToast }) {
+  const { t } = useT()
   const { data: company, mutate } = useSWR('/admin/company', fetcher)
   const [editing, setEditing] = useState(false)
   const [form, setForm] = useState({
@@ -830,7 +822,7 @@ function OnsiteScheduleSection({ onToast }) {
   async function save(e) {
     e.preventDefault()
     if (form.onsiteCycleWeeks > 1 && !form.scheduleAnchorDate) {
-      onToast({ variant: 'error', message: '雙週以上的循環需指定「週 A 起算日」' })
+      onToast({ variant: 'error', message: t('shifts.cycleNeedsAnchor') })
       return
     }
     setSaving(true)
@@ -843,9 +835,9 @@ function OnsiteScheduleSection({ onToast }) {
       })
       mutate()
       setEditing(false)
-      onToast({ variant: 'success', message: '已更新實體辦公日' })
+      onToast({ variant: 'success', message: t('settings.onsiteUpdated') })
     } catch (err) {
-      onToast({ variant: 'error', message: err?.message || '更新失敗' })
+      onToast({ variant: 'error', message: err?.message || t('common.updateFailed') })
     } finally {
       setSaving(false)
     }
@@ -859,7 +851,7 @@ function OnsiteScheduleSection({ onToast }) {
   const editBtn = !editing && company && (
     <MarkerButton color="#0ea5e9" rotate="0.5deg" fontSize={12} onClick={openEdit}>
       <Pencil size={12} strokeWidth={3} />
-      編輯
+      {t('common.edit')}
     </MarkerButton>
   )
 
@@ -867,24 +859,22 @@ function OnsiteScheduleSection({ onToast }) {
     <section className="mb-10">
       <SectionHeader
         icon={<CalendarCheck size={18} className="text-white" strokeWidth={2.5} />}
-        title="實體辦公日"
+        title={t('settings.onsiteDays')}
         subtitle="Onsite Schedule"
         action={editBtn}
       />
-      <p className="font-zh text-xs text-slate-500 mb-3 pl-1">
-        指定「需到公司」的日子；當日打卡會強制要求位於公司地點半徑內，否則會被擋下並提示「你還未到公司」。
-        <span className="ml-1 text-slate-400">非實體辦公日可自由遠端打卡；已批准的請假日自動豁免。</span>
+      <p className="font-zh text-xs text-slate-500 mb-3 pl-1">{t('ui.onsiteHelp')}<span className="ml-1 text-slate-400">{t('ui.onsiteHelp2')}</span>
       </p>
 
       <PaperPiece color="white" rotate="-0.25deg" variant="card" className="p-6">
         {!company ? (
-          <p className="font-zh text-sm text-slate-400">載入中…</p>
+          <p className="font-zh text-sm text-slate-400">{t('ui.loading')}</p>
         ) : editing ? (
           <form onSubmit={save} className="space-y-6">
             {/* 循環長度 */}
             <div className="flex items-center gap-3 flex-wrap">
               <Repeat size={14} className="text-slate-400" strokeWidth={3} />
-              <span className="font-zh text-xs text-slate-500">循環長度</span>
+              <span className="font-zh text-xs text-slate-500">{t('ui.cycleLength')}</span>
               <div className="flex gap-1">
                 {[1, 2, 3, 4].map((n) => (
                   <ChipBox
@@ -895,15 +885,13 @@ function OnsiteScheduleSection({ onToast }) {
                     onClick={() => changeCycle(n)}
                   >
                     <span className="block w-12 py-1.5 text-xs font-mono font-black tabular-nums">
-                      {n}{n === 1 ? '週' : '週'}
+                      {n}{n === 1 ? t('common.week') : t('common.week')}
                     </span>
                   </ChipBox>
                 ))}
               </div>
               {form.onsiteCycleWeeks > 1 && (
-                <span className="font-zh text-[11px] text-slate-400 ml-1">
-                  （勾選每一週的實體辦公日）
-                </span>
+                <span className="font-zh text-[11px] text-slate-400 ml-1">{t('ui.cycleWeeksHint')}</span>
               )}
             </div>
 
@@ -916,7 +904,7 @@ function OnsiteScheduleSection({ onToast }) {
                 <div key={cycleIdx} className="flex items-center gap-3 flex-wrap">
                   {form.onsiteCycleWeeks > 1 && (
                     <span className="font-zh text-xs text-slate-500 w-12 shrink-0">
-                      週 {String.fromCharCode(65 + cycleIdx)}
+                      {t('fmt.weekLetter', { letter: String.fromCharCode(65 + cycleIdx) })}
                     </span>
                   )}
                   <div className="flex gap-1.5 flex-wrap">
@@ -947,8 +935,7 @@ function OnsiteScheduleSection({ onToast }) {
             {/* 起算日 */}
             {form.onsiteCycleWeeks > 1 && (
               <label className="block max-w-xs">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">
-                  週 A 起算日 <span className="text-slate-400">(請選一個 Monday)</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.weekAStart')}<span className="text-slate-400">{t('ui.pickMonday')}</span>
                 </span>
                 <input
                   type="date"
@@ -982,19 +969,17 @@ function OnsiteScheduleSection({ onToast }) {
                   )
                 })}
               </div>
-              <p className="font-zh text-[11px] text-slate-400">
-                與每週設定取「聯集」— 兩邊任一符合就視為實體辦公日。
-              </p>
+              <p className="font-zh text-[11px] text-slate-400">{t('ui.unionHint')}</p>
             </div>
 
             <div className="flex items-center gap-3 pt-1">
               <MarkerButton as="button" type="submit" color="#10b981" rotate="-0.5deg" disabled={saving}>
                 <Check size={14} strokeWidth={3} />
-                {saving ? '儲存中…' : '儲存'}
+                {saving ? t('common.saving') : t('common.save')}
               </MarkerButton>
               <MarkerButton color="#94a3b8" rotate="0.5deg" onClick={() => setEditing(false)} disabled={saving}>
                 <X size={14} strokeWidth={3} />
-                取消
+                {t('common.cancel')}
               </MarkerButton>
             </div>
           </form>
@@ -1004,18 +989,17 @@ function OnsiteScheduleSection({ onToast }) {
             style={{ transform: 'rotate(-1deg)', borderRadius: '8px 2px 10px 3px/3px 10px 2px 8px' }}
           >
             <p className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">Unset</p>
-            <p className="font-zh text-xs text-slate-500">未設定 — 所有日皆可遠端打卡</p>
+            <p className="font-zh text-xs text-slate-500">{t('ui.noOnsiteConfigured')}</p>
           </div>
         ) : (
           <div className="space-y-4">
             <div className="flex items-baseline gap-3 flex-wrap">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cycle</p>
               <p className="font-mono font-black text-base text-slate-700 tabular-nums">
-                {display.onsiteCycleWeeks}<span className="text-slate-400 text-xs font-zh ml-1">週循環</span>
+                {display.onsiteCycleWeeks}<span className="text-slate-400 text-xs font-zh ml-1">{t('ui.weekCycle')}</span>
               </p>
               {display.scheduleAnchorDate && display.onsiteCycleWeeks > 1 && (
-                <p className="font-zh text-xs text-slate-400">
-                  週 A 起算 <span className="font-mono tabular-nums">{display.scheduleAnchorDate}</span>
+                <p className="font-zh text-xs text-slate-400">{t('ui.weekAAnchor')}<span className="font-mono tabular-nums">{display.scheduleAnchorDate}</span>
                 </p>
               )}
             </div>
@@ -1024,11 +1008,11 @@ function OnsiteScheduleSection({ onToast }) {
                 <div key={idx} className="flex items-center gap-3">
                   {display.onsiteCycleWeeks > 1 && (
                     <span className="font-zh text-xs text-slate-500 w-10 shrink-0">
-                      週 {String.fromCharCode(65 + idx)}
+                      {t('fmt.weekLetter', { letter: String.fromCharCode(65 + idx) })}
                     </span>
                   )}
                   {row.length === 0 ? (
-                    <span className="font-zh text-xs text-slate-300">— 全遠端</span>
+                    <span className="font-zh text-xs text-slate-300">{t('ui.allRemote')}</span>
                   ) : (
                     <div className="flex gap-1 flex-wrap">
                       {WEEKDAY_LABELS.filter((w) => row.includes(w.iso)).map((w) => (
@@ -1046,7 +1030,7 @@ function OnsiteScheduleSection({ onToast }) {
             </div>
             {display.onsiteMonthDays.length > 0 && (
               <div className="flex items-start gap-3 pt-2 border-t border-dashed border-slate-200">
-                <span className="font-zh text-xs text-slate-500 mt-1 shrink-0">每月</span>
+                <span className="font-zh text-xs text-slate-500 mt-1 shrink-0">{t('ui.perMonth')}</span>
                 <div className="flex gap-1 flex-wrap">
                   {display.onsiteMonthDays.map((d) => (
                     <span
@@ -1068,6 +1052,7 @@ function OnsiteScheduleSection({ onToast }) {
 
 
 function WifiCheckinSection({ onToast }) {
+  const { t } = useT()
   const { data: company, mutate } = useSWR('/admin/company', fetcher)
   const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -1090,11 +1075,11 @@ function WifiCheckinSection({ onToast }) {
     const s = draft.trim()
     if (!s) return
     if (!looksLikeIpOrCidr(s)) {
-      onToast({ variant: 'error', message: 'IP 或 CIDR 格式看起來不對' })
+      onToast({ variant: 'error', message: t('settings.ipInvalid') })
       return
     }
     if (ips.includes(s)) {
-      onToast({ variant: 'error', message: '這筆 IP 已在清單中' })
+      onToast({ variant: 'error', message: t('settings.ipDuplicate') })
       return
     }
     setIps((list) => [...list, s])
@@ -1106,14 +1091,14 @@ function WifiCheckinSection({ onToast }) {
       const { ip } = await getMyIp()
       setDraft(ip)
     } catch (err) {
-      onToast({ variant: 'error', message: err?.message || '無法取得目前 IP' })
+      onToast({ variant: 'error', message: err?.message || t('settings.ipUnavailable') })
     }
   }
 
   async function save(e) {
     e.preventDefault()
     if (enabled && ips.length === 0) {
-      onToast({ variant: 'error', message: '啟用 WiFi 打卡前需至少設定一筆允許 IP' })
+      onToast({ variant: 'error', message: t('settings.wifiNeedsIp') })
       return
     }
     setSaving(true)
@@ -1121,9 +1106,9 @@ function WifiCheckinSection({ onToast }) {
       await updateCompany({ wifiCheckinEnabled: enabled, allowedIps: ips })
       mutate()
       setEditing(false)
-      onToast({ variant: 'success', message: '已更新 WiFi 打卡設定' })
+      onToast({ variant: 'success', message: t('settings.wifiUpdated') })
     } catch (err) {
-      onToast({ variant: 'error', message: err?.message || '更新失敗' })
+      onToast({ variant: 'error', message: err?.message || t('common.updateFailed') })
     } finally {
       setSaving(false)
     }
@@ -1132,7 +1117,7 @@ function WifiCheckinSection({ onToast }) {
   const editBtn = !editing && company && (
     <MarkerButton color="#0ea5e9" rotate="0.5deg" fontSize={12} onClick={openEdit}>
       <Pencil size={12} strokeWidth={3} />
-      編輯
+      {t('common.edit')}
     </MarkerButton>
   )
 
@@ -1140,30 +1125,28 @@ function WifiCheckinSection({ onToast }) {
     <section className="mb-10">
       <SectionHeader
         icon={<Wifi size={18} className="text-white" strokeWidth={2.5} />}
-        title="WiFi 打卡"
+        title={t('settings.wifiPunch')}
         subtitle="WiFi Check-in"
         action={editBtn}
       />
-      <p className="font-zh text-xs text-slate-500 mb-3 pl-1">
-        啟用後，「實體辦公日」當天必須連上公司網路（打卡來源 IP 命中下方清單）才能打卡，GPS 定位不再作為認定依據。
-        <span className="ml-1 text-slate-400">非實體辦公日不受影響；已批准的請假日自動豁免。</span>
+      <p className="font-zh text-xs text-slate-500 mb-3 pl-1">{t('ui.wifiHelp')}<span className="ml-1 text-slate-400">{t('ui.wifiHelp2')}</span>
       </p>
 
       <PaperPiece color="white" rotate="0.25deg" variant="card" className="p-6">
         {!company ? (
-          <p className="font-zh text-sm text-slate-400">載入中…</p>
+          <p className="font-zh text-sm text-slate-400">{t('ui.loading')}</p>
         ) : editing ? (
           <form onSubmit={save} className="space-y-5">
             {/* 啟用開關 */}
             <div className="flex items-center gap-2">
               <ChipBox active={!enabled} accent="emerald" rotate="-0.5deg" onClick={() => setEnabled(false)}>
-                <span className="block px-3 py-1.5 font-zh text-sm">停用</span>
+                <span className="block px-3 py-1.5 font-zh text-sm">{t('common.disable')}</span>
               </ChipBox>
               <ChipBox active={enabled} accent="sky" rotate="0.5deg" onClick={() => setEnabled(true)}>
-                <span className="block px-3 py-1.5 font-zh text-sm">啟用</span>
+                <span className="block px-3 py-1.5 font-zh text-sm">{t('ui.enable')}</span>
               </ChipBox>
               {enabled && ips.length === 0 && (
-                <span className="font-zh text-[11px] text-red-500 ml-1">需至少一筆允許 IP 才能儲存</span>
+                <span className="font-zh text-[11px] text-red-500 ml-1">{t('ui.wifiNeedIpToSave')}</span>
               )}
             </div>
 
@@ -1173,7 +1156,7 @@ function WifiCheckinSection({ onToast }) {
                 Allowed IP / CIDR
               </p>
               {ips.length === 0 ? (
-                <p className="font-zh text-xs text-slate-400">尚未設定任何允許 IP</p>
+                <p className="font-zh text-xs text-slate-400">{t('ui.noIpsYet')}</p>
               ) : (
                 <ul className="space-y-1.5">
                   {ips.map((ip) => (
@@ -1185,7 +1168,7 @@ function WifiCheckinSection({ onToast }) {
                         type="button"
                         onClick={() => setIps((list) => list.filter((x) => x !== ip))}
                         className="text-slate-300 hover:text-red-500 transition-colors active:scale-95"
-                        aria-label={`刪除 ${ip}`}
+                        aria-label={t('fmt.deleteIp', { ip })}
                       >
                         <Trash2 size={14} strokeWidth={2.5} />
                       </button>
@@ -1201,30 +1184,24 @@ function WifiCheckinSection({ onToast }) {
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') { e.preventDefault(); addDraft() }
                   }}
-                  placeholder="61.220.33.5 或 61.220.33.0/24"
+                  placeholder={t('settings.ipPlaceholder')}
                   className="w-56 px-3 py-2 bg-[#fdfbf4] border border-slate-200 focus:border-sky-400 outline-none font-mono text-sm text-slate-700"
                 />
                 <MarkerButton color="#0ea5e9" rotate="-0.5deg" fontSize={12} onClick={addDraft}>
-                  <Plus size={12} strokeWidth={3} />
-                  加入
-                </MarkerButton>
-                <MarkerButton color="#94a3b8" rotate="0.5deg" fontSize={12} onClick={fillMyIp}>
-                  使用我目前的 IP
-                </MarkerButton>
+                  <Plus size={12} strokeWidth={3} />{t('ui.addIp')}</MarkerButton>
+                <MarkerButton color="#94a3b8" rotate="0.5deg" fontSize={12} onClick={fillMyIp}>{t('ui.useMyIp')}</MarkerButton>
               </div>
-              <p className="font-zh text-[11px] text-slate-400">
-                「使用我目前的 IP」請在公司網路內按，會自動填入公司對外 IP。
-              </p>
+              <p className="font-zh text-[11px] text-slate-400">{t('ui.useMyIpHelp')}</p>
             </div>
 
             <div className="flex items-center gap-3 pt-1">
               <MarkerButton as="button" type="submit" color="#10b981" rotate="-0.5deg" disabled={saving}>
                 <Check size={14} strokeWidth={3} />
-                {saving ? '儲存中…' : '儲存'}
+                {saving ? t('common.saving') : t('common.save')}
               </MarkerButton>
               <MarkerButton color="#94a3b8" rotate="0.5deg" onClick={() => setEditing(false)} disabled={saving}>
                 <X size={14} strokeWidth={3} />
-                取消
+                {t('common.cancel')}
               </MarkerButton>
             </div>
           </form>
@@ -1239,7 +1216,7 @@ function WifiCheckinSection({ onToast }) {
                     : 'bg-slate-50 text-slate-500 border-slate-200'
                 }`}
               >
-                {company.wifiCheckinEnabled ? '已啟用' : '未啟用'}
+                {company.wifiCheckinEnabled ? t('common.enabled') : t('common.disabled')}
               </span>
             </div>
             {(company.allowedIps ?? []).length > 0 && (
@@ -1260,6 +1237,7 @@ function WifiCheckinSection({ onToast }) {
 
 
 export default function Settings() {
+  const { t } = useT()
   const [toast, setToast] = useState(null)
 
   useEffect(() => {
@@ -1277,7 +1255,7 @@ export default function Settings() {
           <Building2 size={22} className="text-white" strokeWidth={2.5} />
         </div>
         <div>
-          <h2 className="text-3xl font-zh text-slate-800">公司設定</h2>
+          <h2 className="text-3xl font-zh text-slate-800">{t('nav.settings')}</h2>
           <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mt-1">
             Company Settings
           </p>

@@ -2,15 +2,17 @@ import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Mail, Lock, LogIn } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth.js'
+import { useT } from '../i18n/index.jsx'
+import LanguageToggle from '../components/LanguageToggle.jsx'
 import PaperPiece from '../components/PaperPiece.jsx'
 import MarkerButton from '../components/MarkerButton.jsx'
 
-function CompanyLogo({ className }) {
+function CompanyLogo({ className, alt }) {
   return (
     <div className={`relative flex items-center justify-center ${className}`}>
       <img
         src={`${import.meta.env.BASE_URL}logo.png`}
-        alt="公司標誌"
+        alt={alt}
         className="max-w-full h-auto object-contain"
         style={{ filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.1))' }}
       />
@@ -21,6 +23,7 @@ function CompanyLogo({ className }) {
 export default function Login() {
   const navigate = useNavigate()
   const { loginEmail } = useAuth()
+  const { t } = useT()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
@@ -30,7 +33,7 @@ export default function Login() {
   const handleEmailLogin = useCallback(async (e) => {
     e.preventDefault()
     if (!email.trim() || !password) {
-      setError('請輸入 email 與密碼')
+      setError(t('login.needBoth'))
       return
     }
     setError(null)
@@ -40,11 +43,11 @@ export default function Login() {
       await loginEmail(email.trim().toLowerCase(), password)
       navigate('/')
     } catch (err) {
-      setError(err?.message || '登入失敗，請稍後再試')
+      setError(err?.message || t('login.failed'))
       setIsLoading(false)
       setMode(null)
     }
-  }, [email, password, loginEmail, navigate])
+  }, [email, password, loginEmail, navigate, t])
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#f3f0e6] relative">
@@ -59,12 +62,12 @@ export default function Login() {
       <PaperPiece color="white" rotate="-2deg" className="w-full max-w-sm p-10 flex flex-col items-center z-10">
         {/* Logo 區域 */}
         <div className="relative mb-8 w-full flex justify-center">
-          <CompanyLogo className="w-40 rotate-1" />
+          <CompanyLogo className="w-40 rotate-1" alt={t('login.logoAlt')} />
           <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 h-1.5 w-20 bg-orange-400/20 rounded-full" />
         </div>
 
         <h1 className="text-2xl font-black text-slate-700 mb-1">ClocDot</h1>
-        <p className="text-xs font-bold text-slate-400 mb-8 uppercase tracking-[0.2em]">打卡系統</p>
+        <p className="text-xs font-bold text-slate-400 mb-8 uppercase tracking-[0.2em]">{t('login.subtitle')}</p>
 
         {/* 錯誤提示 — 紙條樣式 */}
         {error && (
@@ -120,7 +123,7 @@ export default function Login() {
             style={{ width: '100%' }}
           >
             <LogIn size={16} strokeWidth={3} />
-            <span>{isLoading && mode === 'email' ? '登入中…' : '登入'}</span>
+            <span>{isLoading && mode === 'email' ? t('login.signingIn') : t('login.signIn')}</span>
           </MarkerButton>
         </form>
 
@@ -128,9 +131,11 @@ export default function Login() {
           href={import.meta.env.VITE_ADMIN_URL || 'https://clocdot-admin.zeabur.app'}
           className="mt-8 text-xs font-bold text-slate-400 hover:text-slate-600 underline decoration-dotted underline-offset-4 transition-colors font-zh"
         >
-          後台管理請點這裡
+          {t('login.adminLink')}
         </a>
       </PaperPiece>
+
+      <LanguageToggle className="mt-6 z-10" />
     </div>
   )
 }

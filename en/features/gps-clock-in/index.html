@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPS Clock-In Explained: Accuracy, Multiple Sites &amp; Privacy | ClocDot</title>
+  <meta name="description" content="How accurate is GPS clock-in really? Expected accuracy by environment, the five situations it suits, how buddy punching is handled, and what ClocDot does and does not record about employee location." />
+  <link rel="canonical" href="https://clocdot.com/en/features/gps-clock-in/" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="alternate" hreflang="zh-TW" href="https://clocdot.com/features/gps-clock-in/" />
+  <link rel="alternate" hreflang="en" href="https://clocdot.com/en/features/gps-clock-in/" />
+  <link rel="alternate" hreflang="x-default" href="https://clocdot.com/features/gps-clock-in/" />
+  <meta property="og:title" content="GPS Clock-In Explained: Accuracy, Multiple Sites &amp; Privacy | ClocDot" />
+  <meta property="og:description" content="Expected GPS accuracy by environment, the five situations it suits, and what ClocDot does and does not record about employee location." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://clocdot.com/en/features/gps-clock-in/" />
+  <meta property="og:image" content="https://clocdot.com/assets/og-cover.png" />
+  <meta property="og:locale" content="en" />
+  <meta property="og:locale:alternate" content="zh_TW" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#10b981" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../dist/output.css?v=54bd4a91" />
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://clocdot.com/en/" },
+          { "@type": "ListItem", "position": 2, "name": "Features", "item": "https://clocdot.com/en/features/" },
+          { "@type": "ListItem", "position": 3, "name": "GPS clock-in", "item": "https://clocdot.com/en/features/gps-clock-in/" }
+        ]
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://clocdot.com/en/features/gps-clock-in/#webpage",
+        "url": "https://clocdot.com/en/features/gps-clock-in/",
+        "name": "GPS Clock-In Explained: Accuracy, Multiple Sites & Privacy",
+        "inLanguage": "en",
+        "isPartOf": { "@type": "WebSite", "url": "https://clocdot.com/", "name": "ClocDot" },
+        "primaryImageOfPage": { "@type": "ImageObject", "url": "https://clocdot.com/assets/og-cover.png" },
+        "dateModified": "2026-08-12",
+        "description": "How accurate GPS clock-in is in practice, the situations it suits, and what location data is and is not recorded."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How accurate is GPS clock-in?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "In open outdoor areas expect roughly 5 to 10 metres. In a typical urban setting, which covers most clock-in situations, expect roughly 10 to 20 metres. Indoors or among dense high-rises it can widen to 30 to 50 metres, where WiFi signals help supplement positioning. ClocDot's default clock-in radius is 100 metres, comfortably wider than normal GPS drift so nobody fails to clock in because of signal noise."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does ClocDot track employees throughout the day?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Location is captured once, at the moment the employee presses the clock-in or clock-out button. There is no background tracking and no route history. If an employee has not punched, the system does not know where they are."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What happens if GPS fails or is denied?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The punch is flagged rather than blocked. The record is still created with a note that location could not be confirmed, and a manager decides what it means. Blocking someone from clocking in because a basement has poor signal creates a worse problem than it solves."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can we register more than one office location?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Multiple sites are supported and addresses are geocoded automatically, so each punch is matched against whichever site is nearest. The radius is adjustable if 100 metres is too tight or too loose for a particular location."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does GPS clock-in stop buddy punching?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "It raises the bar without being absolute. Coordinates and timestamps can be cross-checked, which makes casual punching for a colleague far more visible than it is with a shared card. For office days where physical presence really matters, pairing GPS with WiFi or IP verification is the stronger setup."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="overflow-x-hidden">
+
+  <!-- Torn-paper SVG filter defs — required by .paper-card / .paper-scrap -->
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <defs>
+      <filter id="torn-edge" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02 0.04" numOctaves="4" seed="7" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="torn-edge-soft" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.03 0.05" numOctaves="3" seed="3" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- ───── Header ───── -->
+  <header class="relative max-w-6xl mx-auto px-6 pt-8 flex items-center justify-between">
+    <a href="../../" class="flex items-center gap-2 group">
+      <img
+        src="../../../assets/logo.png"
+        alt="ClocDot logo"
+        width="1024"
+        height="1024"
+        fetchpriority="high"
+        class="w-9 h-9 object-contain drop-shadow-sm transition-transform group-hover:rotate-12"
+        style="transform: rotate(-4deg);"
+      />
+      <span class="text-xl font-black tracking-tight text-slate-800">ClocDot</span>
+    </a>
+    <nav class="flex items-center gap-4 md:gap-6 text-sm text-slate-600">
+      <a href="../../" class="hidden md:inline hover:text-emerald-600 transition-colors">Home</a>
+      <a href="../remote-work-attendance/" class="hidden md:inline hover:text-emerald-600 transition-colors">Remote attendance</a>
+      <a href="../../#pricing" class="hidden md:inline hover:text-emerald-600 transition-colors">Pricing</a>
+      <a href="../../../features/gps-clock-in/" hreflang="zh-TW" class="inline hover:text-emerald-600 transition-colors">中文</a>
+      <a href="https://app.clocdot.com/login" class="relative group">
+        <span class="absolute inset-0 bg-slate-800 translate-y-1 translate-x-1 rounded-md"></span>
+        <span class="relative inline-block px-3 py-1.5 md:px-4 bg-white border-2 border-slate-800 rounded-md font-black text-sm group-hover:-translate-y-0.5 group-hover:-translate-x-0.5 transition-transform">Log in</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- ───── Breadcrumb ───── -->
+  <nav aria-label="Breadcrumb" class="relative max-w-4xl mx-auto px-6 pt-8">
+    <ol class="flex items-center gap-2 text-xs text-slate-400">
+      <li><a href="../../" class="hover:text-emerald-600">Home</a></li>
+      <li aria-hidden="true">/</li>
+      <li class="text-slate-600">GPS clock-in</li>
+    </ol>
+  </nav>
+
+  <!-- ───── Hero ───── -->
+  <main class="relative max-w-4xl mx-auto px-6 pt-10 pb-16">
+    <span class="inline-flex items-center gap-1.5 stamp text-cyan-600 px-3 py-1 mb-6 text-[10px] font-black uppercase tracking-[0.25em]" style="transform: rotate(-2deg);">
+      <span class="w-1.5 h-1.5 bg-cyan-500 rounded-full"></span>
+      Guide
+    </span>
+
+    <h1 class="text-4xl md:text-5xl font-black tracking-tight text-slate-800 leading-[1.15] mb-6">
+      <span class="text-cyan-600">GPS clock-in</span>, explained honestly
+    </h1>
+
+    <p class="text-base text-slate-600 leading-relaxed max-w-2xl">
+      How accurate it actually is, where it works and where it does not,
+      what happens when positioning fails, and exactly what ClocDot records about employee location —
+      including what it deliberately does not.
+    </p>
+  </main>
+
+  <div class="wave-divider"></div>
+
+  <!-- ───── What is it ───── -->
+  <section id="what" class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Basics</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">What is GPS clock-in?</h2>
+    </div>
+
+    <div class="space-y-6 text-slate-700 leading-relaxed">
+      <p>
+        GPS clock-in replaces the physical time clock with the phone your employee already carries.
+        When they press clock in, the device reads its coordinates once and sends them with the punch.
+        The system compares that position against your registered office locations and labels the punch
+        <strong>Office</strong>, <strong>Remote</strong> or field work automatically.
+      </p>
+      <p>
+        The practical consequence is that nobody has to be anywhere in particular for attendance to be recorded,
+        and nobody has to self-report where they were. For a company running several sites, or staff who go
+        straight from home to a client, that difference is the entire point.
+      </p>
+    </div>
+  </section>
+
+  <div class="wave-divider rotate-180"></div>
+
+  <!-- ───── Accuracy ───── -->
+  <section id="accuracy" class="relative max-w-5xl mx-auto px-6 py-20 bg-cyan-50/30">
+    <div class="text-center mb-12">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Accuracy</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">How accurate is it, really?</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8 mb-10">
+      <article class="relative bg-white p-6 paper-card text-center" style="transform: rotate(-1deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-2deg);"></div>
+        <p class="text-3xl font-black text-emerald-600 mb-2 mt-3">5–10m</p>
+        <h3 class="font-black text-lg text-slate-800 mb-2">Open outdoors</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Parks, car parks, open intersections. Strongest satellite signal, smallest error.</p>
+      </article>
+
+      <article class="relative bg-white p-6 paper-card text-center" style="transform: rotate(0.8deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(3deg);"></div>
+        <p class="text-3xl font-black text-cyan-600 mb-2 mt-3">10–20m</p>
+        <h3 class="font-black text-lg text-slate-800 mb-2">Typical urban</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Office buildings, streets, commercial districts. This is the realistic accuracy for most punches.</p>
+      </article>
+
+      <article class="relative bg-white p-6 paper-card text-center" style="transform: rotate(-0.6deg); --paper-bg: #fef3c7;">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-4deg);"></div>
+        <p class="text-3xl font-black text-amber-600 mb-2 mt-3">30–50m</p>
+        <h3 class="font-black text-lg text-slate-800 mb-2">Indoors / dense high-rise</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Basements and tightly packed buildings. WiFi signals are used to supplement positioning here.</p>
+      </article>
+    </div>
+
+    <div class="max-w-3xl mx-auto text-slate-700 leading-relaxed space-y-4">
+      <p>
+        <strong>ClocDot's default clock-in radius is 100 metres</strong> — deliberately much wider than normal
+        GPS drift, so an employee standing in the lobby never fails to clock in because the signal wobbled.
+        The radius is adjustable per site if you need something tighter or looser.
+      </p>
+      <p class="text-sm">
+        The other thing worth being upfront about: <strong>positioning sometimes just fails</strong> —
+        a basement, a factory floor, a denied permission. ClocDot flags those punches instead of blocking them.
+        The record still gets created with a note that location was unconfirmed, and a human decides what it means.
+        Locking someone out of clocking in because of poor reception creates a worse problem than it solves.
+      </p>
+    </div>
+  </section>
+
+  <div class="wave-divider"></div>
+
+  <!-- ───── Use cases ───── -->
+  <section id="use-cases" class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Use cases</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">Five situations GPS clock-in suits</h2>
+    </div>
+
+    <div class="space-y-5 text-slate-700">
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(-0.4deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">Companies with multiple sites</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Register every location once. Each punch is matched to the nearest registered site, so you never need a device per office.</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(0.5deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">Sales and field visits</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Staff who go straight to a client in the morning. Time and place are recorded where the work actually happens, with no detour to the office to badge in.</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(-0.3deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">Construction and engineering sites</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Work locations change from week to week. Adding a site takes a moment, and nothing needs installing on-site.</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(0.4deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">Working from home</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Punches from outside any registered site are tagged Remote automatically, so office and remote hours separate themselves without anyone labelling their own days.</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(-0.6deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">Logistics and mobile service routes</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Teams that are moving all day. Offline punches queue on the device and sync once there is a connection again.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave-divider rotate-180"></div>
+
+  <!-- ───── Privacy ───── -->
+  <section id="privacy" class="relative max-w-4xl mx-auto px-6 py-20 bg-cyan-50/30">
+    <div class="mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Privacy</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">What we do and do not record</h2>
+    </div>
+
+    <div class="space-y-6 text-slate-700 leading-relaxed">
+      <p>
+        Plenty of employees hear "GPS" and assume they are about to be followed around all day.
+        That concern is reasonable, and it is worth answering directly rather than burying it —
+        a rollout goes much better when staff know the boundaries up front.
+      </p>
+
+      <div class="relative bg-white p-7 paper-card my-8" style="transform: rotate(-0.6deg); --paper-bg: #fffdf7;">
+        <div class="absolute -top-3 left-10 w-20 h-6 tape" style="transform: rotate(-3deg);"></div>
+        <ul class="space-y-3 text-sm text-slate-600 mt-2">
+          <li><strong class="text-slate-800">✓ One reading, at the moment of the punch.</strong>
+            Coordinates are captured in the second the employee presses the button. Nothing runs in the background.
+            If they have not punched, the system does not know where they are.</li>
+          <li><strong class="text-slate-800">✗ No route history.</strong>
+            There is no map replay, no trail between punches, no idea what happened in between.</li>
+          <li><strong class="text-slate-800">✓ Employees see their own records.</strong>
+            Whatever is stored about someone's punches is visible to that person, not only to management.</li>
+          <li><strong class="text-slate-800">✓ Failures are flagged, not punished.</strong>
+            A punch with unconfirmed location is still a valid punch that a manager reviews.</li>
+        </ul>
+      </div>
+
+      <p class="text-sm">
+        If continuous location is genuinely unacceptable to your team, the alternative worth considering is
+        <strong>WiFi or IP verification for office days</strong> — it confirms someone is on the company network
+        without recording any coordinates at all. Many hybrid teams end up combining the two:
+        network verification on office days, GPS on remote days.
+      </p>
+    </div>
+  </section>
+
+  <div class="wave-divider"></div>
+
+  <!-- ───── FAQ ───── -->
+  <section id="faq" class="relative max-w-3xl mx-auto px-6 py-20">
+    <div class="mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">FAQ</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">GPS clock-in FAQ</h2>
+    </div>
+
+    <div class="space-y-4">
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.3deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">How accurate is GPS clock-in?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">Roughly 5–10 metres in open outdoor areas, 10–20 metres in a typical urban setting (which covers most punches), and 30–50 metres indoors or among dense high-rises, where WiFi helps supplement positioning. ClocDot's default radius is 100 metres, comfortably wider than normal drift.</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(0.3deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">Does ClocDot track employees throughout the day?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">No. Location is captured once, at the moment the button is pressed. There is no background tracking and no route history. If an employee has not punched, the system does not know where they are.</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.35deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">What happens if GPS fails or permission is denied?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">The punch is flagged rather than blocked. The record is still created, with a note that location could not be confirmed, and a manager decides what it means. Blocking someone because a basement has poor signal creates a worse problem than it solves.</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(0.25deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">Can we register more than one office location?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">Yes. Multiple sites are supported and addresses are geocoded automatically, so each punch is matched against whichever site is nearest. The radius is adjustable per site if 100 metres is too tight or too loose.</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.3deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">Does GPS clock-in stop buddy punching?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">It raises the bar without being absolute. Coordinates and timestamps can be cross-checked, which makes casually punching for a colleague far more visible than it is with a shared card. Where physical presence really matters, pairing GPS with WiFi or IP verification is the stronger setup.</p>
+      </details>
+    </div>
+
+    <div class="mt-12 p-5 bg-cyan-50/50 paper-scrap" style="transform: rotate(-0.2deg);">
+      <p class="text-xs font-black uppercase tracking-widest text-cyan-700 mb-2">Read next</p>
+      <a href="../remote-work-attendance/" class="font-bold text-slate-800 hover:text-emerald-600 underline underline-offset-2 decoration-dashed">
+        Remote attendance in Taiwan — five clock-in methods compared and what records need to contain →
+      </a>
+    </div>
+  </section>
+
+  <!-- ───── CTA ───── -->
+  <section class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="relative bg-white paper-scrap p-12 md:p-16 text-center" style="transform: rotate(-0.8deg);">
+      <div class="absolute -top-4 left-1/4 w-24 h-7 tape" style="transform: rotate(-4deg);"></div>
+      <div class="absolute -top-4 right-1/4 w-24 h-7 tape" style="transform: rotate(3deg);"></div>
+
+      <span class="inline-flex items-center gap-1.5 stamp text-amber-600 px-3 py-1 mb-6 text-[10px] font-black uppercase tracking-[0.25em]" style="transform: rotate(2deg);">
+        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
+        First 6 months free
+      </span>
+
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 leading-tight mb-4">
+        Try it before you
+        <span class="relative inline-block">
+          <span class="absolute inset-x-0 bottom-1 h-3 bg-cyan-200/70 -z-10 -rotate-1"></span>
+          decide anything
+        </span>
+      </h2>
+
+      <p class="text-slate-500 text-base max-w-lg mx-auto mb-8">
+        Free for teams of 5 or fewer. No credit card, no spam.
+      </p>
+
+      <a href="../../#apply" class="inline-block relative group active:scale-95 transition-transform">
+        <span class="absolute inset-0 bg-emerald-700 translate-y-[3px] rounded-md"></span>
+        <span class="relative inline-flex items-center gap-2 px-8 py-4 bg-emerald-500 text-white font-bold rounded-md group-hover:-translate-y-[1px] transition-transform">
+          Request access
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+
+      <p class="accent-handwritten text-2xl mt-10 -rotate-1" style="color: var(--color-coral-deep);">
+        See you soon.
+      </p>
+    </div>
+  </section>
+
+  <!-- ───── Footer ───── -->
+  <footer class="relative max-w-6xl mx-auto px-6 py-12 border-t border-dashed border-slate-300/60">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <img
+          src="../../../assets/logo.png"
+          alt="ClocDot logo"
+          width="1024"
+          height="1024"
+          loading="lazy"
+          decoding="async"
+          class="w-7 h-7 object-contain drop-shadow-sm"
+          style="transform: rotate(-4deg);"
+        />
+        <span class="text-sm text-slate-500">© 2026 ClocDot</span>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-slate-400">
+        <a href="../../" class="hover:text-slate-700">Home</a>
+        <a href="../remote-work-attendance/" class="hover:text-slate-700">Remote attendance</a>
+        <a href="../../../features/gps-clock-in/" hreflang="zh-TW" class="hover:text-slate-700">中文版</a>
+        <a href="../../../privacy.html" class="hover:text-slate-700">Privacy</a>
+        <a href="../../../terms.html" class="hover:text-slate-700">Terms</a>
+        <a href="mailto:pm@clocdot.com" class="hover:text-slate-700">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

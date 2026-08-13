@@ -5,11 +5,12 @@ import { getSettlement, getAdminAttendanceList, getAdminYearlyAttendance, downlo
 import PaperPiece from '../components/PaperPiece.jsx'
 import PaperToast from '../components/PaperToast.jsx'
 import ComplianceBadge from '../components/ComplianceBadge.jsx'
+import { tr, useT } from '../i18n/index.jsx'
 
 const VIEWS = [
-  { key: 'settlement', label: '結算', accent: 'emerald' },
-  { key: 'attendance', label: '月度出勤', accent: 'sky' },
-  { key: 'yearly', label: '年度出勤統計', accent: 'amber' },
+  { key: 'settlement', label: tr('payroll.settleShort'), accent: 'emerald' },
+  { key: 'attendance', label: tr('dashboard.monthlyAttendance'), accent: 'sky' },
+  { key: 'yearly', label: tr('dashboard.yearlyStats'), accent: 'amber' },
 ]
 
 const VIEW_ACCENT = {
@@ -19,12 +20,12 @@ const VIEW_ACCENT = {
 }
 
 const RATE_LABEL = {
-  '1.34': '加班×1.34', '1.67': '加班×1.67', '2.67': '加班×2.67',
-  holiday: '假日加倍', regular_leave: '例假',
+  '1.34': tr('payroll.overtime134'), '1.67': tr('payroll.overtime167'), '2.67': tr('payroll.overtime267'),
+  holiday: tr('dayType.holidayDouble'), regular_leave: tr('dayType.regular_leave'),
 }
 const RATE_LABEL_SHORT = {
   '1.34': '×1.34', '1.67': '×1.67', '2.67': '×2.67',
-  holiday: '假日加倍', regular_leave: '例假',
+  holiday: tr('dayType.holidayDouble'), regular_leave: tr('dayType.regular_leave'),
 }
 
 function buildMonthOptions() {
@@ -32,7 +33,7 @@ function buildMonthOptions() {
   return Array.from({ length: 6 }, (_, i) => {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
     const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
-    const label = `${d.getFullYear()} 年 ${d.getMonth() + 1} 月`
+    const label = tr('fmt.monthLabel', { y: d.getFullYear(), m: d.getMonth() + 1 })
     return { value, label }
   })
 }
@@ -41,7 +42,7 @@ function buildYearOptions() {
   const thisYear = new Date().getFullYear()
   return Array.from({ length: 4 }, (_, i) => {
     const y = thisYear - i
-    return { value: y, label: `${y} 年` }
+    return { value: y, label: tr('fmt.yearLabel', { y }) }
   })
 }
 
@@ -56,6 +57,7 @@ function leaveByTypeText(byType) {
 }
 
 export default function MonthlyReport() {
+  const { t } = useT()
   const monthOptions = useMemo(() => buildMonthOptions(), [])
   const yearOptions = useMemo(() => buildYearOptions(), [])
   const [month, setMonth] = useState(monthOptions[0].value)
@@ -97,7 +99,7 @@ export default function MonthlyReport() {
       if (kind === 'settlement') await downloadSettlementCSV(month)
       else await downloadAttendanceCSV(month)
     } catch (err) {
-      setToast({ variant: 'error', message: err?.message || '匯出失敗' })
+      setToast({ variant: 'error', message: err?.message || t('common.exportFailed') })
     } finally {
       setDownloading(false)
     }
@@ -109,8 +111,8 @@ export default function MonthlyReport() {
 
   // 依視圖決定欄位標題（員工欄固定為第一欄）
   const headers = view === 'settlement'
-    ? ['員工', '應出勤(日)', '應出勤(時)', '實出勤(日)', '實出勤(時)', '遲到', '早退', '缺勤', '請假(時)', ...rates.map((r) => RATE_LABEL[r] || r)]
-    : ['員工', '出勤天', '總工時(時)', '遲到天', '早退天', '缺勤天', '請假天', 'Office', 'Remote']
+    ? [t('employees.label'), t('metrics.expectedDays'), t('metrics.expectedHours'), t('metrics.actualDays'), t('metrics.actualHours'), t('metrics.late'), t('metrics.earlyLeave'), t('metrics.absent'), t('metrics.leaveHours'), ...rates.map((r) => RATE_LABEL[r] || r)]
+    : [t('employees.label'), t('fmt.attendDays'), t('metrics.totalHoursAlt'), t('metrics.lateDays'), t('metrics.earlyDays'), t('metrics.absentDays'), t('metrics.leaveDays'), 'Office', 'Remote']
 
   return (
     <div className="animate-in fade-in duration-300">
@@ -123,7 +125,7 @@ export default function MonthlyReport() {
             <FileSpreadsheet size={22} className="text-white" strokeWidth={2.5} />
           </div>
           <div>
-            <h2 className="text-3xl font-zh text-slate-800">報表</h2>
+            <h2 className="text-3xl font-zh text-slate-800">{t('nav.reports')}</h2>
             <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mt-1">
               Reports
             </p>
@@ -136,7 +138,7 @@ export default function MonthlyReport() {
               <select
                 value={year}
                 onChange={(e) => setYear(Number(e.target.value))}
-                aria-label="選擇年度"
+                aria-label={t('common.selectYear')}
                 className="appearance-none bg-white px-4 py-2 pr-8 border border-slate-200 shadow-sm text-xs font-black text-slate-600 tracking-tight focus:outline-none"
               >
                 {yearOptions.map((opt) => (
@@ -147,7 +149,7 @@ export default function MonthlyReport() {
               <select
                 value={month}
                 onChange={(e) => { setMonth(e.target.value); setExpanded(null) }}
-                aria-label="選擇月份"
+                aria-label={t('common.selectMonth')}
                 className="appearance-none bg-white px-4 py-2 pr-8 border border-slate-200 shadow-sm text-xs font-black text-slate-600 tracking-tight focus:outline-none"
               >
                 {monthOptions.map((opt) => (
@@ -172,7 +174,7 @@ export default function MonthlyReport() {
               <div className="absolute inset-0 bg-emerald-700 translate-y-[3px]" />
               <div className="relative bg-emerald-500 text-white px-5 py-2.5 flex items-center gap-2 font-zh text-sm group-hover:-translate-y-[1px] transition-transform">
                 <Download size={16} strokeWidth={2.5} />
-                {downloading ? '匯出中...' : '匯出'}
+                {downloading ? t('common.exporting') : t('common.exportLabel')}
                 <ChevronDown size={14} strokeWidth={2.5} />
               </div>
             </button>
@@ -180,13 +182,9 @@ export default function MonthlyReport() {
               <>
                 <button type="button" aria-hidden="true" tabIndex={-1} className="fixed inset-0 z-10 cursor-default" onClick={() => setExportOpen(false)} />
                 <div role="menu" className="absolute right-0 mt-2 z-20 bg-white border border-slate-200 shadow-lg min-w-[160px]">
-                  <button type="button" role="menuitem" onClick={() => handleDownload('attendance')} className="w-full text-left px-4 py-2.5 font-zh text-sm text-slate-600 hover:bg-sky-50 hover:text-sky-600 transition-colors active:scale-[0.98]">
-                    出勤每日明細
-                  </button>
+                  <button type="button" role="menuitem" onClick={() => handleDownload('attendance')} className="w-full text-left px-4 py-2.5 font-zh text-sm text-slate-600 hover:bg-sky-50 hover:text-sky-600 transition-colors active:scale-[0.98]">{t('ui.dailyDetail')}</button>
                   <div className="border-t border-dashed border-slate-200" />
-                  <button type="button" role="menuitem" onClick={() => handleDownload('settlement')} className="w-full text-left px-4 py-2.5 font-zh text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors active:scale-[0.98]">
-                    月結算
-                  </button>
+                  <button type="button" role="menuitem" onClick={() => handleDownload('settlement')} className="w-full text-left px-4 py-2.5 font-zh text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors active:scale-[0.98]">{t('ui.monthlySettle')}</button>
                 </div>
               </>
             )}
@@ -223,12 +221,12 @@ export default function MonthlyReport() {
       </div>
 
       {isLoading ? (
-        <p className="text-center text-slate-400 text-sm py-24 font-zh">載入中...</p>
+        <p className="text-center text-slate-400 text-sm py-24 font-zh">{t('ui.loading')}</p>
       ) : isYearly ? (
         (yearlyData ?? []).length === 0 ? (
           <div className="text-center py-24 opacity-40 flex flex-col items-center gap-3">
             <Inbox size={48} className="text-slate-300" />
-            <p className="font-zh text-sm text-slate-400">本年度沒有資料</p>
+            <p className="font-zh text-sm text-slate-400">{t('ui.noDataYear')}</p>
           </div>
         ) : (
           <YearlyTable rows={yearlyData} />
@@ -236,7 +234,7 @@ export default function MonthlyReport() {
       ) : rows.length === 0 ? (
         <div className="text-center py-24 opacity-40 flex flex-col items-center gap-3">
           <Inbox size={48} className="text-slate-300" />
-          <p className="font-zh text-sm text-slate-400">本月沒有資料</p>
+          <p className="font-zh text-sm text-slate-400">{t('ui.noDataMonth')}</p>
         </div>
       ) : (
         <PaperPiece variant="card" rotate="-0.2deg" className="shadow-md overflow-x-auto">
@@ -277,23 +275,24 @@ export default function MonthlyReport() {
 
 // 年度出勤統計 — 12 個月出勤天數矩陣 + 年度合計
 function YearlyTable({ rows }) {
-  const monthHeaders = Array.from({ length: 12 }, (_, i) => `${i + 1}月`)
+  const { t } = useT()
+  const monthHeaders = Array.from({ length: 12 }, (_, i) => tr('fmt.monthShort', { m: i + 1 }))
   return (
     <div>
-      <p className="font-zh text-[11px] text-slate-400 mb-2">各月數字為當月出勤天數</p>
+      <p className="font-zh text-[11px] text-slate-400 mb-2">{t('ui.monthlyDaysNote')}</p>
       <PaperPiece variant="card" rotate="-0.2deg" className="shadow-md overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b-2 border-dashed border-slate-200">
               <th className="px-4 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] whitespace-nowrap text-left">
-                員工
+                {t('employees.label')}
               </th>
               {monthHeaders.map((h) => (
                 <th key={h} className="px-2.5 py-4 text-[10px] font-black text-slate-400 tracking-[0.1em] whitespace-nowrap text-center">
                   {h}
                 </th>
               ))}
-              {['出勤天', '總工時(時)', '遲到', '早退', '請假'].map((h, i) => (
+              {[t('fmt.attendDays'), t('metrics.totalHoursAlt'), t('metrics.late'), t('metrics.earlyLeave'), t('fmt.leaveWord')].map((h, i) => (
                 <th
                   key={h}
                   className={`px-4 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] whitespace-nowrap text-center ${i === 0 ? 'border-l border-dashed border-slate-200' : ''}`}
@@ -437,31 +436,32 @@ function Num({ value, tone = 'slate' }) {
 
 // 單人本月全貌 — 出勤 + 結算 + 分級加班一次攤開
 function PersonDetail({ r, att, rates }) {
+  const { t } = useT()
   const otTiers = rates.map((rate) => ({ rate, mins: r.overtimeByRate?.[rate] ?? 0 })).filter((t) => t.mins > 0)
   const reasons = r.compliance?.reasons ?? []
   return (
     <div className="space-y-px">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-slate-200/50 border border-slate-200/50">
-        <DetailCell title="應出勤 / 實出勤">
+        <DetailCell title={t('dashboard.expectedVsActual')}>
           <p className="font-mono font-black text-sm text-slate-700 tabular-nums">
-            {r.expectedWorkdays} 日 · {toHours(r.expectedMinutes)}h
+            {t('fmt.expectedDay', { d: r.expectedWorkdays, h: toHours(r.expectedMinutes) })}
           </p>
           <p className="font-mono font-black text-sm text-emerald-600 tabular-nums">
-            實 {r.actualWorkdays} 日 · {toHours(r.actualMinutes)}h
+            {t('fmt.actualDay', { d: r.actualWorkdays, h: toHours(r.actualMinutes) })}
           </p>
         </DetailCell>
 
-        <DetailCell title="請假 / 遲到早退">
+        <DetailCell title={t('dashboard.leaveVsLate')}>
           <p className="font-mono font-black text-sm text-sky-600 tabular-nums">{toHours(r.leaveMinutes)}h</p>
           <p className="font-zh text-[11px] text-slate-500">{leaveByTypeText(att?.leaveByType)}</p>
           <p className="font-mono text-[11px] text-slate-500 tabular-nums mt-0.5">
-            遲到 {r.lateCount} · 早退 {r.earlyLeaveCount}
+            {t('fmt.lateEarly', { late: r.lateCount, early: r.earlyLeaveCount })}
           </p>
         </DetailCell>
 
-        <DetailCell title="分級加班">
+        <DetailCell title={t('payroll.tieredOvertime')}>
           {otTiers.length === 0 ? (
-            <p className="font-zh text-[12px] text-slate-400">無</p>
+            <p className="font-zh text-[12px] text-slate-400">{t('ui.none')}</p>
           ) : (
             <div className="flex flex-wrap gap-1">
               {otTiers.map((t) => (
@@ -473,19 +473,19 @@ function PersonDetail({ r, att, rates }) {
           )}
         </DetailCell>
 
-        <DetailCell title="辦公室 / 遠端">
+        <DetailCell title={t('dashboard.officeVsRemote')}>
           <p className="font-mono font-black text-sm text-slate-700 tabular-nums">
             <span className="text-emerald-600">{att?.officeDays ?? 0}</span>
             <span className="text-slate-300"> / </span>
             <span className="text-sky-600">{att?.remoteDays ?? 0}</span>
-            <span className="font-zh text-[11px] text-slate-400"> 天</span>
+            <span className="font-zh text-[11px] text-slate-400">{t('ui.days')}</span>
           </p>
-          <p className="font-mono text-[11px] text-slate-500 tabular-nums">總工時 {toHours(att?.totalWorkDuration)}h</p>
+          <p className="font-mono text-[11px] text-slate-500 tabular-nums">{t('fmt.totalWork', { h: toHours(att?.totalWorkDuration) })}</p>
         </DetailCell>
       </div>
       {reasons.length > 0 && (
         <div className="bg-white border border-slate-200/50 p-3">
-          <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1.5">合規狀態</p>
+          <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1.5">{t('ui.complianceStatus')}</p>
           <div className="flex flex-col gap-1">
             {reasons.map((reason, i) => (
               <p

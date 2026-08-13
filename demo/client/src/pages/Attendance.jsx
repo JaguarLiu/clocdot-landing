@@ -12,6 +12,7 @@ import { enqueuePunch, queueSize, replayQueue } from '../services/offlineQueue.j
 import { punchIn as apiPunchIn, punchOut as apiPunchOut, fetcher } from '../services/api.js'
 import { formatShiftRange } from '../utils/shiftTime.js'
 import useSWR from 'swr'
+import { tr, trArray, useT } from '../i18n/index.jsx'
 
 function formatTime(dateStr) {
   const d = new Date(dateStr)
@@ -19,6 +20,7 @@ function formatTime(dateStr) {
 }
 
 export default function Attendance() {
+  const { t } = useT()
   const [currentTime, setCurrentTime] = useState(new Date())
   const [isPunching, setIsPunching] = useState(false)
   const [toast, setToast] = useState(null)
@@ -43,7 +45,7 @@ export default function Attendance() {
     fetcher,
   )
   const todayShift = weekSchedule?.find((s) => s.date === todayStr)?.shift ?? null
-  const WEEK_ZH = ['一', '二', '三', '四', '五', '六', '日']
+  const WEEK_ZH = [...trArray('weekdays.short').slice(1), trArray('weekdays.short')[0]]
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
@@ -59,10 +61,10 @@ export default function Attendance() {
     })
     setPendingCount(queueSize())
     if (result.sent > 0) {
-      setToast({ variant: 'success', message: `已同步 ${result.sent} 筆離線打卡` })
+      setToast({ variant: 'success', message: tr('attendance.synced', { n: result.sent }) })
       refresh()
     } else if (result.dropped > 0) {
-      setToast({ variant: 'error', message: `${result.dropped} 筆離線打卡被伺服器退回 (重複或逾時)` })
+      setToast({ variant: 'error', message: tr('attendance.droppedSync', { n: result.dropped }) })
       refresh()
     }
   }, [refresh])
@@ -87,7 +89,7 @@ export default function Attendance() {
       id: 'out',
       type: 'out',
       time: formatTime(todayRecord.punchOut),
-      note: isEarlyLeave ? '今天提早走啦，明天見！' : '準時完成，辛苦了！',
+      note: isEarlyLeave ? t('punch.noteEarlyLeave') : t('punch.noteOnTime'),
       borderColor: '#f97316',
       isAlert: isEarlyLeave,
       rotate: '-1.5deg',
@@ -99,7 +101,7 @@ export default function Attendance() {
       id: 'in',
       type: 'in',
       time: formatTime(todayRecord.punchIn),
-      note: isLate ? '今天稍微晚了一點點～' : '加油，開始工作！',
+      note: isLate ? t('punch.noteLate') : t('punch.noteStart'),
       borderColor: '#fbbf24',
       isAlert: isLate,
       rotate: '1.2deg',
@@ -115,7 +117,7 @@ export default function Attendance() {
       // 離線 + onsite 必到 → 直接擋 (Q1 答案 B)
       // 因為無法在離線時驗證使用者真的在公司範圍內
       if (!isOnline && onsiteRequired) {
-        setToast({ variant: 'error', message: '目前離線，今日需到公司打卡，請連上網路後再試' })
+        setToast({ variant: 'error', message: t('attendance.offlineOnsiteBlocked') })
         setIsPunching(false)
         return
       }
@@ -148,7 +150,7 @@ export default function Attendance() {
         setPendingCount(queueSize())
         setToast({
           variant: 'success',
-          message: `離線中 — 已暫存${action === 'in' ? '上班' : '下班'}打卡 ${formatTime(new Date())}，連上網會自動送出`,
+          message: t('attendance.queuedOffline', { action: action === 'in' ? t('common.clockIn') : t('common.clockOut'), time: formatTime(new Date()) }),
         })
         return
       }
@@ -166,14 +168,14 @@ export default function Attendance() {
           setPendingCount(queueSize())
           setToast({
             variant: 'success',
-            message: `網路不穩 — 已暫存${action === 'in' ? '上班' : '下班'}打卡，稍後自動送出`,
+            message: t('attendance.queuedFlaky', { action: action === 'in' ? t('common.clockIn') : t('common.clockOut') }),
           })
           return
         }
         throw err
       }
     } catch (err) {
-      const msg = err?.info?.error || err?.info?.message || err?.message || '打卡失敗，請稍後再試'
+      const msg = err?.info?.error || err?.info?.message || err?.message || t('punch.failed')
       setToast({ variant: 'error', message: msg })
     } finally {
       setIsPunching(false)
@@ -210,7 +212,7 @@ export default function Attendance() {
             style={{ transform: 'rotate(-1.5deg)', borderRadius: '10px 3px 12px 4px/4px 12px 3px 10px' }}
           >
             <MapPin size={12} strokeWidth={3} />
-            <span className="font-zh text-[11px]">今日需到公司打卡</span>
+            <span className="font-zh text-[11px]">{t('attendance.onsiteRequired')}</span>
           </div>
         )}
         {!isOnline && (
@@ -219,7 +221,7 @@ export default function Attendance() {
             style={{ transform: 'rotate(1.2deg)', borderRadius: '12px 4px 10px 3px/3px 10px 4px 12px' }}
           >
             <WifiOff size={12} strokeWidth={3} />
-            <span className="font-zh text-[11px]">離線中</span>
+            <span className="font-zh text-[11px]">{t('attendance.offline')}</span>
           </div>
         )}
         {pendingCount > 0 && (
@@ -228,7 +230,7 @@ export default function Attendance() {
             style={{ transform: 'rotate(-0.8deg)', borderRadius: '8px 12px 4px 10px/10px 4px 12px 8px' }}
           >
             <CloudUpload size={12} strokeWidth={3} />
-            <span className="font-zh text-[11px]">{pendingCount} 筆待同步</span>
+            <span className="font-zh text-[11px]">{t('attendance.pendingSync', { n: pendingCount })}</span>
           </div>
         )}
       </div>
@@ -251,9 +253,9 @@ export default function Attendance() {
         </div>
 
         {isLoading ? (
-          <p className="text-center text-slate-400 text-xs py-8 font-zh">載入中...</p>
+          <p className="text-center text-slate-400 text-xs py-8 font-zh">{t('common.loading')}</p>
         ) : history.length === 0 ? (
-          <p className="text-center text-slate-400 text-xs py-8 font-zh">今天還沒有打卡紀錄</p>
+          <p className="text-center text-slate-400 text-xs py-8 font-zh">{t('attendance.noRecordsToday')}</p>
         ) : (
           <div className="flex flex-col items-center">
             {history.map((item) => (
@@ -277,7 +279,7 @@ export default function Attendance() {
             <div className="flex items-center gap-2 mb-3">
               <CalendarClock size={16} className="text-emerald-500" />
               <h3 className="font-black text-slate-500 text-xs uppercase tracking-[0.2em]">My Schedule</h3>
-              <span className="font-zh text-xs text-slate-400">我的班表</span>
+              <span className="font-zh text-xs text-slate-400">{t('attendance.mySchedule')}</span>
             </div>
             <div className="space-y-1.5">
               {weekSchedule.map((s, i) => {
@@ -289,15 +291,15 @@ export default function Attendance() {
                     style={isToday ? { borderRadius: '8px 3px 9px 4px/4px 9px 3px 8px' } : undefined}
                   >
                     <span className={`font-zh text-xs ${isToday ? 'text-emerald-700' : 'text-slate-500'}`}>
-                      週{WEEK_ZH[i]} <span className="font-mono text-[10px] text-slate-400">{s.date.slice(5)}</span>
+                      {t('attendance.weekPrefix', { d: WEEK_ZH[i] })} <span className="font-mono text-[10px] text-slate-400">{s.date.slice(5)}</span>
                     </span>
                     {s.shift ? (
                       <span className={`font-mono font-black text-xs tabular-nums ${isToday ? 'text-emerald-700' : 'text-slate-600'}`}>
                         {s.shift.name}・{formatShiftRange(s.shift)}
-                        {s.source === 'assignment' && <span className="font-zh font-normal text-[9px] text-amber-600 ml-1">指派</span>}
+                        {s.source === 'assignment' && <span className="font-zh font-normal text-[9px] text-amber-600 ml-1">{t('attendance.assigned')}</span>}
                       </span>
                     ) : (
-                      <span className="font-zh text-xs text-slate-400">無班別</span>
+                      <span className="font-zh text-xs text-slate-400">{t('attendance.noShift')}</span>
                     )}
                   </div>
                 )

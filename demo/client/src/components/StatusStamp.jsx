@@ -1,4 +1,5 @@
 import { Check, X, Clock } from 'lucide-react'
+import { useT } from '../i18n/index.jsx'
 
 // 圓形印章 — 雙環邊 + 微傾，蓋在卡片尾端
 // client 版尺寸偏小，行動端不擠版
@@ -8,21 +9,21 @@ import { Check, X, Clock } from 'lucide-react'
 
 const STAMP_STYLES = {
   approved: {
-    label: '已通過',
+    labelKey: 'status.approved',
     en: 'APPROVED',
     classes: 'text-emerald-600 border-emerald-500 outline-emerald-500 bg-emerald-50/70',
     rotate: '-8deg',
     Icon: Check,
   },
   rejected: {
-    label: '已駁回',
+    labelKey: 'status.rejected',
     en: 'REJECTED',
     classes: 'text-red-500 border-red-500 outline-red-500 bg-red-50/70',
     rotate: '6deg',
     Icon: X,
   },
   pending: {
-    label: '審核中',
+    labelKey: 'status.pending',
     en: 'PENDING',
     classes: 'text-amber-600 border-amber-500 outline-amber-500 bg-amber-50/70',
     rotate: '-5deg',
@@ -36,6 +37,7 @@ const SIZE = {
 }
 
 export default function StatusStamp({ status = 'pending', size = 'sm' }) {
+  const { t } = useT()
   const style = STAMP_STYLES[status] || STAMP_STYLES.pending
   const dims = SIZE[size] || SIZE.sm
   const Icon = style.Icon
@@ -47,10 +49,10 @@ export default function StatusStamp({ status = 'pending', size = 'sm' }) {
         transform: `rotate(${style.rotate})`,
         outlineOffset: dims.offset,
       }}
-      aria-label={style.label}
+      aria-label={t(style.labelKey)}
     >
       <Icon size={dims.icon} strokeWidth={3} aria-hidden="true" />
-      <span className={`font-zh leading-none mt-0.5 ${dims.zh}`}>{style.label}</span>
+      <span className={`font-zh leading-none mt-0.5 ${dims.zh}`}>{t(style.labelKey)}</span>
       {dims.en !== 'hidden' && (
         <span className={`uppercase tracking-[0.15em] leading-none mt-0.5 opacity-70 ${dims.en}`}>
           {style.en}

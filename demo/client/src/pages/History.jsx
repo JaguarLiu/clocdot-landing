@@ -3,13 +3,11 @@ import { History as HistoryIcon, ChevronDown, ArrowLeft, AlertCircle, ArrowRight
 import { useNavigate } from 'react-router-dom'
 import { useAttendanceHistory } from '../hooks/useAttendance.js'
 import PaperPiece from '../components/PaperPiece.jsx'
+import { tr, trArray, useT } from '../i18n/index.jsx'
 
-const months = [
-  '1 月', '2 月', '3 月', '4 月', '5 月', '6 月',
-  '7 月', '8 月', '9 月', '10 月', '11 月', '12 月',
-]
+const months = trArray('months')
 
-const weekDays = ['日', '一', '二', '三', '四', '五', '六']
+const weekDays = trArray('weekdays.short')
 
 // 同一頁多張紙片用不同方向旋轉，營造剪貼感（±1deg 內）
 const rotations = ['-0.6deg', '0.5deg', '-0.4deg', '0.7deg', '-0.3deg', '0.8deg']
@@ -28,13 +26,14 @@ function formatDuration(minutes) {
 }
 
 function statusLabel(record) {
-  if (record.isLate && record.isEarlyLeave) return '遲到・早退'
-  if (record.isLate) return '遲到'
-  if (record.isEarlyLeave) return '早退'
+  if (record.isLate && record.isEarlyLeave) return tr('history.lateAndEarly')
+  if (record.isLate) return tr('punch.late')
+  if (record.isEarlyLeave) return tr('punch.earlyLeave')
   return null
 }
 
 export default function History() {
+  const { t } = useT()
   const now = new Date()
   const [selectedMonth, setSelectedMonth] = useState(now.getMonth())
   const [selectedYear] = useState(now.getFullYear())
@@ -52,13 +51,13 @@ export default function History() {
         onClick={() => navigate('/profile')}
         className="flex items-center gap-2 mb-6 text-slate-400 hover:text-slate-600 transition-colors font-black text-xs uppercase tracking-widest"
       >
-        <ArrowLeft size={16} /> 返回個人中心
+        <ArrowLeft size={16} /> {t('history.backToProfile')}
       </button>
 
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <HistoryIcon size={24} className="text-sky-500" />
-          <h3 className="font-zh text-2xl text-slate-700">打卡紀錄</h3>
+          <h3 className="font-zh text-2xl text-slate-700">{t('history.heading')}</h3>
         </div>
         <div className="relative">
           <button
@@ -90,11 +89,11 @@ export default function History() {
       {/* 每日紙片列表 */}
       <div className="pb-10 space-y-3">
         {isLoading ? (
-          <p className="text-center text-slate-400 text-xs py-20 font-zh">載入中...</p>
+          <p className="text-center text-slate-400 text-xs py-20 font-zh">{t('common.loading')}</p>
         ) : records.length === 0 ? (
           <div className="text-center py-20 opacity-40 flex flex-col items-center gap-2">
             <HistoryIcon size={40} className="text-slate-300" />
-            <p className="font-zh text-xs text-slate-400">本月尚無打卡紀錄</p>
+            <p className="font-zh text-xs text-slate-400">{t('history.empty')}</p>
           </div>
         ) : (
           records.map((record, index) => {
@@ -128,7 +127,7 @@ export default function History() {
                       {dd}
                     </span>
                     <span className="font-mono text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">
-                      {mm}月・{day}
+                      {t('history.dayLabel', { m: mm, d: day })}
                     </span>
                   </div>
 

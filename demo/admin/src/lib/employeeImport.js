@@ -1,9 +1,10 @@
+import { tr } from '../i18n/index.jsx'
 import * as XLSX from 'xlsx'
 
 // 匯入欄位（範本表頭與解析比對皆用這組正規鍵）
 export const IMPORT_COLUMNS = ['email', 'name', 'empNo', 'role', 'hireDate', 'baseSalary', 'bankAccount']
 
-const SAMPLE_ROW = ['wang@example.com', '王小明', '1001', 'employee', '2026-01-01', '36000', '700-1234567']
+const SAMPLE_ROW = ['wang@example.com', tr('seed.userA'), '1001', 'employee', '2026-01-01', '36000', '700-1234567']
 
 // 解析 .csv / .xlsx → 正規欄位鍵的 row 陣列（值一律字串、已 trim）
 export async function parseEmployeeFile(file) {
@@ -30,8 +31,8 @@ export async function parseEmployeeFile(file) {
 export function downloadImportTemplate() {
   const ws = XLSX.utils.aoa_to_sheet([IMPORT_COLUMNS, SAMPLE_ROW])
   const wb = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(wb, ws, '員工匯入')
-  XLSX.writeFile(wb, '員工匯入範本.xlsx')
+  XLSX.utils.book_append_sheet(wb, ws, tr('employees.importHeading'))
+  XLSX.writeFile(wb, tr('employees.templateFile'))
 }
 
 function csvCell(v) {
@@ -51,7 +52,7 @@ export function downloadPasswordCSV(created) {
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = '匯入密碼清單.csv'
+  a.download = tr('employees.passwordListFile')
   a.click()
   URL.revokeObjectURL(url)
 }

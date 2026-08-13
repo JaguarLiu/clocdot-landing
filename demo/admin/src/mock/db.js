@@ -1,3 +1,4 @@
+import { tr } from '../i18n/index.jsx'
 // Demo 管理後台假資料庫 — 全部存 localStorage，無任何後端。
 // 一家小公司：4 名員工、2 部門、3 班別，含出勤/請假/加班/補卡/薪資/結算。
 // 清除：主控台 window.__resetDemo() 或清掉此 key 後重整。
@@ -20,22 +21,22 @@ export const MODULES = [
 ]
 
 const LEAVE_TYPE_META = {
-  annual: { label: '特休', defaultDays: 0 },
-  personal: { label: '事假', defaultDays: 14 },
-  sick: { label: '病假', defaultDays: 30 },
-  menstrual: { label: '生理假', defaultDays: 12 },
-  marriage: { label: '婚假', defaultDays: 8 },
-  bereavement: { label: '喪假', defaultDays: 8 },
-  maternity: { label: '產假', defaultDays: 56 },
-  paternity: { label: '陪產假', defaultDays: 7 },
-  official: { label: '公假', defaultDays: 0 },
-  compensatory: { label: '補休', defaultDays: 0 },
+  annual: { label: tr('leaveType.annual'), defaultDays: 0 },
+  personal: { label: tr('leaveType.personal'), defaultDays: 14 },
+  sick: { label: tr('leaveType.sick'), defaultDays: 30 },
+  menstrual: { label: tr('leaveType.menstrual'), defaultDays: 12 },
+  marriage: { label: tr('leaveType.marriage'), defaultDays: 8 },
+  bereavement: { label: tr('leaveType.bereavement'), defaultDays: 8 },
+  maternity: { label: tr('leaveType.maternity'), defaultDays: 56 },
+  paternity: { label: tr('leaveType.paternity'), defaultDays: 7 },
+  official: { label: tr('leaveType.official'), defaultDays: 0 },
+  compensatory: { label: tr('leaveType.compensatory'), defaultDays: 0 },
 }
 
 const monthlyPayslip = (base, otAmount) => {
   const earnings = {
     baseSalary: base,
-    allowances: [{ name: '伙食津貼', amount: 2400 }],
+    allowances: [{ name: tr('seed.allowanceMeal'), amount: 2400 }],
     overtime: { tiers: otAmount ? [{ rate: '1.34', minutes: 120, amount: otAmount }] : [] },
     grossPay: base + 2400 + otAmount,
   }
@@ -59,30 +60,30 @@ function buildSeed() {
   }
 
   const shifts = [
-    { id: 's1', name: '日班', startTime: '09:00', endTime: '18:00', breakMinutes: 60, isDefault: true },
-    { id: 's2', name: '早班', startTime: '08:00', endTime: '17:00', breakMinutes: 60, isDefault: false },
-    { id: 's3', name: '晚班', startTime: '13:00', endTime: '22:00', breakMinutes: 60, isDefault: false },
+    { id: 's1', name: tr('seed.shiftDay'), startTime: '09:00', endTime: '18:00', breakMinutes: 60, isDefault: true },
+    { id: 's2', name: tr('seed.shiftMorning'), startTime: '08:00', endTime: '17:00', breakMinutes: 60, isDefault: false },
+    { id: 's3', name: tr('seed.shiftNight'), startTime: '13:00', endTime: '22:00', breakMinutes: 60, isDefault: false },
   ]
 
   const mkUser = (o) => ({
     avatar: null, timezone: 'Asia/Taipei', lockedAt: null, failedLoginCount: 0,
     createdAt: naive('2024-01-15', 9, 0), hasPassword: true, roleId: null, roleName: null,
-    isAdmin: false, defaultShiftId: 's1', defaultShiftName: '日班', ...o,
+    isAdmin: false, defaultShiftId: 's1', defaultShiftName: tr('seed.shiftDay'), ...o,
   })
   const users = [
-    mkUser({ id: 'u1', email: 'ming@demo.app', name: '王小明', empNo: 1001, hireDate: naive('2023-03-01', 0, 0), departmentId: 'd2', departmentName: '工程部', employmentType: 'operation' }),
-    mkUser({ id: 'u2', email: 'hua@demo.app', name: '李美華', empNo: 1002, hireDate: naive('2021-07-15', 0, 0), departmentId: 'd1', departmentName: '業務部', employmentType: 'regular' }),
-    mkUser({ id: 'u3', email: 'wen@demo.app', name: '陳大文', empNo: 1003, hireDate: naive('2020-02-10', 0, 0), departmentId: 'd2', departmentName: '工程部', employmentType: 'regular' }),
-    mkUser({ id: 'u4', email: 'ting@demo.app', name: '林雅婷', empNo: 1004, hireDate: naive('2024-06-01', 0, 0), departmentId: 'd1', departmentName: '業務部', employmentType: 'parttime', defaultShiftId: 's2', defaultShiftName: '早班' }),
+    mkUser({ id: 'u1', email: 'ming@demo.app', name: tr('seed.userA'), empNo: 1001, hireDate: naive('2023-03-01', 0, 0), departmentId: 'd2', departmentName: tr('seed.deptEngineering'), employmentType: 'operation' }),
+    mkUser({ id: 'u2', email: 'hua@demo.app', name: tr('seed.userB'), empNo: 1002, hireDate: naive('2021-07-15', 0, 0), departmentId: 'd1', departmentName: tr('seed.deptSales'), employmentType: 'regular' }),
+    mkUser({ id: 'u3', email: 'wen@demo.app', name: tr('seed.userC'), empNo: 1003, hireDate: naive('2020-02-10', 0, 0), departmentId: 'd2', departmentName: tr('seed.deptEngineering'), employmentType: 'regular' }),
+    mkUser({ id: 'u4', email: 'ting@demo.app', name: tr('seed.userD'), empNo: 1004, hireDate: naive('2024-06-01', 0, 0), departmentId: 'd1', departmentName: tr('seed.deptSales'), employmentType: 'parttime', defaultShiftId: 's2', defaultShiftName: tr('seed.shiftMorning') }),
   ]
 
   const departments = [
-    { id: 'd1', name: '業務部', parentId: null, managerId: 'u2', managerName: '李美華', memberCount: 2 },
-    { id: 'd2', name: '工程部', parentId: null, managerId: 'u3', managerName: '陳大文', memberCount: 2 },
+    { id: 'd1', name: tr('seed.deptSales'), parentId: null, managerId: 'u2', managerName: tr('seed.userB'), memberCount: 2 },
+    { id: 'd2', name: tr('seed.deptEngineering'), parentId: null, managerId: 'u3', managerName: tr('seed.userC'), memberCount: 2 },
   ]
   const deptRoles = {
-    d1: [{ id: 11, name: '業務主管', permissions: ['leaves', 'corrections'], departmentId: 'd1', memberCount: 1 }],
-    d2: [{ id: 21, name: '工程主管', permissions: ['leaves', 'schedule'], departmentId: 'd2', memberCount: 1 }],
+    d1: [{ id: 11, name: tr('seed.roleSalesLead'), permissions: ['leaves', 'corrections'], departmentId: 'd1', memberCount: 1 }],
+    d2: [{ id: 21, name: tr('seed.roleEngLead'), permissions: ['leaves', 'schedule'], departmentId: 'd2', memberCount: 1 }],
   }
 
   // 月出勤彙總（給報表）
@@ -90,7 +91,7 @@ function buildSeed() {
   const attendanceMonthly = users.map((u, i) => ({
     user: userMini(u),
     totalWorkDuration: 9600 - i * 300, attendanceDays: 20 - i, lateDays: i === 0 ? 2 : 0,
-    earlyLeaveDays: i === 1 ? 1 : 0, leaveDays: i, leaveByType: i ? { 特休: i } : {},
+    earlyLeaveDays: i === 1 ? 1 : 0, leaveDays: i, leaveByType: i ? { [tr('leaveType.annual')]: i } : {},
     officeDays: 15 - i, remoteDays: 5,
   }))
   const yearlyAttendance = users.map((u) => ({
@@ -111,23 +112,23 @@ function buildSeed() {
   }))
 
   const leaveRequests = [
-    { id: 'lr1', user: userMini(users[0]), leaveType: 'annual', startDate: recentWorkday(3), endDate: recentWorkday(2), startTime: '09:00', endTime: '18:00', reason: '家庭旅遊', status: 'pending', reviewNote: null, cancelRequested: false, cancelReason: null },
-    { id: 'lr2', user: userMini(users[3]), leaveType: 'sick', startDate: addDays(todayStr, 1), endDate: addDays(todayStr, 1), startTime: '09:00', endTime: '18:00', reason: '看診', status: 'pending', reviewNote: null, cancelRequested: false, cancelReason: null },
-    { id: 'lr3', user: userMini(users[1]), leaveType: 'personal', startDate: recentWorkday(6), endDate: recentWorkday(6), startTime: '14:00', endTime: '18:00', reason: '辦事', status: 'approved', reviewNote: null, cancelRequested: true, cancelReason: '行程取消' },
-    { id: 'lr4', user: userMini(users[2]), leaveType: 'marriage', startDate: recentWorkday(10), endDate: recentWorkday(6), startTime: '09:00', endTime: '18:00', reason: '結婚', status: 'approved', reviewNote: '恭喜', cancelRequested: false, cancelReason: null },
+    { id: 'lr1', user: userMini(users[0]), leaveType: 'annual', startDate: recentWorkday(3), endDate: recentWorkday(2), startTime: '09:00', endTime: '18:00', reason: tr('seed.reasonTrip'), status: 'pending', reviewNote: null, cancelRequested: false, cancelReason: null },
+    { id: 'lr2', user: userMini(users[3]), leaveType: 'sick', startDate: addDays(todayStr, 1), endDate: addDays(todayStr, 1), startTime: '09:00', endTime: '18:00', reason: tr('seed.reasonDoctor'), status: 'pending', reviewNote: null, cancelRequested: false, cancelReason: null },
+    { id: 'lr3', user: userMini(users[1]), leaveType: 'personal', startDate: recentWorkday(6), endDate: recentWorkday(6), startTime: '14:00', endTime: '18:00', reason: tr('seed.reasonErrand'), status: 'approved', reviewNote: null, cancelRequested: true, cancelReason: tr('seed.reasonCancelled') },
+    { id: 'lr4', user: userMini(users[2]), leaveType: 'marriage', startDate: recentWorkday(10), endDate: recentWorkday(6), startTime: '09:00', endTime: '18:00', reason: tr('seed.reasonWedding'), status: 'approved', reviewNote: tr('common.congrats'), cancelRequested: false, cancelReason: null },
   ]
   const correctionRequests = [
-    { id: 'cr1', reason: '[上班] 09:00 - 忘記打卡', status: 'pending', attendance: { workDate: naive(recentWorkday(1), 0, 0), user: userMini(users[0]) } },
-    { id: 'cr2', reason: '[下班] 18:00 - 系統當機', status: 'pending', attendance: { workDate: naive(recentWorkday(2), 0, 0), user: userMini(users[3]) } },
-    { id: 'cr3', reason: '[上班] 08:30 - 忘打', status: 'approved', attendance: { workDate: naive(recentWorkday(5), 0, 0), user: userMini(users[1]) } },
+    { id: 'cr1', reason: tr('seed.correctionForgotIn'), status: 'pending', attendance: { workDate: naive(recentWorkday(1), 0, 0), user: userMini(users[0]) } },
+    { id: 'cr2', reason: tr('seed.correctionCrash'), status: 'pending', attendance: { workDate: naive(recentWorkday(2), 0, 0), user: userMini(users[3]) } },
+    { id: 'cr3', reason: tr('seed.correctionForgotIn2'), status: 'approved', attendance: { workDate: naive(recentWorkday(5), 0, 0), user: userMini(users[1]) } },
   ]
   const overtimeRequests = [
-    { id: 'or1', user: userMini(users[0]), workDate: recentWorkday(1), dayType: 'workday', requestedMinutes: 120, reason: '專案趕工', status: 'pending', tiers: [{ rate: '1.34', minutes: 120 }] },
-    { id: 'or2', user: userMini(users[2]), workDate: recentWorkday(4), dayType: 'restday', requestedMinutes: 180, reason: '緊急維護', status: 'approved', tiers: [{ rate: '1.34', minutes: 120 }, { rate: '1.67', minutes: 60 }] },
+    { id: 'or1', user: userMini(users[0]), workDate: recentWorkday(1), dayType: 'workday', requestedMinutes: 120, reason: tr('seed.reasonCrunch'), status: 'pending', tiers: [{ rate: '1.34', minutes: 120 }] },
+    { id: 'or2', user: userMini(users[2]), workDate: recentWorkday(4), dayType: 'restday', requestedMinutes: 180, reason: tr('issue.maintenance'), status: 'approved', tiers: [{ rate: '1.34', minutes: 120 }, { rate: '1.67', minutes: 60 }] },
   ]
 
   const salaryProfiles = {
-    u1: { userId: 'u1', payType: 'monthly', baseSalary: 45000, hourlyRate: null, allowances: [{ name: '伙食津貼', amount: 2400, insured: false, taxable: false }], updatedAt: naive('2025-01-05', 10, 0) },
+    u1: { userId: 'u1', payType: 'monthly', baseSalary: 45000, hourlyRate: null, allowances: [{ name: tr('seed.allowanceMeal'), amount: 2400, insured: false, taxable: false }], updatedAt: naive('2025-01-05', 10, 0) },
     u2: { userId: 'u2', payType: 'monthly', baseSalary: 52000, hourlyRate: null, allowances: [], updatedAt: naive('2025-01-05', 10, 0) },
     u3: { userId: 'u3', payType: 'monthly', baseSalary: 60000, hourlyRate: null, allowances: [], updatedAt: naive('2025-01-05', 10, 0) },
     u4: { userId: 'u4', payType: 'hourly', baseSalary: null, hourlyRate: 200, allowances: [], updatedAt: naive('2025-01-05', 10, 0) },
@@ -149,14 +150,14 @@ function buildSeed() {
   }
 
   const company = {
-    id: 'demo-co', name: 'ClocDot 展示公司', timezone: 'Asia/Taipei',
+    id: 'demo-co', name: tr('seed.companyName'), timezone: 'Asia/Taipei',
     breakMinutes: 60, standardDailyMinutes: 480, leavePolicyYearReset: 'anniversary',
     onsiteCycleWeeks: 1, onsiteWeekdaysByCycle: [[1, 3, 5]], onsiteMonthDays: [], scheduleAnchorDate: null,
     flexibleOvertime: false, approvalLevels: 1, workHourType: 'fixed', lateDeductMode: 'per_minute',
     wifiCheckinEnabled: false, allowedIps: [],
   }
   const companyLocations = [
-    { id: 'loc1', companyId: 'demo-co', name: '台北總部', address: '台北市信義區市府路1號', lat: 25.0375, lng: 121.5637, radius: 100 },
+    { id: 'loc1', companyId: 'demo-co', name: tr('seed.hqName'), address: tr('seed.hqAddressAlt'), lat: 25.0375, lng: 121.5637, radius: 100 },
   ]
   const leavePolicies = Object.entries(LEAVE_TYPE_META).map(([leaveType, m]) => ({
     leaveType, label: m.label,
@@ -173,7 +174,7 @@ function buildSeed() {
   }]))
 
   return {
-    me: { id: 'u-admin', name: '陳經理', isAdmin: true, permissions: MODULES, adminRoleId: 1 },
+    me: { id: 'u-admin', name: tr('seed.roleManager'), isAdmin: true, permissions: MODULES, adminRoleId: 1 },
     company, companyLocations, leavePolicies,
     users, departments, deptRoles, shifts,
     shiftAssignments: [

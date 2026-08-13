@@ -4,9 +4,10 @@ import useSWR from 'swr'
 import { fetcher, getHolidays } from '../services/api.js'
 import PaperPiece from './PaperPiece.jsx'
 import { LEAVE_TYPE_MAP } from '../utils/leaveTypes.js'
+import { trArray, useT } from '../i18n/index.jsx'
 
-const WEEK_DAYS = ['日', '一', '二', '三', '四', '五', '六']
-const MONTH_NAMES = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+const WEEK_DAYS = trArray('weekdays.short')
+const MONTH_NAMES = trArray('months')
 
 // 5-colour semantic system for calendar leave types
 // 藍請假 as the general colour; specific types mapped to palette
@@ -42,6 +43,7 @@ function monthBounds(year, month) {
 
 // 全公司請假行事曆（含假別）。獨立元件，供 Dashboard / 審核頁共用。
 export default function CompanyLeaveCalendar() {
+  const { t } = useT()
   const today = new Date()
   const [calYear,  setCalYear]  = useState(today.getFullYear())
   const [calMonth, setCalMonth] = useState(today.getMonth()) // 0-indexed
@@ -101,7 +103,7 @@ export default function CompanyLeaveCalendar() {
           <CalendarCheck size={18} className="text-white" strokeWidth={2.5} />
         </div>
         <div>
-          <h3 className="text-xl font-zh text-slate-800">公司行事曆</h3>
+          <h3 className="text-xl font-zh text-slate-800">{t('ui.companyCalendar')}</h3>
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] mt-0.5">
             Company Leave Calendar
           </p>
@@ -119,7 +121,7 @@ export default function CompanyLeaveCalendar() {
             <ChevronLeft size={18} />
           </button>
           <span className="font-zh font-black text-slate-700 text-base">
-            {calYear} 年 {MONTH_NAMES[calMonth]}
+            {t('fmt.monthLabel', { y: calYear, m: MONTH_NAMES[calMonth] })}
           </span>
           <button
             type="button"
@@ -196,7 +198,7 @@ export default function CompanyLeaveCalendar() {
         <div className="mt-4 pt-4 border-t border-dashed border-slate-200 flex flex-wrap gap-2">
           <span className="inline-flex items-center gap-1 text-[9px] font-zh px-2 py-0.5 border bg-red-100 text-red-600 border-red-200"
                 style={{ borderRadius: '2px' }}>
-            國定假日
+            {t('dayType.national_holiday')}
           </span>
           {Object.entries(LEAVE_TYPE_MAP).slice(0, 6).map(([key, info]) => {
             const colorClass = LEAVE_TYPE_COLOR[key] || LEAVE_TYPE_COLOR._default

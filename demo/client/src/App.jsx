@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth.js'
 import AppLayout from './components/AppLayout.jsx'
 import InstallPromptDialog from './components/InstallPromptDialog.jsx'
+import { tr } from './i18n/index.jsx'
 
 const Login = lazy(() => import('./pages/Login.jsx'))
 const Attendance = lazy(() => import('./pages/Attendance.jsx'))
@@ -17,7 +18,7 @@ const Approvals = lazy(() => import('./pages/Approvals.jsx'))
 function Loading() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f3f0e6]">
-      <div className="text-slate-400 text-sm font-medium">載入中...</div>
+      <div className="text-slate-400 text-sm font-medium">{tr('common.loading')}</div>
     </div>
   )
 }

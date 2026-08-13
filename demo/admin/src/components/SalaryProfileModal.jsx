@@ -3,6 +3,7 @@ import { Wallet, Plus, Trash2, Check, X } from 'lucide-react'
 import PaperPiece from './PaperPiece.jsx'
 import MarkerButton from './MarkerButton.jsx'
 import { getSalaryProfile, saveSalaryProfile, updateUser } from '../services/api.js'
+import { tr, useT } from '../i18n/index.jsx'
 
 const EMPTY = {
   baseSalary: '',
@@ -20,6 +21,7 @@ const EMPTY = {
 const toIntOrNull = (v) => (v === '' || v === null ? null : parseInt(v, 10))
 
 export default function SalaryProfileModal({ open, employee, onClose, onToast, onSaved }) {
+  const { t } = useT()
   const [form, setForm] = useState(EMPTY)
   const [loading, setLoading] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -43,7 +45,7 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
           note: p.note ?? '',
         } : EMPTY)
       })
-      .catch(() => onToast?.({ variant: 'error', message: '載入薪資資料失敗' }))
+      .catch(() => onToast?.({ variant: 'error', message: tr('employees.salaryLoadFailed') }))
       .finally(() => setLoading(false))
   }, [open, employee, onToast])
 
@@ -93,11 +95,11 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
             })),
             ...common,
           })
-      onToast?.({ variant: 'success', message: employee.pendingUserPayload ? '員工與薪資資料已儲存' : '薪資資料已儲存' })
+      onToast?.({ variant: 'success', message: employee.pendingUserPayload ? t('employees.savedWithSalary') : t('employees.salarySaved') })
       onSaved?.()
       onClose()
     } catch (err) {
-      onToast?.({ variant: 'error', message: err.message || '儲存失敗' })
+      onToast?.({ variant: 'error', message: err.message || t('common.saveFailed') })
     } finally {
       setBusy(false)
     }
@@ -113,7 +115,7 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
     >
       <button
         type="button"
-        aria-label="關閉"
+        aria-label={t('common.close')}
         tabIndex={-1}
         onClick={() => !busy && onClose()}
         className="absolute inset-0 bg-[#1c1810]/20 backdrop-blur-[2px] cursor-default"
@@ -133,14 +135,12 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
           </div>
           <div className="min-w-0 pt-0.5">
             <h3 className="font-zh text-lg text-slate-800 flex items-center gap-2">
-              薪資主檔
+              {t('fmt.salaryProfile')}
               {isHourly && (
                 <span
                   className="px-2 py-0.5 bg-amber-100 text-amber-700 border border-amber-200 text-[10px] font-black uppercase tracking-widest"
                   style={{ transform: 'rotate(-1deg)' }}
-                >
-                  時薪制 Hourly
-                </span>
+                >{t('ui.hourlyType')}</span>
               )}
             </h3>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] mt-1">
@@ -150,12 +150,12 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
         </div>
 
         {loading ? (
-          <p className="font-zh text-sm text-slate-400 py-8 text-center">載入中…</p>
+          <p className="font-zh text-sm text-slate-400 py-8 text-center">{t('ui.loading')}</p>
         ) : (
           <form onSubmit={submit} className="space-y-4">
             {isHourly ? (
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">時薪（元/小時）</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.hourlyRate')}</span>
                 <input
                   type="number"
                   min="1"
@@ -167,7 +167,7 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
               </label>
             ) : (
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">本薪（月）</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.monthlyBase')}</span>
                 <input
                   type="number"
                   min="0"
@@ -182,20 +182,19 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
             {!isHourly && (
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="font-zh text-xs text-slate-500">加給／津貼</span>
+                <span className="font-zh text-xs text-slate-500">{t('ui.allowances')}</span>
                 <button
                   type="button"
                   onClick={addAllowance}
                   className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-emerald-700 active:scale-95"
                 >
-                  <Plus size={12} /> 新增
-                </button>
+                  <Plus size={12} />{t('ui.add')}</button>
               </div>
               <div className="space-y-2">
                 {form.allowances.map((a, i) => (
                   <div key={i} className="flex items-center gap-2 border-b border-dashed border-slate-100 pb-2">
                     <input
-                      placeholder="名稱"
+                      placeholder={t('common.name')}
                       value={a.name}
                       onChange={(e) => setAllowance(i, 'name', e.target.value)}
                       className="flex-1 px-2 py-1.5 bg-white border border-slate-200 outline-none font-zh text-sm"
@@ -203,7 +202,7 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
                     <input
                       type="number"
                       min="0"
-                      placeholder="金額"
+                      placeholder={t('common.amount')}
                       value={a.amount}
                       onChange={(e) => setAllowance(i, 'amount', e.target.value)}
                       className="w-24 px-2 py-1.5 bg-white border border-slate-200 outline-none font-mono text-sm tabular-nums"
@@ -213,20 +212,16 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
                         type="checkbox"
                         checked={a.insured}
                         onChange={(e) => setAllowance(i, 'insured', e.target.checked)}
-                      />
-                      投保
-                    </label>
+                      />{t('ui.insured')}</label>
                     <label className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-slate-500 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={a.taxable}
                         onChange={(e) => setAllowance(i, 'taxable', e.target.checked)}
-                      />
-                      課稅
-                    </label>
+                      />{t('ui.taxable')}</label>
                     <button
                       type="button"
-                      aria-label="刪除津貼"
+                      aria-label={t('settings.deleteAllowance')}
                       onClick={() => removeAllowance(i)}
                       className="text-red-400 hover:text-red-600 active:scale-95"
                     >
@@ -240,7 +235,7 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
 
             <div className="grid grid-cols-2 gap-3">
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">勞保投保薪資</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.laborInsuredSalary')}</span>
                 <input
                   type="number"
                   min="0"
@@ -250,7 +245,7 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
                 />
               </label>
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">健保投保薪資</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.healthInsuredSalary')}</span>
                 <input
                   type="number"
                   min="0"
@@ -260,7 +255,7 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
                 />
               </label>
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">健保眷口數</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.healthDependents')}</span>
                 <input
                   type="number"
                   min="0"
@@ -270,7 +265,7 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
                 />
               </label>
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">扶養人數</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.taxDependents')}</span>
                 <input
                   type="number"
                   min="0"
@@ -280,7 +275,7 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
                 />
               </label>
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">勞退自願提繳率（0~0.06）</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.pensionRate')}</span>
                 <input
                   type="number"
                   min="0"
@@ -292,7 +287,7 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
                 />
               </label>
               <label className="block">
-                <span className="font-zh text-xs text-slate-500 mb-1.5 block">匯款帳號</span>
+                <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.bankAccount')}</span>
                 <input
                   value={form.bankAccount}
                   onChange={(e) => set('bankAccount', e.target.value)}
@@ -302,7 +297,7 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
             </div>
 
             <label className="block">
-              <span className="font-zh text-xs text-slate-500 mb-1.5 block">備註</span>
+              <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('ui.note')}</span>
               <input
                 value={form.note}
                 onChange={(e) => set('note', e.target.value)}
@@ -318,7 +313,7 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
                 disabled={busy}
               >
                 <X size={14} strokeWidth={3} />
-                取消
+                {t('common.cancel')}
               </MarkerButton>
               <MarkerButton
                 as="button"
@@ -328,7 +323,7 @@ export default function SalaryProfileModal({ open, employee, onClose, onToast, o
                 disabled={busy}
               >
                 <Check size={14} strokeWidth={3} />
-                {busy ? '儲存中…' : '儲存'}
+                {busy ? t('common.saving') : t('common.save')}
               </MarkerButton>
             </div>
           </form>

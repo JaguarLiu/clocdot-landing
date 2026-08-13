@@ -15,27 +15,29 @@ import SalaryProfileModal from '../components/SalaryProfileModal.jsx'
 import EmployeeImportModal from '../components/EmployeeImportModal.jsx'
 import EmployeeFormModal from '../components/EmployeeFormModal.jsx'
 import OrgChart from '../components/OrgChart.jsx'
+import { useT } from '../i18n/index.jsx'
 
 const PASSWORD_MIN = 8
 
 function PasswordModal({ open, employee, onClose, onToast }) {
+  const { t } = useT()
   const [pw, setPw] = useState('')
   const [busy, setBusy] = useState(false)
 
   async function submit(e) {
     e.preventDefault()
     if (pw.length < PASSWORD_MIN) {
-      onToast({ variant: 'error', message: `密碼長度至少 ${PASSWORD_MIN} 碼` })
+      onToast({ variant: 'error', message: t('fmt.passwordMinShort', { n: PASSWORD_MIN }) })
       return
     }
     setBusy(true)
     try {
       await setUserPassword(employee.id, pw)
-      onToast({ variant: 'success', message: '已更新密碼' })
+      onToast({ variant: 'success', message: t('password.updated') })
       setPw('')
       onClose()
     } catch (err) {
-      onToast({ variant: 'error', message: err?.message || '操作失敗' })
+      onToast({ variant: 'error', message: err?.message || t('common.actionFailed') })
     } finally {
       setBusy(false)
     }
@@ -58,7 +60,7 @@ function PasswordModal({ open, employee, onClose, onToast }) {
             <KeyRound size={20} className="text-white" strokeWidth={2.5} />
           </div>
           <div className="min-w-0 pt-0.5">
-            <h3 className="font-zh text-lg text-slate-800">設定密碼</h3>
+            <h3 className="font-zh text-lg text-slate-800">{t('ui.setPassword')}</h3>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] mt-1">
               {employee.email}
             </p>
@@ -67,7 +69,7 @@ function PasswordModal({ open, employee, onClose, onToast }) {
 
         <form onSubmit={submit} className="space-y-4">
           <label className="block">
-            <span className="font-zh text-xs text-slate-500 mb-1.5 block">新密碼（至少 {PASSWORD_MIN} 碼）</span>
+            <span className="font-zh text-xs text-slate-500 mb-1.5 block">{t('fmt.newPasswordLabel', { n: PASSWORD_MIN })}</span>
             <input
               type="password"
               value={pw}
@@ -78,10 +80,10 @@ function PasswordModal({ open, employee, onClose, onToast }) {
           </label>
           <div className="flex items-center justify-end gap-3 pt-1">
             <MarkerButton color="#94a3b8" rotate="0.5deg" onClick={() => !busy && onClose()} disabled={busy}>
-              <X size={14} strokeWidth={3} />取消
+              <X size={14} strokeWidth={3} />{t('common.cancel')}
             </MarkerButton>
             <MarkerButton as="button" type="submit" color="#0ea5e9" rotate="-0.5deg" disabled={busy}>
-              <Check size={14} strokeWidth={3} />{busy ? '儲存中…' : '儲存'}
+              <Check size={14} strokeWidth={3} />{busy ? t('common.saving') : t('common.save')}
             </MarkerButton>
           </div>
         </form>
@@ -92,6 +94,7 @@ function PasswordModal({ open, employee, onClose, onToast }) {
 
 // 左欄：未編入部門的員工。整列為紙片，可拖曳至右側部門便條紙以編入。
 function UnassignedRow({ u, isSelf, rotate, onEdit, onUnlock }) {
+  const { t } = useT()
   const locked = Boolean(u.lockedAt)
   return (
     <div
@@ -119,11 +122,11 @@ function UnassignedRow({ u, isSelf, rotate, onEdit, onUnlock }) {
         </div>
         <div className="flex items-center gap-1 shrink-0">
           {locked && (
-            <MarkerButton color="#f59e0b" rotate="-0.5deg" fontSize={11} title="解鎖" ariaLabel="解鎖" contentStyle={{ padding: '6px' }} onClick={() => onUnlock(u)}>
+            <MarkerButton color="#f59e0b" rotate="-0.5deg" fontSize={11} title={t('ui.unlock')} ariaLabel={t('ui.unlock')} contentStyle={{ padding: '6px' }} onClick={() => onUnlock(u)}>
               <LockOpen size={12} strokeWidth={3} />
             </MarkerButton>
           )}
-          <MarkerButton color="#10b981" rotate="0.5deg" fontSize={11} title="編輯" ariaLabel="編輯" contentStyle={{ padding: '6px' }} onClick={() => onEdit(u)}>
+          <MarkerButton color="#10b981" rotate="0.5deg" fontSize={11} title={t('common.edit')} ariaLabel={t('common.edit')} contentStyle={{ padding: '6px' }} onClick={() => onEdit(u)}>
             <Pencil size={12} strokeWidth={3} />
           </MarkerButton>
         </div>
@@ -133,6 +136,7 @@ function UnassignedRow({ u, isSelf, rotate, onEdit, onUnlock }) {
 }
 
 function UnassignedList({ users, currentUser, onEdit, onUnlock, onUnassign }) {
+  const { t } = useT()
   const [over, setOver] = useState(false)
   const dragDepth = useRef(0)
 
@@ -171,12 +175,12 @@ function UnassignedList({ users, currentUser, onEdit, onUnlock, onUnassign }) {
           <div className="px-3.5 pt-4 pb-3.5">
             {/* 標題：與部門便條紙一致 */}
             <div className="flex items-center justify-between gap-2">
-              <p className="font-zh text-sm text-slate-800 truncate leading-tight">未編入部門</p>
+              <p className="font-zh text-sm text-slate-800 truncate leading-tight">{t('ui.unassignedStaff')}</p>
               <span
                 className="shrink-0 text-[10px] font-mono font-black tabular-nums text-amber-800 bg-amber-200/60 border border-amber-300 px-1.5 py-0.5"
                 style={{ borderRadius: '4px 1px 5px 2px/2px 5px 1px 4px' }}
               >
-                {users.length} 人
+                {t('fmt.people', { n: users.length })}
               </span>
             </div>
 
@@ -184,7 +188,7 @@ function UnassignedList({ users, currentUser, onEdit, onUnlock, onUnassign }) {
               {users.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-8 gap-2 text-amber-600/50">
                   <Inbox size={24} />
-                  <p className="font-zh text-xs">全部員工都已編入部門</p>
+                  <p className="font-zh text-xs">{t('ui.allAssigned')}</p>
                 </div>
               ) : (
                 users.map((u, i) => (
@@ -204,7 +208,7 @@ function UnassignedList({ users, currentUser, onEdit, onUnlock, onUnassign }) {
 
         {over && (
           <div className="absolute inset-0 top-3 z-20 flex items-center justify-center pointer-events-none border-2 border-dashed border-emerald-500 bg-emerald-50/45 rounded-[14px]">
-            <span className="font-zh text-xs text-emerald-700 bg-white/90 px-2 py-1 shadow-sm">放開以移出部門</span>
+            <span className="font-zh text-xs text-emerald-700 bg-white/90 px-2 py-1 shadow-sm">{t('ui.dropToRemove')}</span>
           </div>
         )}
       </div>
@@ -213,6 +217,7 @@ function UnassignedList({ users, currentUser, onEdit, onUnlock, onUnassign }) {
 }
 
 export default function Employees() {
+  const { t } = useT()
   const { user: currentUser } = useAuth()
   const { data, mutate } = useSWR('/admin/users', fetcher)
   const { data: deptData } = useSWR('/admin/departments', fetcher)
@@ -251,10 +256,10 @@ export default function Employees() {
       if (fromDept && fromDept.managerId === userId) {
         await updateDepartment(fromDeptId, { managerId: null })
       }
-      setToast({ variant: 'success', message: deptId ? '已編入部門' : '已移出部門' })
+      setToast({ variant: 'success', message: deptId ? t('org.movedIn') : t('org.movedOut') })
       refresh()
     } catch (err) {
-      setToast({ variant: 'error', message: err?.message || '操作失敗' })
+      setToast({ variant: 'error', message: err?.message || t('common.actionFailed') })
     }
   }
 
@@ -263,11 +268,11 @@ export default function Employees() {
     setDeleting(true)
     try {
       await deleteUser(deleteTarget.id)
-      setToast({ variant: 'success', message: '已刪除員工' })
+      setToast({ variant: 'success', message: t('employees.deleted') })
       setDeleteTarget(null)
       refresh()
     } catch (err) {
-      setToast({ variant: 'error', message: err?.message || '刪除失敗' })
+      setToast({ variant: 'error', message: err?.message || t('common.deleteFailed') })
     } finally {
       setDeleting(false)
     }
@@ -276,10 +281,10 @@ export default function Employees() {
   async function handleUnlock(u) {
     try {
       await unlockUser(u.id)
-      setToast({ variant: 'success', message: `已解鎖 ${u.name || u.email}` })
+      setToast({ variant: 'success', message: t('fmt.unlocked', { who: u.name || u.email }) })
       refresh()
     } catch (err) {
-      setToast({ variant: 'error', message: err?.message || '解鎖失敗' })
+      setToast({ variant: 'error', message: err?.message || t('payroll.unlockFailed') })
     }
   }
 
@@ -292,10 +297,10 @@ export default function Employees() {
       <ConfirmDialog
         open={deleteTarget !== null}
         variant="danger"
-        title="刪除員工"
-        message={deleteTarget && `確定要刪除「${deleteTarget.name || deleteTarget.email}」？此員工無法再登入，但歷史出勤紀錄將保留。`}
-        confirmLabel="刪除"
-        cancelLabel="取消"
+        title={t('employees.deleteEmployee')}
+        message={deleteTarget && t('fmt.confirmDeleteEmployee', { name: deleteTarget.name || deleteTarget.email })}
+        confirmLabel={t('common.del')}
+        cancelLabel={t('common.cancel')}
         loading={deleting}
         onConfirm={confirmDelete}
         onCancel={() => !deleting && setDeleteTarget(null)}
@@ -345,7 +350,7 @@ export default function Employees() {
           <Users size={22} className="text-white" strokeWidth={2.5} />
         </div>
         <div>
-          <h2 className="text-3xl font-zh text-slate-800">員工管理</h2>
+          <h2 className="text-3xl font-zh text-slate-800">{t('nav.employees')}</h2>
           <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mt-1">
             Employee Directory
           </p>
@@ -359,10 +364,9 @@ export default function Employees() {
         actions={(
           <>
             <MarkerButton color="#0ea5e9" rotate="0.5deg" onClick={() => setImportOpen(true)}>
-              <Upload size={15} strokeWidth={3} />批次匯入
-            </MarkerButton>
+              <Upload size={15} strokeWidth={3} />{t('ui.bulkImportShort')}</MarkerButton>
             <MarkerButton color="#10b981" rotate="-0.6deg" onClick={openNew}>
-              <Plus size={15} strokeWidth={3} />新增員工
+              <Plus size={15} strokeWidth={3} />{t('employees.addEmployee')}
             </MarkerButton>
           </>
         )}

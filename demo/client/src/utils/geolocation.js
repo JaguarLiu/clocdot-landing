@@ -1,3 +1,4 @@
+import { tr } from '../i18n/index.jsx'
 // 取得當前 GPS 座標
 // 一般打卡：低耗電 + 接受快取，回 null 不擋打卡
 // onsite 必到日：高精度 + 不接受快取，並回傳錯誤碼讓 UI 引導使用者
@@ -65,15 +66,15 @@ export function geoErrorMessage(error) {
   switch (error) {
     case GEO_ERROR.PERMISSION_DENIED:
       return isIOSStandalone()
-        ? '定位被拒絕，請到 iPhone 設定 → 隱私 → 定位服務 → ClocDot 開啟'
-        : '定位被拒絕，請到瀏覽器設定重新授權後再試'
+        ? tr('geo.deniedIos')
+        : tr('geo.denied')
     case GEO_ERROR.POSITION_UNAVAILABLE:
-      return '無法取得位置，請到戶外或開窗邊再試一次'
+      return tr('geo.unavailable')
     case GEO_ERROR.TIMEOUT:
-      return '定位逾時，訊號可能太弱，請走到窗邊再試'
+      return tr('geo.timeout')
     case GEO_ERROR.UNSUPPORTED:
-      return '此裝置不支援定位'
+      return tr('geo.unsupported')
     default:
-      return '無法取得位置'
+      return tr('geo.generic')
   }
 }

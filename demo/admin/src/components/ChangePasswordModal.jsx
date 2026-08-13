@@ -3,8 +3,10 @@ import { Lock, X, KeyRound } from 'lucide-react'
 import { changePassword } from '../services/auth.js'
 import PaperPiece from './PaperPiece.jsx'
 import MarkerButton from './MarkerButton.jsx'
+import { useT } from '../i18n/index.jsx'
 
 export default function ChangePasswordModal({ open, onClose }) {
+  const { t } = useT()
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -30,19 +32,19 @@ export default function ChangePasswordModal({ open, onClose }) {
     setError(null)
 
     if (!currentPassword || !newPassword || !confirmPassword) {
-      setError('請填寫所有欄位')
+      setError(t('common.fillAllFields'))
       return
     }
     if (newPassword.length < 8) {
-      setError('新密碼至少 8 碼')
+      setError(t('password.tooShort'))
       return
     }
     if (newPassword !== confirmPassword) {
-      setError('兩次輸入的新密碼不一致')
+      setError(t('password.mismatch'))
       return
     }
     if (newPassword === currentPassword) {
-      setError('新密碼不可與目前密碼相同')
+      setError(t('password.sameAsOld'))
       return
     }
 
@@ -52,7 +54,7 @@ export default function ChangePasswordModal({ open, onClose }) {
       setSuccess(true)
       setTimeout(() => onClose(), 1200)
     } catch (err) {
-      setError(err.message || '變更失敗，請稍後再試')
+      setError(err.message || t('password.failed'))
       setIsLoading(false)
     }
   }
@@ -63,7 +65,7 @@ export default function ChangePasswordModal({ open, onClose }) {
         <button
           type="button"
           onClick={onClose}
-          aria-label="關閉"
+          aria-label={t('common.close')}
           className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors"
         >
           <X size={18} strokeWidth={2.5} />
@@ -76,7 +78,7 @@ export default function ChangePasswordModal({ open, onClose }) {
           >
             <KeyRound size={22} className="text-amber-600" strokeWidth={2.5} />
           </div>
-          <h2 className="font-zh text-xl text-slate-800">修改密碼</h2>
+          <h2 className="font-zh text-xl text-slate-800">{t('ui.changePassword')}</h2>
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] mt-1">
             Change Password
           </p>
@@ -84,9 +86,7 @@ export default function ChangePasswordModal({ open, onClose }) {
 
         {success ? (
           <div className="px-4 py-6 bg-emerald-50 border-2 border-emerald-200 font-zh text-sm text-emerald-700 text-center"
-               style={{ borderRadius: '8px 2px 10px 3px/3px 10px 2px 8px' }}>
-            密碼已成功更新
-          </div>
+               style={{ borderRadius: '8px 2px 10px 3px/3px 10px 2px 8px' }}>{t('ui.passwordUpdated')}</div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {error && (
@@ -109,7 +109,7 @@ export default function ChangePasswordModal({ open, onClose }) {
               onChange={setNewPassword}
               disabled={isLoading}
               autoComplete="new-password"
-              hint="至少 8 碼"
+              hint={t('password.hint')}
             />
             <PasswordField
               label="Confirm New Password"

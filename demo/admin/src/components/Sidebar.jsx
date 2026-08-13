@@ -3,19 +3,21 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { LayoutDashboard, FileSpreadsheet, CheckCircle2, CalendarCheck, Building2, Users, LogOut, User, KeyRound, MessageSquareWarning, Timer, Wallet, CalendarDays } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth.js'
 import ChangePasswordModal from './ChangePasswordModal.jsx'
+import LanguageToggle from './LanguageToggle.jsx'
 import IssueReportModal from './IssueReportModal.jsx'
 import PaperPiece from './PaperPiece.jsx'
+import { tr, useT } from '../i18n/index.jsx'
 
 const navItems = [
-  { path: '/', icon: LayoutDashboard, label: '總覽', accent: 'emerald', module: 'dashboard' },
-  { path: '/monthly-report', icon: FileSpreadsheet, label: '報表', accent: 'emerald', module: 'monthly-report' },
-  { path: '/corrections', icon: CheckCircle2, label: '補打卡審核', accent: 'orange', module: 'corrections' },
-  { path: '/leaves', icon: CalendarCheck, label: '請假審核', accent: 'amber', module: 'leaves' },
-  { path: '/overtime-reviews', icon: Timer, label: '加班審核', accent: 'amber', module: 'overtime-reviews' },
-  { path: '/employees', icon: Users, label: '員工管理', accent: 'emerald', module: 'employees' },
-  { path: '/schedule', icon: CalendarDays, label: '排班', accent: 'emerald', module: 'schedule' },
-  { path: '/payroll', icon: Wallet, label: '薪資結算', accent: 'emerald', module: 'payroll' },
-  { path: '/settings', icon: Building2, label: '公司設定', accent: 'sky', module: 'settings' },
+  { path: '/', icon: LayoutDashboard, label: tr('nav.overview'), accent: 'emerald', module: 'dashboard' },
+  { path: '/monthly-report', icon: FileSpreadsheet, label: tr('nav.reports'), accent: 'emerald', module: 'monthly-report' },
+  { path: '/corrections', icon: CheckCircle2, label: tr('nav.corrections'), accent: 'orange', module: 'corrections' },
+  { path: '/leaves', icon: CalendarCheck, label: tr('nav.leaveReviews'), accent: 'amber', module: 'leaves' },
+  { path: '/overtime-reviews', icon: Timer, label: tr('nav.overtimeReviews'), accent: 'amber', module: 'overtime-reviews' },
+  { path: '/employees', icon: Users, label: tr('nav.employees'), accent: 'emerald', module: 'employees' },
+  { path: '/schedule', icon: CalendarDays, label: tr('nav.schedule'), accent: 'emerald', module: 'schedule' },
+  { path: '/payroll', icon: Wallet, label: tr('nav.payroll'), accent: 'emerald', module: 'payroll' },
+  { path: '/settings', icon: Building2, label: tr('nav.settings'), accent: 'sky', module: 'settings' },
 ]
 
 const accentMap = {
@@ -26,6 +28,7 @@ const accentMap = {
 }
 
 export default function Sidebar() {
+  const { t } = useT()
   const location = useLocation()
   const navigate = useNavigate()
   const { user, logout, can } = useAuth()
@@ -107,9 +110,7 @@ export default function Sidebar() {
             onClick={() => setShowIssueReport(true)}
             className="inline-flex items-center gap-1.5 text-[10px] font-zh text-slate-400 hover:text-slate-600 underline decoration-dashed decoration-slate-300 underline-offset-4 active:scale-[0.97] transition-colors"
           >
-            <MessageSquareWarning size={12} strokeWidth={2.5} />
-            問題回報
-          </button>
+            <MessageSquareWarning size={12} strokeWidth={2.5} />{t('ui.issueReport')}</button>
         </div>
 
         {/* 使用者卡片 — 撕邊紙片 */}
@@ -125,13 +126,16 @@ export default function Sidebar() {
                 )}
               </div>
               <div className="min-w-0">
-                <p className="font-zh text-sm text-slate-700 truncate">{user?.name || '管理員'}</p>
+                <p className="font-zh text-sm text-slate-700 truncate">{user?.name || tr('org.admin')}</p>
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate overflow-hidden">
                   {user?.email}
                 </p>
               </div>
             </div>
             <div className="flex flex-col gap-2">
+              <div className="flex justify-center pb-1">
+                <LanguageToggle />
+              </div>
               <button
                 type="button"
                 onClick={() => setShowChangePassword(true)}

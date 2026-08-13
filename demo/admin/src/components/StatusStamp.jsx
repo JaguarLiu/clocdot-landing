@@ -1,4 +1,5 @@
 import { Check, X, Clock } from 'lucide-react'
+import { tr } from '../i18n/index.jsx'
 
 // 圓形印章 — 雙環邊 + 微傾，蓋在 row 尾端
 // 與 DESIGN.md §7「狀態印章可升級為斜蓋」的方向一致
@@ -8,21 +9,21 @@ import { Check, X, Clock } from 'lucide-react'
 
 const STAMP_STYLES = {
   approved: {
-    label: '已通過',
+    label: tr('status.approved'),
     en: 'APPROVED',
     classes: 'text-emerald-600 border-emerald-500 outline-emerald-500 bg-emerald-50/70',
     rotate: '-8deg',
     Icon: Check,
   },
   rejected: {
-    label: '已駁回',
+    label: tr('status.rejected'),
     en: 'REJECTED',
     classes: 'text-red-600 border-red-500 outline-red-500 bg-red-50/70',
     rotate: '6deg',
     Icon: X,
   },
   pending: {
-    label: '審核中',
+    label: tr('status.pending'),
     en: 'PENDING',
     classes: 'text-amber-600 border-amber-500 outline-amber-500 bg-amber-50/70',
     rotate: '-5deg',

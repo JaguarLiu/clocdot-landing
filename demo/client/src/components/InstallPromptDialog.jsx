@@ -2,8 +2,10 @@ import { Download, Share, Plus, X } from 'lucide-react'
 import PaperPiece from './PaperPiece.jsx'
 import MarkerButton from './MarkerButton.jsx'
 import { useInstallPrompt } from '../hooks/useInstallPrompt.js'
+import { useT } from '../i18n/index.jsx'
 
 export default function InstallPromptDialog() {
+  const { t } = useT()
   const { visible, platform, canInstall, install, dismiss } = useInstallPrompt()
 
   if (!visible) return null
@@ -31,7 +33,7 @@ export default function InstallPromptDialog() {
           <button
             type="button"
             onClick={dismiss}
-            aria-label="關閉安裝提示"
+            aria-label={t('install.dismiss')}
             className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center
                        text-slate-400 hover:text-slate-600 active:scale-95 transition"
           >
@@ -47,10 +49,10 @@ export default function InstallPromptDialog() {
           </div>
 
           <h2 id="install-title" className="font-zh text-slate-700 text-xl font-bold mb-2 leading-snug">
-            把 ClocDot 放到你的<br />主畫面吧！
+            <span dangerouslySetInnerHTML={{ __html: t('install.title') }} />
           </h2>
           <p className="font-zh text-slate-500 text-sm leading-relaxed mb-5">
-            像 App 一樣一鍵打開，離線也能用。打卡更快一點。
+            {t('install.subtitle')}
           </p>
 
           {isIOS ? (
@@ -58,16 +60,16 @@ export default function InstallPromptDialog() {
               <div className="bg-sky-50 p-3 border-l-4 border-sky-400 flex gap-3 items-start">
                 <Share size={18} className="text-sky-500 shrink-0 mt-0.5" />
                 <p className="font-zh text-[12px] font-bold text-sky-700 leading-relaxed">
-                  1. 點下方 Safari 工具列的<br />
+                  {t('install.iosStep1')}<br />
                   <span className="inline-flex items-center gap-1">
-                    <Share size={13} className="inline" /> 分享按鈕
+                    <Share size={13} className="inline" /> {t('install.iosShare')}
                   </span>
                 </p>
               </div>
               <div className="bg-emerald-50 p-3 border-l-4 border-emerald-400 flex gap-3 items-start">
                 <Plus size={18} className="text-emerald-500 shrink-0 mt-0.5" />
                 <p className="font-zh text-[12px] font-bold text-emerald-700 leading-relaxed">
-                  2. 選「加入主畫面」<br />
+                  {t('install.iosStep2')}<br />
                   <span className="text-emerald-600/80">Add to Home Screen</span>
                 </p>
               </div>
@@ -75,7 +77,7 @@ export default function InstallPromptDialog() {
           ) : (
             <div className="bg-emerald-50 p-3 border-l-4 border-emerald-400 mb-5">
               <p className="font-zh text-[12px] font-bold text-emerald-700 leading-relaxed">
-                點下方按鈕，依瀏覽器提示確認安裝即可。
+                {t('install.otherStep')}
               </p>
             </div>
           )}
@@ -89,7 +91,7 @@ export default function InstallPromptDialog() {
                 onClick={install}
               >
                 <Download size={18} strokeWidth={2.5} />
-                加入主畫面
+                {t('install.action')}
               </MarkerButton>
             ) : null}
 

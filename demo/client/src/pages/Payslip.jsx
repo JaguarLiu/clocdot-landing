@@ -3,15 +3,16 @@ import useSWR from 'swr'
 import { Wallet } from 'lucide-react'
 import PaperPiece from '../components/PaperPiece.jsx'
 import { getMyPayslipMonths, getMyPayslip } from '../services/api.js'
+import { useT, tr } from '../i18n/index.jsx'
 
 const money = (n) => (n ?? 0).toLocaleString('en-US')
 
 function monthLabel(m) {
   const [y, mo] = m.split('-')
-  return `${y} 年 ${Number(mo)} 月`
+  return tr('common.monthLabel', { y, m: Number(mo) })
 }
 
-const fmtMin = (m) => `${Math.floor((m ?? 0) / 60)} 時 ${(m ?? 0) % 60} 分`
+const fmtMin = (m) => tr('common.hourMin', { h: Math.floor((m ?? 0) / 60), m: (m ?? 0) % 60 })
 
 function Row({ label, value, strong }) {
   return (
@@ -23,6 +24,7 @@ function Row({ label, value, strong }) {
 }
 
 export default function Payslip() {
+  const { t } = useT()
   const { data: months, isLoading: monthsLoading } = useSWR('/payroll/me', getMyPayslipMonths)
   const [picked, setPicked] = useState(null)
   const month = picked ?? months?.[0]?.month ?? null
@@ -34,7 +36,7 @@ export default function Payslip() {
   if (monthsLoading) {
     return (
       <main className="w-full max-w-md mx-auto px-4 mt-10 text-center text-slate-400 font-zh text-sm">
-        載入中…
+        {t('common.loading')}
       </main>
     )
   }
@@ -44,7 +46,7 @@ export default function Payslip() {
       <main className="w-full max-w-md mx-auto px-4 mt-6 animate-in slide-in-from-right-4 duration-300">
         <PaperPiece color="white" rotate="-1deg" className="p-8 text-center">
           <Wallet size={36} className="text-slate-300 mx-auto mb-3" />
-          <p className="font-zh text-sm text-slate-500">尚無已發放的薪資單</p>
+          <p className="font-zh text-sm text-slate-500">{t('payslip.empty')}</p>
         </PaperPiece>
       </main>
     )
@@ -55,12 +57,12 @@ export default function Payslip() {
     <main className="w-full max-w-md mx-auto px-4 mt-4 pb-10 animate-in slide-in-from-right-4 duration-300">
       <div className="flex items-center justify-between mb-5">
         <h2 className="text-2xl font-black text-slate-700 flex items-center gap-2">
-          <Wallet size={22} className="text-emerald-500" /> 薪資單
+          <Wallet size={22} className="text-emerald-500" /> {t('titles.payslip')}
         </h2>
         <select
           value={month}
           onChange={(e) => setPicked(e.target.value)}
-          aria-label="選擇月份"
+          aria-label={t('common.selectMonth')}
           className="bg-white px-3 py-1.5 border border-slate-200 text-sm font-black text-slate-600 focus:outline-none"
         >
           {months.map((m) => (
@@ -70,60 +72,60 @@ export default function Payslip() {
       </div>
 
       {slipLoading || !p ? (
-        <p className="text-center text-slate-400 font-zh text-sm mt-10">載入中…</p>
+        <p className="text-center text-slate-400 font-zh text-sm mt-10">{t('common.loading')}</p>
       ) : (
         <PaperPiece color="white" rotate="-0.6deg" className="p-6">
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">
             {monthLabel(slip.month)} PAYSLIP
           </p>
 
-          <p className="font-zh text-xs text-emerald-600 font-black mb-1">應發</p>
+          <p className="font-zh text-xs text-emerald-600 font-black mb-1">{t('payslip.earnings')}</p>
           {p.meta?.payType === 'hourly' ? (
-            <Row label={`時薪 $${p.earnings.hourlyRate} × ${fmtMin(p.earnings.regularMinutes)}`} value={p.earnings.regularPay} />
+            <Row label={t('payslip.hourlyRow', { rate: p.earnings.hourlyRate, time: fmtMin(p.earnings.regularMinutes) })} value={p.earnings.regularPay} />
           ) : (
             <>
-              <Row label="本薪" value={p.earnings.baseSalary} />
+              <Row label={t('payslip.baseSalary')} value={p.earnings.baseSalary} />
               {(p.earnings.allowances ?? []).map((a, i) => (
-                <Row key={i} label={`加給 · ${a.name}`} value={a.amount} />
+                <Row key={i} label={t('payslip.allowance', { name: a.name })} value={a.amount} />
               ))}
             </>
           )}
-          {(p.earnings.overtime?.tiers ?? []).map((t, i) => (
-            <Row key={i} label={`加班 · ${t.rate}（${t.minutes}分）`} value={t.amount} />
+          {(p.earnings.overtime?.tiers ?? []).map((tier, i) => (
+            <Row key={i} label={t('payslip.overtimeRow', { rate: tier.rate, minutes: tier.minutes })} value={tier.amount} />
           ))}
           <div className="border-t border-dashed border-slate-200 mt-1">
-            <Row label="應發毛額" value={p.earnings.grossPay} strong />
+            <Row label={t('payslip.gross')} value={p.earnings.grossPay} strong />
           </div>
 
-          <p className="font-zh text-xs text-red-500 font-black mb-1 mt-4">應扣</p>
-          <Row label="勞保自付" value={-p.deductions.laborInsurance} />
-          <Row label="健保自付" value={-p.deductions.healthInsurance} />
-          <Row label="勞退自提" value={-p.deductions.pensionVoluntary} />
-          <Row label="所得稅" value={-p.deductions.incomeTax} />
+          <p className="font-zh text-xs text-red-500 font-black mb-1 mt-4">{t('payslip.deductions')}</p>
+          <Row label={t('payslip.laborInsurance')} value={-p.deductions.laborInsurance} />
+          <Row label={t('payslip.healthInsurance')} value={-p.deductions.healthInsurance} />
+          <Row label={t('payslip.pension')} value={-p.deductions.pensionVoluntary} />
+          <Row label={t('payslip.incomeTax')} value={-p.deductions.incomeTax} />
           {p.deductions.attendanceDeduction > 0 && (
-            <Row label="遲到早退/缺勤" value={-p.deductions.attendanceDeduction} />
+            <Row label={t('payslip.attendanceDeduction')} value={-p.deductions.attendanceDeduction} />
           )}
           {p.deductions.leaveDeduction > 0 && (
-            <Row label="請假扣款" value={-p.deductions.leaveDeduction} />
+            <Row label={t('payslip.leaveDeduction')} value={-p.deductions.leaveDeduction} />
           )}
           <div className="border-t border-dashed border-slate-200 mt-1">
-            <Row label="應扣合計" value={-p.deductions.total} strong />
+            <Row label={t('payslip.deductionTotal')} value={-p.deductions.total} strong />
           </div>
 
           {(slip.adjustments ?? []).length > 0 && (
             <>
-              <p className="font-zh text-xs text-sky-600 font-black mb-1 mt-4">調整</p>
+              <p className="font-zh text-xs text-sky-600 font-black mb-1 mt-4">{t('payslip.adjustments')}</p>
               {slip.adjustments.map((a, i) => (
                 <Row key={i} label={a.label} value={a.amount} />
               ))}
               <div className="border-t border-dashed border-slate-200 mt-1">
-                <Row label="調整合計" value={slip.adjustmentsTotal} strong />
+                <Row label={t('payslip.adjustmentTotal')} value={slip.adjustmentsTotal} strong />
               </div>
             </>
           )}
 
           <div className="border-t-2 border-slate-200 mt-5 pt-3 flex items-center justify-between">
-            <span className="font-zh text-sm font-black text-slate-700">實發淨額</span>
+            <span className="font-zh text-sm font-black text-slate-700">{t('payslip.net')}</span>
             <span className="font-mono tabular-nums text-2xl font-black text-emerald-600">
               {money(slip.netPay)}
             </span>
@@ -131,7 +133,7 @@ export default function Payslip() {
 
           {slip.lockedAt && (
             <p className="text-[10px] text-slate-300 font-mono mt-4 text-right">
-              發放 {new Date(slip.lockedAt).toLocaleDateString()}
+              {t('payslip.releasedOn', { date: new Date(slip.lockedAt).toLocaleDateString() })}
             </p>
           )}
         </PaperPiece>

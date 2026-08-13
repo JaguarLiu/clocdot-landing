@@ -7,6 +7,7 @@ import PaperToast from '../components/PaperToast.jsx'
 import MarkerButton from '../components/MarkerButton.jsx'
 import StatusStamp from '../components/StatusStamp.jsx'
 import { submitCorrectionRequest, fetcher } from '../services/api.js'
+import { tr, useT } from '../i18n/index.jsx'
 
 const LIST_ROTATIONS = ['-0.6deg', '0.5deg', '-0.4deg', '0.7deg', '-0.3deg']
 
@@ -21,7 +22,7 @@ function buildMonthOptions() {
   return Array.from({ length: 6 }, (_, i) => {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
     const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
-    const label = `${d.getFullYear()} 年 ${d.getMonth() + 1} 月`
+    const label = tr('common.monthLabel', { y: d.getFullYear(), m: d.getMonth() + 1 })
     return { value, label }
   })
 }
@@ -32,6 +33,7 @@ function formatDateFull(dateStr) {
 }
 
 export default function Correction() {
+  const { t } = useT()
   const [searchParams, setSearchParams] = useSearchParams()
   const activeTab = searchParams.get('tab') === 'list' ? 'list' : 'apply'
 
@@ -43,14 +45,14 @@ export default function Correction() {
     <main className="w-full relative z-10 px-4 mt-4 animate-in slide-in-from-bottom-4 duration-300 pb-20">
       <div className="flex items-center gap-2 mb-6 px-2">
         <ClipboardPen size={24} className="text-orange-500" aria-hidden="true" />
-        <h3 className="font-zh text-2xl text-slate-700">補打卡服務</h3>
+        <h3 className="font-zh text-2xl text-slate-700">{t('correction.heading')}</h3>
       </div>
 
       {/* 子頁籤 */}
       <div
         className="flex mb-8 bg-slate-200/40 p-1 border border-slate-200"
         role="tablist"
-        aria-label="補打卡頁籤"
+        aria-label={t('correction.tabsLabel')}
       >
         <button
           type="button"
@@ -61,7 +63,7 @@ export default function Correction() {
             activeTab === 'apply' ? 'bg-white text-orange-500 shadow-sm' : 'text-slate-500'
           }`}
         >
-          提交申請
+          {t('common.submit')}
         </button>
         <button
           type="button"
@@ -72,7 +74,7 @@ export default function Correction() {
             activeTab === 'list' ? 'bg-white text-orange-500 shadow-sm' : 'text-slate-500'
           }`}
         >
-          申請紀錄
+          {t('correction.tabRecords')}
         </button>
       </div>
 
@@ -84,6 +86,7 @@ export default function Correction() {
 // ------- 提交申請 -------
 
 function CorrectionApplyForm() {
+  const { t } = useT()
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [type, setType] = useState('in')
@@ -93,18 +96,18 @@ function CorrectionApplyForm() {
 
   async function handleSubmit() {
     if (!date || !time || !reason.trim()) {
-      setToast({ variant: 'error', message: '請填寫完整資料' })
+      setToast({ variant: 'error', message: t('correction.incomplete') })
       return
     }
     setIsSubmitting(true)
     try {
       await submitCorrectionRequest({ workDate: date, time, type, reason: reason.trim() })
-      setToast({ variant: 'success', message: '申請已送出，等待主管審核' })
+      setToast({ variant: 'success', message: t('correction.sent') })
       setDate('')
       setTime('')
       setReason('')
     } catch (err) {
-      const msg = err?.info?.error || err?.message || '提交失敗，請稍後再試'
+      const msg = err?.info?.error || err?.message || t('correction.failed')
       setToast({ variant: 'error', message: msg })
     } finally {
       setIsSubmitting(false)
@@ -124,7 +127,7 @@ function CorrectionApplyForm() {
       <PaperPiece color="white" rotate="-0.5deg" className="p-8 mb-8">
         <div className="space-y-6">
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">日期</label>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">{t('common.date')}</label>
             <input
               type="date"
               value={date}
@@ -135,7 +138,7 @@ function CorrectionApplyForm() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">時間</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">{t('common.time')}</label>
               <input
                 type="text"
                 inputMode="numeric"
@@ -151,23 +154,23 @@ function CorrectionApplyForm() {
               />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">類型</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">{t('common.type')}</label>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
                 className="w-full bg-slate-50 border-b-2 border-slate-200 p-2 font-zh text-slate-700 rounded-none focus:outline-none focus:border-orange-400 transition-colors appearance-none"
               >
-                <option value="in">上班</option>
-                <option value="out">下班</option>
+                <option value="in">{tr('common.clockIn')}</option>
+                <option value="out">{tr('common.clockOut')}</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">申請原因</label>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">{t('correction.reason')}</label>
             <textarea
               rows="3"
-              placeholder="請描述補打卡原因..."
+              placeholder={t('correction.reasonPlaceholder')}
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               className="w-full bg-slate-50 border-b-2 border-slate-200 p-3 font-zh text-slate-600 rounded-none focus:outline-none focus:border-orange-400 transition-colors resize-none"
@@ -184,7 +187,7 @@ function CorrectionApplyForm() {
             style={{ width: '100%' }}
           >
             <Send size={20} aria-hidden="true" />
-            <span>{isSubmitting ? '送出中...' : '提交申請'}</span>
+            <span>{isSubmitting ? t('common.submitting') : t('common.submit')}</span>
           </MarkerButton>
         </div>
       </PaperPiece>
@@ -195,6 +198,7 @@ function CorrectionApplyForm() {
 // ------- 申請紀錄 -------
 
 function CorrectionList() {
+  const { t } = useT()
   const monthOptions = useMemo(() => buildMonthOptions(), [])
   const [selectedMonth, setSelectedMonth] = useState(monthOptions[0].value)
   const [statusFilter, setStatusFilter] = useState('all')
@@ -220,11 +224,11 @@ function CorrectionList() {
       </div>
 
       {isLoading ? (
-        <p className="text-center text-slate-500 text-xs py-20 font-zh">載入中...</p>
+        <p className="text-center text-slate-500 text-xs py-20 font-zh">{t('common.loading')}</p>
       ) : filtered.length === 0 ? (
         <div className="text-center py-20 opacity-40 flex flex-col items-center gap-2">
           <Inbox size={40} className="text-slate-400" aria-hidden="true" />
-          <p className="font-zh text-xs text-slate-500">本月沒有符合條件的紀錄</p>
+          <p className="font-zh text-xs text-slate-500">{t('common.noRecordsThisMonth')}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -242,14 +246,15 @@ function CorrectionList() {
 }
 
 function StatusFilter({ value, onChange }) {
+  const { t } = useT()
   const options = [
-    { key: 'all',      label: '全部' },
-    { key: 'pending',  label: '審核中' },
-    { key: 'approved', label: '已通過' },
-    { key: 'rejected', label: '已駁回' },
+    { key: 'all',      label: t('common.all') },
+    { key: 'pending',  label: t('common.pending') },
+    { key: 'approved', label: t('common.approved') },
+    { key: 'rejected', label: t('common.rejected') },
   ]
   return (
-    <div className="flex items-center gap-1" role="tablist" aria-label="狀態篩選">
+    <div className="flex items-center gap-1" role="tablist" aria-label={t('common.statusFilter')}>
       {options.map((opt) => {
         const active = value === opt.key
         return (
@@ -274,12 +279,13 @@ function StatusFilter({ value, onChange }) {
 }
 
 function MonthSelect({ value, options, onChange }) {
+  const { t } = useT()
   return (
     <div className="relative">
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        aria-label="選擇月份"
+        aria-label={t('common.selectMonth')}
         className="appearance-none bg-white px-3 py-1.5 pr-7 border border-slate-200 shadow-sm text-[11px] font-black text-slate-500 tracking-tight focus:outline-none rounded-full"
       >
         {options.map((opt) => (
@@ -292,14 +298,15 @@ function MonthSelect({ value, options, onChange }) {
 }
 
 const TYPE_BADGE = {
-  in:  { label: '上班', en: 'IN',  Icon: LogIn,  classes: 'bg-emerald-50 border-emerald-100 text-emerald-600 [&_.en]:text-emerald-400' },
-  out: { label: '下班', en: 'OUT', Icon: LogOut, classes: 'bg-orange-50 border-orange-100 text-orange-600 [&_.en]:text-orange-400' },
+  in:  { label: tr('common.clockIn'), en: 'IN',  Icon: LogIn,  classes: 'bg-emerald-50 border-emerald-100 text-emerald-600 [&_.en]:text-emerald-400' },
+  out: { label: tr('common.clockOut'), en: 'OUT', Icon: LogOut, classes: 'bg-orange-50 border-orange-100 text-orange-600 [&_.en]:text-orange-400' },
 }
 
 function CorrectionCard({ req, rotate }) {
+  const { t } = useT()
   const parsed = parseReason(req.reason)
-  // parseReason 的 type 來自 DB reason 字串 ('上班' / '下班')；無法解析時退到 'in'
-  const isOut = parsed.type === '下班'
+  // parseReason 的 type 來自 DB reason 字串 (tr('common.clockIn') / tr('common.clockOut'))；無法解析時退到 'in'
+  const isOut = parsed.type === tr('common.clockOut')
   const badge = isOut ? TYPE_BADGE.out : TYPE_BADGE.in
   const BadgeIcon = badge.Icon
 
@@ -334,7 +341,7 @@ function CorrectionCard({ req, rotate }) {
                 {parsed.detail}
               </p>
             ) : (
-              <p className="font-zh text-[11px] text-slate-400 italic">未填寫原因</p>
+              <p className="font-zh text-[11px] text-slate-400 italic">{t('correction.noReason')}</p>
             )}
           </div>
         </div>

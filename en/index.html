@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClocDot | Taiwan-Ready Attendance Tracking for Remote &amp; Hybrid Teams</title>
+  <meta name="description" content="Cloud attendance tracking built around Taiwan's record-keeping rules, for foreign companies with a Taiwan entity. GPS clock-in, per-minute records, CSV export. Free for teams of 5 or fewer." />
+  <link rel="canonical" href="https://clocdot.com/en/" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="alternate" hreflang="zh-TW" href="https://clocdot.com/" />
+  <link rel="alternate" hreflang="en" href="https://clocdot.com/en/" />
+  <link rel="alternate" hreflang="x-default" href="https://clocdot.com/" />
+  <meta property="og:title" content="ClocDot | Taiwan-Ready Attendance Tracking for Remote &amp; Hybrid Teams" />
+  <meta property="og:description" content="Cloud attendance tracking built around Taiwan's record-keeping rules, for foreign companies with a Taiwan entity." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://clocdot.com/en/" />
+  <meta property="og:image" content="https://clocdot.com/assets/og-cover.png" />
+  <meta property="og:locale" content="en" />
+  <meta property="og:locale:alternate" content="zh_TW" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#10b981" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../dist/output.css?v=54bd4a91" />
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://clocdot.com/#org",
+        "name": "ClocDot",
+        "url": "https://clocdot.com/",
+        "logo": "https://clocdot.com/assets/logo.png",
+        "email": "pm@clocdot.com"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://clocdot.com/en/#webpage",
+        "url": "https://clocdot.com/en/",
+        "name": "ClocDot | Taiwan-Ready Attendance Tracking for Remote & Hybrid Teams",
+        "inLanguage": "en",
+        "isPartOf": { "@type": "WebSite", "url": "https://clocdot.com/", "name": "ClocDot" },
+        "primaryImageOfPage": { "@type": "ImageObject", "url": "https://clocdot.com/assets/og-cover.png" },
+        "dateModified": "2026-08-12",
+        "description": "Cloud attendance tracking built around Taiwan's record-keeping rules, for foreign companies with a Taiwan entity."
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "ClocDot",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web, iOS, Android (PWA)",
+        "description": "Attendance tracking for remote and hybrid teams in Taiwan. GPS distinguishes office from remote, per-minute records, automatic leave accrual, one-click CSV export.",
+        "url": "https://clocdot.com/en/",
+        "featureList": [
+          "GPS automatically tags each punch as Office, Remote or field work",
+          "Office addresses geocoded automatically, multiple sites supported",
+          "Per-minute clock-in and clock-out records, kept in the cloud",
+          "Installs as a PWA on phone or desktop, works offline and syncs later",
+          "One-click monthly CSV export of hours worked"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TWD",
+          "description": "Free forever for teams of 5 or fewer. Apply now and your first 6 months are free."
+        },
+        "publisher": {"@id": "https://clocdot.com/#org"}
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://clocdot.com/en/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is the ClocDot interface available in English?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Both the employee app and the admin console are fully available in English, and each person picks their own language — your Taiwanese staff can work in Chinese while an overseas manager uses the same account data in English. Nobody has to switch to the other side's language to get their work done."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do we still need attendance records if our staff in Taiwan work from home?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Record-keeping obligations do not disappear because the work happens off-site. Employees working from home, working remotely or working in the field still need attendance records, logged daily and to the minute, and retained for a set number of years. This is general information only, not legal advice."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can our overseas HQ see the data without reading Chinese?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "That is the reason this version exists. Reports and CSV exports are structured so a manager outside Taiwan can read hours, leave and Office versus Remote splits without needing to interpret Chinese-language HR software."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do we need a Taiwan entity to use ClocDot?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "ClocDot is attendance software, not an employer of record. It fits companies that already employ people in Taiwan through their own branch or subsidiary. If you have not set up an entity yet and are employing through an EOR, your EOR usually handles attendance for you."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What does it cost?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Teams of 5 or fewer are free forever, with no time limit and no credit card required. Apply now and once your account is approved, your first 6 months are free."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="overflow-x-hidden">
+
+  <!-- Torn-paper SVG filter defs — required by .paper-card / .paper-scrap -->
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <defs>
+      <filter id="torn-edge" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02 0.04" numOctaves="4" seed="7" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="torn-edge-soft" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.03 0.05" numOctaves="3" seed="3" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- ───── Header ───── -->
+  <header class="relative max-w-6xl mx-auto px-6 pt-8 flex items-center justify-between">
+    <a href="./" class="flex items-center gap-2 group">
+      <img
+        src="../assets/logo.png"
+        alt="ClocDot logo"
+        width="1024"
+        height="1024"
+        fetchpriority="high"
+        class="w-9 h-9 object-contain drop-shadow-sm transition-transform group-hover:rotate-12"
+        style="transform: rotate(-4deg);"
+      />
+      <span class="text-xl font-black tracking-tight text-slate-800">ClocDot</span>
+    </a>
+    <nav class="flex items-center gap-4 md:gap-6 text-sm text-slate-600">
+      <a href="#compliance" class="hidden md:inline hover:text-emerald-600 transition-colors">Compliance</a>
+      <a href="#features" class="hidden md:inline hover:text-emerald-600 transition-colors">Features</a>
+      <a href="#pricing" class="hidden md:inline hover:text-emerald-600 transition-colors">Pricing</a>
+      <a href="#faq" class="hidden md:inline hover:text-emerald-600 transition-colors">FAQ</a>
+      <a href="#apply" class="hidden md:inline hover:text-emerald-600 transition-colors">Apply</a>
+      <a href="../" hreflang="zh-TW" class="inline hover:text-emerald-600 transition-colors">中文</a>
+      <a href="https://app.clocdot.com/login" class="relative group">
+        <span class="absolute inset-0 bg-slate-800 translate-y-1 translate-x-1 rounded-md"></span>
+        <span class="relative inline-block px-3 py-1.5 md:px-4 bg-white border-2 border-slate-800 rounded-md font-black text-sm group-hover:-translate-y-0.5 group-hover:-translate-x-0.5 transition-transform">Log in</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- ───── Hero ───── -->
+  <main class="relative max-w-6xl mx-auto px-6 pt-16 pb-24">
+    <section class="grid md:grid-cols-2 gap-12 items-center">
+      <div class="relative">
+        <span class="inline-flex items-center gap-1.5 stamp text-cyan-600 px-3 py-1 mb-6 text-[10px] font-black uppercase tracking-[0.25em]" style="transform: rotate(-2deg);">
+          <span class="w-1.5 h-1.5 bg-cyan-500 rounded-full"></span>
+          Now in beta
+        </span>
+
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight text-slate-800 leading-[1.12] mb-6">
+          Attendance tracking that speaks<br class="hidden md:inline"/>
+          <span class="text-cyan-600">Taiwan's rules</span> and your language
+        </h1>
+
+        <p class="text-base text-slate-600 leading-relaxed mb-8 max-w-md">
+          Most attendance tools force a choice: software built for Taiwan that only your local HR can read,
+          or a familiar international app that was never designed around Taiwanese record-keeping.
+          <strong class="text-slate-700">ClocDot is built for the gap in between</strong> —
+          a full English interface on top of attendance that follows how records actually work here.
+          Your staff in Taiwan keep using Chinese; you read the same data in English.
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="#apply" class="relative group active:scale-95 transition-transform">
+            <span class="absolute inset-0 bg-emerald-700 translate-y-[3px] rounded-md"></span>
+            <span class="relative inline-flex items-center gap-2 px-7 py-3.5 bg-emerald-500 text-white font-bold rounded-md group-hover:-translate-y-[1px] transition-transform">
+              Request access
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </a>
+          <a href="#compliance" class="relative group active:scale-95 transition-transform">
+            <span class="absolute inset-0 bg-slate-800 translate-y-[3px] rounded-md"></span>
+            <span class="relative inline-flex items-center gap-2 px-6 py-3.5 bg-white border-2 border-slate-800 text-slate-800 font-bold rounded-md group-hover:-translate-y-[1px] transition-transform">
+              What Taiwan requires
+            </span>
+          </a>
+        </div>
+
+        <p class="mt-5 text-sm text-slate-500">
+          New here? Start with the
+          <a href="./features/remote-work-attendance/" class="font-bold text-slate-700 hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">remote attendance guide</a>
+          or see
+          <a href="./features/gps-clock-in/" class="font-bold text-slate-700 hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">how GPS clock-in works</a>.
+        </p>
+      </div>
+
+      <!-- Postcard hero card -->
+      <div class="relative animate-float-slow">
+        <div class="relative bg-white p-8 paper-card" style="transform: rotate(2deg);">
+          <div class="absolute -top-4 right-8 w-16 h-20 border-2 flex flex-col items-center justify-center text-white" style="border-radius: 4px; transform: rotate(8deg); background: var(--color-coral); border-color: var(--color-coral-deep);">
+            <span class="text-[8px] font-black uppercase tracking-widest">REMOTE</span>
+            <span class="text-3xl font-black">9:02</span>
+          </div>
+          <div class="absolute -top-3 left-12 w-20 h-6 tape" style="transform: rotate(-3deg);"></div>
+
+          <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-3">Clock-in record</p>
+          <h2 class="text-xl text-slate-700 leading-relaxed mb-4">
+            <span class="accent-handwritten text-2xl text-cyan-700">Working from home</span><br/>
+            Tagged as Remote automatically<br/>
+            Logged to the minute
+          </h2>
+          <div class="flex items-end justify-between mt-6">
+            <div>
+              <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Auto-tagged</p>
+              <p class="font-mono font-black text-slate-700 text-sm">18.3 km from office</p>
+              <span class="inline-flex items-center gap-1 mt-1.5 text-[9px] font-black uppercase tracking-widest bg-cyan-50 border border-cyan-200 text-cyan-700 px-1.5 py-0.5 rounded-full">
+                <svg class="w-2 h-2" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                Remote
+              </span>
+            </div>
+            <div class="stamp text-emerald-600 px-3 py-2 text-center" style="transform: rotate(-8deg);">
+              <p class="text-[9px] font-black uppercase tracking-[0.2em]">Logged</p>
+              <p class="text-xl font-black">✓</p>
+            </div>
+          </div>
+        </div>
+        <div class="absolute -bottom-6 -left-4 w-32 h-20 paper-card" style="transform: rotate(-6deg); z-index: -1; --paper-bg: #fef3c7;"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="wave-divider"></div>
+
+  <!-- ───── The gap ───── -->
+  <section id="why" class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">The problem</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 leading-tight">Why foreign employers in Taiwan get stuck</h2>
+    </div>
+
+    <div class="space-y-6 text-slate-700 leading-relaxed">
+      <p>
+        If your company has a branch or subsidiary in Taiwan, you have probably already run into this.
+        The local HR systems do the compliance side well, but the entire interface, support and documentation
+        assume a Chinese-reading HR team. The international tools your HQ already knows are pleasant to use,
+        but they were designed around a different set of record-keeping expectations.
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-6 my-8">
+        <article class="relative bg-white p-6 paper-card" style="transform: rotate(-1deg); --paper-bg: #fef3c7;">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-2deg);"></div>
+          <h3 class="font-black text-lg text-slate-800 mb-2 mt-2">Local HR software</h3>
+          <ul class="space-y-2 text-sm text-slate-600">
+            <li>✓ Built around Taiwanese requirements</li>
+            <li>✗ Chinese-only interface and support</li>
+            <li>✗ HQ cannot read the reports</li>
+            <li>✗ Often bundled with payroll modules you do not need</li>
+          </ul>
+        </article>
+
+        <article class="relative bg-white p-6 paper-card" style="transform: rotate(1deg);">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(3deg);"></div>
+          <h3 class="font-black text-lg text-slate-800 mb-2 mt-2">International time-clock apps</h3>
+          <ul class="space-y-2 text-sm text-slate-600">
+            <li>✓ Familiar, English-first</li>
+            <li>✓ Your HQ may already use one</li>
+            <li>✗ Not designed around Taiwan's record-keeping</li>
+            <li>✗ Exports rarely match what a local audit expects</li>
+          </ul>
+        </article>
+      </div>
+
+      <p>
+        The teams that feel this most are the small ones — five to fifty people in Taiwan,
+        too small to justify a full enterprise HR suite, too established to keep tracking hours in a spreadsheet.
+        That is who ClocDot is built for.
+      </p>
+    </div>
+  </section>
+
+  <div class="wave-divider rotate-180"></div>
+
+  <!-- ───── Compliance ───── -->
+  <section id="compliance" class="relative max-w-4xl mx-auto px-6 py-20 bg-cyan-50/30">
+    <div class="mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Compliance</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 leading-tight">What Taiwan expects from attendance records</h2>
+    </div>
+
+    <div class="space-y-6 text-slate-700 leading-relaxed">
+      <p>
+        This is the part that surprises most overseas HR teams:
+        <strong>attendance obligations in Taiwan do not go away when the work happens off-site.</strong>
+        Remote staff, employees working from home and field staff all need records —
+        and "we track output, not hours" is not a substitute.
+      </p>
+
+      <div class="relative bg-white p-7 paper-card my-8" style="transform: rotate(-0.6deg); --paper-bg: #fffdf7;">
+        <div class="absolute -top-3 left-10 w-20 h-6 tape" style="transform: rotate(-3deg);"></div>
+        <h3 class="font-black text-xl text-slate-800 mb-4 mt-2">Three things to get right</h3>
+        <ul class="space-y-3 text-sm text-slate-600">
+          <li><strong class="text-slate-800">Daily records, down to the minute.</strong>
+            Not "present today" — the actual start and end of each working day needs to be reconstructable.
+            This is why a Slack message saying "starting now" does not really count:
+            it lives in a conversation thread, not in a record anyone can review.</li>
+          <li><strong class="text-slate-800">Retained for a number of years.</strong>
+            Records are not something you clear once payroll closes for the month.
+            Paper cards and scattered chat logs are the riskiest option here —
+            you often only discover whether they still exist at the moment someone asks for them.</li>
+          <li><strong class="text-slate-800">Employees can request their own records.</strong>
+            When an employee asks to see or copy their own attendance record, the employer is expected to provide it.
+            So the system needs to show employees their own history, not just an HR back office.</li>
+        </ul>
+      </div>
+
+      <p>
+        Translated into a buying checklist, it comes down to three questions:
+        <strong>is the record granular enough, does it survive long enough, and can the employee retrieve it?</strong>
+        Distributed teams need to be especially careful — the more spread out people are,
+        the less any physical device is quietly creating a record for you.
+      </p>
+
+      <h3 class="font-black text-xl text-slate-800 pt-4">How ClocDot handles it</h3>
+      <ul class="list-disc list-inside space-y-2 ml-2">
+        <li>Every punch is stored to the minute, with the location source (Office / Remote / field) and originating IP.</li>
+        <li>Records live in the cloud — they do not disappear with a replaced laptop, a broken time clock or a lost paper card.</li>
+        <li>Employees see their own full punch history without filing a request with HR.</li>
+        <li>One-click monthly CSV export with daily detail and hours net of break time, ready to hand over when records are requested.</li>
+      </ul>
+
+      <p class="text-sm text-slate-500 border-l-4 border-dashed border-slate-300 pl-4 mt-8">
+        This is a general summary for orientation only and is not legal advice.
+        Actual obligations and how they apply to your company are determined by the Ministry of Labor
+        and your local labor authority. For your specific situation, please consult a qualified professional
+        or your local labor bureau.
+      </p>
+    </div>
+  </section>
+
+  <div class="wave-divider"></div>
+
+  <!-- ───── Features ───── -->
+  <section id="features" class="relative max-w-6xl mx-auto px-6 py-20">
+    <div class="text-center mb-14">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">What it does</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">Built for teams that are not all in one place</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <article class="relative bg-white p-7 paper-card hover:shadow-xl transition-shadow" style="transform: rotate(-1.2deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-2deg);"></div>
+        <h3 class="font-black text-xl text-slate-800 mb-3 mt-2">Office or remote, decided automatically</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          GPS compares the punch location against your registered office sites and tags it as Office, Remote or field work.
+          Multiple sites are supported and addresses are geocoded for you. Nobody has to self-report where they were.
+        </p>
+        <p class="mt-4 text-sm">
+          <a href="./features/gps-clock-in/" class="font-bold text-slate-700 hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">How GPS clock-in works →</a>
+        </p>
+      </article>
+
+      <article class="relative bg-white p-7 paper-card hover:shadow-xl transition-shadow" style="transform: rotate(0.8deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(3deg);"></div>
+        <h3 class="font-black text-xl text-slate-800 mb-3 mt-2">Nothing to install, nothing to buy</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          ClocDot is a PWA. Employees open a link and add it to their home screen — no app store approval,
+          no hardware, no IT rollout. It keeps working offline and syncs when the connection returns,
+          which matters more than you would think for field staff.
+        </p>
+      </article>
+
+      <article class="relative bg-white p-7 paper-card hover:shadow-xl transition-shadow" style="transform: rotate(-0.6deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-4deg);"></div>
+        <h3 class="font-black text-xl text-slate-800 mb-3 mt-2">Month-end that HQ can actually read</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          One click exports a CSV with daily detail, hours net of breaks and a clean Office versus Remote split.
+          It opens in Excel without the character-encoding mess that usually follows Chinese-language exports.
+        </p>
+        <p class="mt-4 text-sm">
+          <a href="./features/remote-work-attendance/" class="font-bold text-slate-700 hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">Remote attendance guide →</a>
+        </p>
+      </article>
+    </div>
+
+    <!-- Interface language -->
+    <div class="mt-12 max-w-3xl mx-auto relative bg-white p-7 md:p-8 paper-card" style="transform: rotate(-0.3deg); --paper-bg: #ecfdf5;">
+      <div class="absolute -top-3 left-10 w-20 h-6 tape" style="transform: rotate(-3deg);"></div>
+      <p class="text-[11px] font-black uppercase tracking-[0.25em] text-emerald-700 mb-3 mt-1">Both languages, same account</p>
+      <p class="text-slate-600 leading-relaxed">
+        <strong class="text-slate-800">The employee app and the admin console are both fully available in English</strong> —
+        and language is a per-person setting, not a company-wide switch. Your team in Taiwan keeps working in Chinese,
+        while a manager in London or Singapore opens the same records in English.
+        Neither side has to operate in the other's language to do their job.
+      </p>
+      <p class="text-sm text-slate-500 leading-relaxed mt-4">
+        This is the part most tools get wrong. Local HR software makes your HQ squint at Chinese screens;
+        international tools make your Taiwanese staff work in a system that does not match how attendance
+        is actually recorded here. You should not have to pick one group to inconvenience.
+      </p>
+    </div>
+  </section>
+
+  <div class="wave-divider rotate-180"></div>
+
+  <!-- ───── Who it's for ───── -->
+  <section id="who" class="relative max-w-4xl mx-auto px-6 py-20 bg-cyan-50/30">
+    <div class="mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Who it's for</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">Is this you?</h2>
+    </div>
+
+    <div class="space-y-5 text-slate-700">
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(-0.4deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">Foreign companies with a Taiwan entity</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">You employ people in Taiwan through your own branch or subsidiary, and the person overseeing them does not read Chinese.</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(0.5deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">Distributed teams with someone in Taiwan</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Your team is spread across countries and time zones, and the Taiwan-based staff have record-keeping requirements the rest of the company does not.</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(-0.3deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">Hybrid offices in Taipei, Hsinchu or Kaohsiung</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Staff come in some days and work from home on others, and you need those two things counted separately without asking anyone to label their own days.</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(0.4deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">Not a fit: no Taiwan entity yet</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">If you are hiring in Taiwan through an employer of record, your EOR generally handles attendance as part of the service. ClocDot is attendance software, not an EOR — it makes sense once you run your own entity.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave-divider"></div>
+
+  <!-- ───── Pricing ───── -->
+  <section id="pricing" class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Pricing</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">What it costs</h2>
+    </div>
+
+    <div class="relative bg-white p-8 md:p-10 paper-card" style="transform: rotate(-0.5deg); --paper-bg: #ecfdf5;">
+      <div class="absolute -top-3 left-12 w-20 h-6 tape" style="transform: rotate(-3deg);"></div>
+      <ul class="space-y-3 text-slate-700 mt-2">
+        <li class="flex gap-3"><span class="text-emerald-600 font-black">✓</span><span><strong class="text-slate-800">Free forever for teams of 5 or fewer.</strong> No time limit, no credit card.</span></li>
+        <li class="flex gap-3"><span class="text-emerald-600 font-black">✓</span><span><strong class="text-slate-800">Apply now and your first 6 months are free</strong> once your account is approved.</span></li>
+        <li class="flex gap-3"><span class="text-emerald-600 font-black">✓</span><span>No hardware to buy — remote and hybrid teams do not need a time clock at all.</span></li>
+      </ul>
+      <p class="text-sm text-slate-500 mt-6">
+        Larger headcount or something unusual about your setup?
+        <a href="#apply" class="font-bold text-slate-700 hover:text-cyan-700 underline underline-offset-2 decoration-dashed">Tell us about your team</a>
+        and we will work it out together.
+      </p>
+    </div>
+
+    <p class="mt-8 text-slate-700 leading-relaxed">
+      Worth noting what the real cost usually is: not the licence fee, but
+      <strong>the hours someone spends every month reconciling timesheets</strong> —
+      chasing missing punches, working out overtime, assembling the report.
+      That bill arrives every single month, and it is normally the bigger one.
+    </p>
+  </section>
+
+  <div class="wave-divider rotate-180"></div>
+
+  <!-- ───── FAQ ───── -->
+  <section id="faq" class="relative max-w-3xl mx-auto px-6 py-20">
+    <div class="mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">FAQ</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">Common questions</h2>
+    </div>
+
+    <div class="space-y-4">
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.3deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">Is the ClocDot interface available in English?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">Yes. Both the employee app and the admin console are fully available in English, and language is a per-person setting — your Taiwanese staff can work in Chinese while an overseas manager reads the same data in English. Nobody has to switch to the other side's language to get their work done.</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(0.3deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">Do we still need attendance records if our staff work from home?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">Yes. Record-keeping obligations do not disappear because the work happens off-site — employees working from home, remotely or in the field still need records, logged daily and to the minute, and retained for a number of years. See the <a href="#compliance" class="font-bold text-slate-700 hover:text-cyan-700 underline underline-offset-2 decoration-dashed">compliance section</a> above. General information only, not legal advice.</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.4deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">Can our overseas HQ read the data without reading Chinese?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">That is the reason this version exists. Reports and CSV exports are structured so a manager outside Taiwan can read hours, leave and the Office versus Remote split without having to interpret Chinese-language HR software.</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(0.4deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">Do we need a Taiwan entity to use ClocDot?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">ClocDot is attendance software, not an employer of record. It fits companies that already employ people in Taiwan through their own branch or subsidiary. If you have not set up an entity and are employing through an EOR, your EOR usually handles attendance as part of the service.</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.2deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">What does it cost?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">Teams of 5 or fewer are free forever, with no time limit and no credit card required. Apply now and once your account is approved, your first 6 months are free.</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(0.25deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">Can office days and remote days use different clock-in methods?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">Yes, and it is the most common setup for hybrid teams: on office days, require a connection to the company network (WiFi / IP verification) to confirm people are actually on site; on remote days, use GPS to record the location and tag the punch as Remote. Both sources are stored per punch, and the monthly export keeps Office and Remote hours separate.</p>
+      </details>
+    </div>
+
+    <div class="mt-12 p-5 bg-cyan-50/50 paper-scrap" style="transform: rotate(-0.2deg);">
+      <p class="text-xs font-black uppercase tracking-widest text-cyan-700 mb-2">Read next</p>
+      <div class="flex flex-col gap-2">
+        <a href="./features/remote-work-attendance/" class="font-bold text-slate-800 hover:text-emerald-600 underline underline-offset-2 decoration-dashed">Remote attendance in Taiwan — the complete guide →</a>
+        <a href="./features/gps-clock-in/" class="font-bold text-slate-800 hover:text-emerald-600 underline underline-offset-2 decoration-dashed">GPS clock-in — accuracy, multiple sites and privacy →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── Apply ───── -->
+  <section id="apply" class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="relative bg-white paper-scrap p-10 md:p-16 text-center" style="transform: rotate(-0.8deg);">
+      <div class="absolute -top-4 left-1/4 w-24 h-7 tape" style="transform: rotate(-4deg);"></div>
+      <div class="absolute -top-4 right-1/4 w-24 h-7 tape" style="transform: rotate(3deg);"></div>
+
+      <span class="inline-flex items-center gap-1.5 stamp text-amber-600 px-3 py-1 mb-6 text-[10px] font-black uppercase tracking-[0.25em]" style="transform: rotate(2deg);">
+        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
+        First 6 months free
+      </span>
+
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 leading-tight mb-4">
+        Get your Taiwan team's hours
+        <span class="relative inline-block">
+          <span class="absolute inset-x-0 bottom-1 h-3 bg-cyan-200/70 -z-10 -rotate-1"></span>
+          on the record
+        </span>
+      </h2>
+
+      <p class="text-slate-500 text-base max-w-lg mx-auto mb-10">
+        Free for teams of 5 or fewer. No credit card, no sales sequence.
+      </p>
+
+      <form id="apply-form" class="flex flex-col gap-5 max-w-xl mx-auto text-left" novalidate>
+        <label class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+          <span class="font-black text-sm text-slate-700 sm:w-32 shrink-0 sm:text-right">Company<span style="color: var(--color-coral-deep);">*</span></span>
+          <input name="companyName" required maxlength="200" autocomplete="organization"
+            class="form-line flex-1 min-w-0 w-full" />
+        </label>
+
+        <label class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+          <span class="font-black text-sm text-slate-700 sm:w-32 shrink-0 sm:text-right">Your name<span style="color: var(--color-coral-deep);">*</span></span>
+          <input name="contactName" required maxlength="100" autocomplete="name"
+            class="form-line flex-1 min-w-0 w-full" />
+        </label>
+
+        <div class="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4">
+          <span class="font-black text-sm text-slate-700 sm:w-32 shrink-0 sm:text-right sm:pt-2">Email<span style="color: var(--color-coral-deep);">*</span></span>
+          <div class="flex-1 min-w-0 w-full flex flex-col gap-1">
+            <input name="email" type="email" required maxlength="254" autocomplete="email"
+              aria-describedby="email-error"
+              class="form-line w-full min-w-0" />
+            <p id="email-error" data-email-error class="hidden text-xs" style="color: var(--color-coral-deep);" role="alert"></p>
+          </div>
+        </div>
+
+        <label class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+          <span class="font-black text-sm text-slate-700 sm:w-32 shrink-0 sm:text-right">Team size</span>
+          <input name="headcount" type="number" min="1" max="100000" inputmode="numeric"
+            class="form-line flex-1 min-w-0 w-full" />
+        </label>
+
+        <label class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+          <span class="font-black text-sm text-slate-700 sm:w-32 shrink-0 sm:text-right">Anything else</span>
+          <input name="note" maxlength="2000" placeholder="Where your team is based, what you use today…"
+            class="form-line flex-1 min-w-0 w-full" />
+        </label>
+
+        <!-- honeypot: humans leave this empty, bots fill it -->
+        <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden" />
+
+        <div class="flex flex-col items-center gap-3 mt-4">
+          <button type="submit" class="relative group active:scale-95 transition-transform">
+            <span class="absolute inset-0 bg-emerald-700 translate-y-[3px] rounded-md"></span>
+            <span class="relative inline-flex items-center gap-2 px-8 py-4 bg-emerald-500 text-white font-bold rounded-md group-hover:-translate-y-[1px] transition-transform">
+              <span data-label-default>Request access</span>
+              <span data-label-loading class="hidden">Sending…</span>
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </button>
+          <p data-form-msg class="text-xs text-slate-500 min-h-[1rem]" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <p class="text-xs text-slate-400 mt-8 max-w-md mx-auto">
+        We read every one of these ourselves. Write in English or Chinese — whichever you prefer.
+      </p>
+
+      <p class="accent-handwritten text-2xl mt-8 -rotate-1" style="color: var(--color-coral-deep);">
+        See you soon.
+      </p>
+    </div>
+  </section>
+
+  <!-- ───── Footer ───── -->
+  <footer class="relative max-w-6xl mx-auto px-6 py-12 border-t border-dashed border-slate-300/60">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <img
+          src="../assets/logo.png"
+          alt="ClocDot logo"
+          width="1024"
+          height="1024"
+          loading="lazy"
+          decoding="async"
+          class="w-7 h-7 object-contain drop-shadow-sm"
+          style="transform: rotate(-4deg);"
+        />
+        <span class="text-sm text-slate-500">© 2026 ClocDot</span>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-slate-400">
+        <a href="./features/remote-work-attendance/" class="hover:text-slate-700">Remote attendance</a>
+        <a href="./features/gps-clock-in/" class="hover:text-slate-700">GPS clock-in</a>
+        <a href="../" hreflang="zh-TW" class="hover:text-slate-700">中文版</a>
+        <a href="../privacy.html" class="hover:text-slate-700">Privacy</a>
+        <a href="../terms.html" class="hover:text-slate-700">Terms</a>
+        <a href="mailto:pm@clocdot.com" class="hover:text-slate-700">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mirrors the submit handler on the Chinese homepage — same /api/apply endpoint,
+    // same honeypot field, English-language validation and status messages.
+    (function () {
+      const form = document.getElementById('apply-form');
+      if (!form) return;
+      const msg = form.querySelector('[data-form-msg]');
+      const btn = form.querySelector('button[type="submit"]');
+      const lblDefault = btn.querySelector('[data-label-default]');
+      const lblLoading = btn.querySelector('[data-label-loading]');
+      const emailInput = form.querySelector('input[name="email"]');
+      const emailError = form.querySelector('[data-email-error]');
+      const API_BASE = (window.__CLOCDOT_API_BASE__ || 'https://api.clocdot.com').replace(/\/$/, '');
+      const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      function setEmailError(text) {
+        if (text) {
+          emailError.textContent = text;
+          emailError.classList.remove('hidden');
+          emailInput.setAttribute('aria-invalid', 'true');
+          emailInput.style.borderBottomColor = 'var(--color-coral-deep)';
+        } else {
+          emailError.textContent = '';
+          emailError.classList.add('hidden');
+          emailInput.removeAttribute('aria-invalid');
+          emailInput.style.borderBottomColor = '';
+        }
+      }
+
+      emailInput.addEventListener('input', () => setEmailError(''));
+      emailInput.addEventListener('blur', () => {
+        const v = emailInput.value.trim();
+        if (!v) return setEmailError('Email is required');
+        if (!EMAIL_RE.test(v)) return setEmailError('That does not look like a valid email — e.g. you@example.com');
+        setEmailError('');
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        msg.textContent = '';
+        msg.className = 'text-xs text-slate-500 min-h-[1rem]';
+
+        const fd = new FormData(form);
+        const headcountRaw = fd.get('headcount');
+        const payload = {
+          companyName: (fd.get('companyName') || '').toString().trim(),
+          contactName: (fd.get('contactName') || '').toString().trim(),
+          email: (fd.get('email') || '').toString().trim(),
+          note: (fd.get('note') || '').toString().trim() || undefined,
+          website: (fd.get('website') || '').toString(),
+        };
+        if (headcountRaw) {
+          const n = parseInt(headcountRaw, 10);
+          if (Number.isFinite(n) && n > 0) payload.headcount = n;
+        }
+
+        if (!payload.email) {
+          setEmailError('Email is required');
+          emailInput.focus();
+          return;
+        }
+        if (!EMAIL_RE.test(payload.email)) {
+          setEmailError('That does not look like a valid email — e.g. you@example.com');
+          emailInput.focus();
+          return;
+        }
+        setEmailError('');
+
+        if (!payload.companyName || !payload.contactName) {
+          msg.textContent = 'Please fill in the required fields';
+          msg.classList.add('text-rose-600');
+          return;
+        }
+
+        btn.disabled = true;
+        lblDefault.classList.add('hidden');
+        lblLoading.classList.remove('hidden');
+
+        try {
+          const res = await fetch(API_BASE + '/api/apply', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (!res.ok) {
+            if (res.status === 429) throw new Error('Too many requests — please try again shortly');
+            throw new Error('Something went wrong — please try again');
+          }
+          form.reset();
+          msg.textContent = '✓ Got it! We will get back to you by email soon';
+          msg.classList.add('text-emerald-600');
+        } catch (err) {
+          msg.textContent = err.message || 'Something went wrong';
+          msg.classList.add('text-rose-600');
+        } finally {
+          btn.disabled = false;
+          lblDefault.classList.remove('hidden');
+          lblLoading.classList.add('hidden');
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

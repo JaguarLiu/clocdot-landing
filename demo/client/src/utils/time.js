@@ -1,3 +1,4 @@
+import { tr } from '../i18n/index.jsx'
 export function formatTime(date) {
   return date.toLocaleTimeString('zh-TW', {
     hour: '2-digit',
@@ -21,7 +22,7 @@ export function formatDuration(minutes) {
 }
 
 export function getDayName(date) {
-  const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
+  const days = [tr('weekdays.long.0'), tr('weekdays.long.1'), tr('weekdays.long.2'), tr('weekdays.long.3'), tr('weekdays.long.4'), tr('weekdays.long.5'), tr('weekdays.long.6')]
   return days[date.getDay()]
 }
 
@@ -49,12 +50,12 @@ export function formatLeaveDuration(startDate, startTime, endDate, endTime) {
     const minutes = (eh * 60 + em) - (sh * 60 + sm)
     if (minutes <= 0) return '—'
     const hours = minutes / 60
-    if (hours >= 8) return '1 天'
-    return `${hours % 1 === 0 ? hours : hours.toFixed(1)} 小時`
+    if (hours >= 8) return tr('leave.oneDay')
+    return tr('leave.nHours', { n: hours % 1 === 0 ? hours : hours.toFixed(1) })
   }
 
   const s = new Date(startKey)
   const e = new Date(endKey)
   const days = Math.round((e - s) / 86400000) + 1
-  return `${days} 天`
+  return tr('leave.nDays', { n: days })
 }

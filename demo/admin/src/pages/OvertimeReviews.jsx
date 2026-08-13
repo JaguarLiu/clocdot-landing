@@ -7,11 +7,12 @@ import PaperToast from '../components/PaperToast.jsx'
 import StatusStamp from '../components/StatusStamp.jsx'
 import MarkerButton from '../components/MarkerButton.jsx'
 import ConfirmDialog from '../components/ConfirmDialog.jsx'
+import { tr, useT } from '../i18n/index.jsx'
 
 const TABS = [
-  { key: 'pending',  label: '待審核', accent: 'orange' },
-  { key: 'approved', label: '已通過', accent: 'emerald' },
-  { key: 'rejected', label: '已駁回', accent: 'red' },
+  { key: 'pending',  label: tr('dashboard.pendingReview'), accent: 'orange' },
+  { key: 'approved', label: tr('status.approved'), accent: 'emerald' },
+  { key: 'rejected', label: tr('status.rejected'), accent: 'red' },
 ]
 
 const TAB_ACCENT = {
@@ -21,15 +22,15 @@ const TAB_ACCENT = {
 }
 
 const DAY_TYPE_LABEL = {
-  workday: '平日',
-  restday: '休息日',
-  national_holiday: '國定假日',
-  regular_leave: '例假',
+  workday: tr('dayType.workday'),
+  restday: tr('dayType.restday'),
+  national_holiday: tr('dayType.national_holiday'),
+  regular_leave: tr('dayType.regular_leave'),
 }
 
 const RATE_LABEL = {
   '1.34': '×1.34', '1.67': '×1.67', '2.67': '×2.67',
-  holiday: '假日加倍', regular_leave: '例假',
+  holiday: tr('dayType.holidayDouble'), regular_leave: tr('dayType.regular_leave'),
 }
 
 function formatDate(dateStr) {
@@ -42,6 +43,7 @@ function toHours(minutes) {
 }
 
 export default function OvertimeReviews() {
+  const { t } = useT()
   const [tab, setTab] = useState('pending')
   const { data: requests, mutate } = useSWR(`/admin/overtime-requests?status=${tab}`, fetcher)
   const [processing, setProcessing] = useState(null)
@@ -53,13 +55,13 @@ export default function OvertimeReviews() {
     try {
       await reviewOvertimeRequest(id, status)
       mutate()
-      setToast({ variant: 'success', message: status === 'approved' ? '已通過加班申請' : '已駁回加班申請' })
+      setToast({ variant: 'success', message: status === 'approved' ? t('reviews.approvedOvertime') : t('reviews.rejectedOvertime') })
     } catch (err) {
       if (err?.status === 409 && err?.info?.compliance) {
         // 核准會超月上限 → 改開確認對話框，由主管二次確認
         setConfirmTarget({ id, compliance: err.info.compliance })
       } else {
-        setToast({ variant: 'error', message: err?.message || '操作失敗' })
+        setToast({ variant: 'error', message: err?.message || t('common.actionFailed') })
       }
     } finally {
       setProcessing(null)
@@ -73,10 +75,10 @@ export default function OvertimeReviews() {
     try {
       await reviewOvertimeRequest(id, 'approved', true)
       mutate()
-      setToast({ variant: 'success', message: '已通過加班申請' })
+      setToast({ variant: 'success', message: t('reviews.approvedOvertime') })
       setConfirmTarget(null)
     } catch (err) {
-      setToast({ variant: 'error', message: err?.message || '操作失敗' })
+      setToast({ variant: 'error', message: err?.message || t('common.actionFailed') })
     } finally {
       setProcessing(null)
     }
@@ -90,10 +92,10 @@ export default function OvertimeReviews() {
       <ConfirmDialog
         open={!!confirmTarget}
         variant="warning"
-        title="加班時數恐超標"
+        title={t('reviews.overtimeRisk')}
         message={confirmTarget?.compliance?.reasons?.map((r) => r.detail).join('；')}
-        confirmLabel="我已知悉，仍要核准"
-        cancelLabel="先不要"
+        confirmLabel={t('reviews.acknowledgeApprove')}
+        cancelLabel={t('common.notNow')}
         onConfirm={handleConfirmApprove}
         onCancel={() => setConfirmTarget(null)}
         loading={processing === confirmTarget?.id}
@@ -104,7 +106,7 @@ export default function OvertimeReviews() {
           <Timer size={22} className="text-white" strokeWidth={2.5} />
         </div>
         <div>
-          <h2 className="text-3xl font-zh text-slate-800">加班審核</h2>
+          <h2 className="text-3xl font-zh text-slate-800">{t('nav.overtimeReviews')}</h2>
           <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mt-1">
             Overtime Requests Review
           </p>
@@ -140,7 +142,7 @@ export default function OvertimeReviews() {
         <div className="text-center py-24 opacity-40 flex flex-col items-center gap-3">
           <Inbox size={48} className="text-slate-300" />
           <p className="font-zh text-sm text-slate-400">
-            {tab === 'pending' ? '目前沒有待審核的加班' : '沒有相關紀錄'}
+            {tab === 'pending' ? t('reviews.noPendingOvertime') : t('common.noRecords')}
           </p>
         </div>
       ) : (
@@ -178,7 +180,7 @@ export default function OvertimeReviews() {
 
                   <div className="pl-5 border-l border-dashed border-slate-200">
                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Hours</p>
-                    <p className="font-mono font-black text-sm text-slate-700 tabular-nums">{toHours(req.requestedMinutes)} 小時</p>
+                    <p className="font-mono font-black text-sm text-slate-700 tabular-nums">{t('fmt.hours', { n: toHours(req.requestedMinutes) })}</p>
                     <div className="flex items-center gap-1 mt-1 flex-wrap">
                       {tiers.map((t, i) => (
                         <span key={i} className="inline-flex font-mono font-black text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded tabular-nums">
@@ -196,13 +198,9 @@ export default function OvertimeReviews() {
                   {tab === 'pending' ? (
                     <div className="flex items-center gap-3 shrink-0">
                       <MarkerButton color="#10b981" rotate="-0.5deg" fontSize={13} onClick={() => handleReview(req.id, 'approved')} disabled={isProcessing}>
-                        <Check size={13} strokeWidth={3} />
-                        通過
-                      </MarkerButton>
+                        <Check size={13} strokeWidth={3} />{t('ui.approve')}</MarkerButton>
                       <MarkerButton color="#ef4444" rotate="0.5deg" fontSize={13} onClick={() => handleReview(req.id, 'rejected')} disabled={isProcessing}>
-                        <X size={13} strokeWidth={3} />
-                        駁回
-                      </MarkerButton>
+                        <X size={13} strokeWidth={3} />{t('ui.reject')}</MarkerButton>
                     </div>
                   ) : (
                     <div className="shrink-0 pl-2">

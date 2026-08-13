@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Remote Attendance in Taiwan: The Complete Guide | ClocDot</title>
+  <meta name="description" content="How remote and hybrid attendance works in Taiwan: five clock-in methods compared, what attendance records need to contain, and how ClocDot handles GPS, offline punches and month-end exports." />
+  <link rel="canonical" href="https://clocdot.com/en/features/remote-work-attendance/" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="alternate" hreflang="zh-TW" href="https://clocdot.com/features/remote-work-attendance/" />
+  <link rel="alternate" hreflang="en" href="https://clocdot.com/en/features/remote-work-attendance/" />
+  <link rel="alternate" hreflang="x-default" href="https://clocdot.com/features/remote-work-attendance/" />
+  <meta property="og:title" content="Remote Attendance in Taiwan: The Complete Guide | ClocDot" />
+  <meta property="og:description" content="Five clock-in methods compared, what Taiwanese attendance records need to contain, and how ClocDot handles remote and hybrid teams." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://clocdot.com/en/features/remote-work-attendance/" />
+  <meta property="og:image" content="https://clocdot.com/assets/og-cover.png" />
+  <meta property="og:locale" content="en" />
+  <meta property="og:locale:alternate" content="zh_TW" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#10b981" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../dist/output.css?v=54bd4a91" />
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://clocdot.com/en/" },
+          { "@type": "ListItem", "position": 2, "name": "Features", "item": "https://clocdot.com/en/features/" },
+          { "@type": "ListItem", "position": 3, "name": "Remote attendance", "item": "https://clocdot.com/en/features/remote-work-attendance/" }
+        ]
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://clocdot.com/en/features/remote-work-attendance/#webpage",
+        "url": "https://clocdot.com/en/features/remote-work-attendance/",
+        "name": "Remote Attendance in Taiwan: The Complete Guide",
+        "inLanguage": "en",
+        "isPartOf": { "@type": "WebSite", "url": "https://clocdot.com/", "name": "ClocDot" },
+        "primaryImageOfPage": { "@type": "ImageObject", "url": "https://clocdot.com/assets/og-cover.png" },
+        "dateModified": "2026-08-12",
+        "description": "How remote and hybrid attendance works in Taiwan: five clock-in methods compared, what attendance records need to contain, and how ClocDot handles it."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How is remote clock-in different from a traditional time clock?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A traditional time clock is tied to a physical device or the company network, so employees have to be on site to use it. Remote clock-in runs on the employee's own phone or laptop, so it works from home, from a client site or from another country, and each punch is tagged with where it came from."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do employees working from home still need attendance records?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Record-keeping obligations do not disappear because the work happens off-site. Employees working from home, working remotely or working in the field still need records, logged daily and to the minute, and retained for a number of years. Reporting in a chat group is generally not enough, because those messages are scattered through a conversation rather than kept as a reviewable record. This is general information only, not legal advice."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can employees see their own attendance records?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Employees see their complete punch history and hours after logging in, without filing a request with HR. Records are stored in the cloud, so they survive a replaced laptop, a broken time clock or a lost paper card, and HR can export the full history as CSV when it is needed."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can we switch from a physical time clock to remote clock-in?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, and no hardware needs replacing, because remote clock-in runs on devices your staff already own. Setup means registering your office locations and working hours and asking employees to add the PWA to their home screen. Most teams can start the same day, and you can run one team in parallel first before switching everyone over."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can office days and remote days use different clock-in methods?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, and this is the most common hybrid setup: on office days, require a connection to the company network so the punch confirms someone is on site; on remote days, use GPS to record the location and tag the punch as Remote. Both sources are stored per punch, and Office and Remote hours stay separate in the monthly export."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is there a cost for small teams?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Teams of 5 or fewer are free forever, with no time limit and no credit card required. Apply now and once your account is approved, your first 6 months are free."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="overflow-x-hidden">
+
+  <!-- Torn-paper SVG filter defs — required by .paper-card / .paper-scrap -->
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <defs>
+      <filter id="torn-edge" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02 0.04" numOctaves="4" seed="7" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="torn-edge-soft" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.03 0.05" numOctaves="3" seed="3" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- ───── Header ───── -->
+  <header class="relative max-w-6xl mx-auto px-6 pt-8 flex items-center justify-between">
+    <a href="../../" class="flex items-center gap-2 group">
+      <img
+        src="../../../assets/logo.png"
+        alt="ClocDot logo"
+        width="1024"
+        height="1024"
+        fetchpriority="high"
+        class="w-9 h-9 object-contain drop-shadow-sm transition-transform group-hover:rotate-12"
+        style="transform: rotate(-4deg);"
+      />
+      <span class="text-xl font-black tracking-tight text-slate-800">ClocDot</span>
+    </a>
+    <nav class="flex items-center gap-4 md:gap-6 text-sm text-slate-600">
+      <a href="../../" class="hidden md:inline hover:text-emerald-600 transition-colors">Home</a>
+      <a href="../gps-clock-in/" class="hidden md:inline hover:text-emerald-600 transition-colors">GPS clock-in</a>
+      <a href="../../#pricing" class="hidden md:inline hover:text-emerald-600 transition-colors">Pricing</a>
+      <a href="../../../features/remote-work-attendance/" hreflang="zh-TW" class="inline hover:text-emerald-600 transition-colors">中文</a>
+      <a href="https://app.clocdot.com/login" class="relative group">
+        <span class="absolute inset-0 bg-slate-800 translate-y-1 translate-x-1 rounded-md"></span>
+        <span class="relative inline-block px-3 py-1.5 md:px-4 bg-white border-2 border-slate-800 rounded-md font-black text-sm group-hover:-translate-y-0.5 group-hover:-translate-x-0.5 transition-transform">Log in</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- ───── Breadcrumb ───── -->
+  <nav aria-label="Breadcrumb" class="relative max-w-4xl mx-auto px-6 pt-8">
+    <ol class="flex items-center gap-2 text-xs text-slate-400">
+      <li><a href="../../" class="hover:text-emerald-600">Home</a></li>
+      <li aria-hidden="true">/</li>
+      <li class="text-slate-600">Remote attendance</li>
+    </ol>
+  </nav>
+
+  <!-- ───── Hero ───── -->
+  <main class="relative max-w-4xl mx-auto px-6 pt-10 pb-12">
+    <span class="inline-flex items-center gap-1.5 stamp text-cyan-600 px-3 py-1 mb-6 text-[10px] font-black uppercase tracking-[0.25em]" style="transform: rotate(-2deg);">
+      <span class="w-1.5 h-1.5 bg-cyan-500 rounded-full"></span>
+      Guide
+    </span>
+
+    <h1 class="text-4xl md:text-5xl font-black tracking-tight text-slate-800 leading-[1.15] mb-6">
+      Remote attendance in Taiwan:<br class="hidden md:inline"/>
+      <span class="text-cyan-600">the complete guide</span>
+    </h1>
+
+    <p class="text-base text-slate-600 leading-relaxed max-w-2xl">
+      Everything you need to decide how your distributed team should clock in —
+      the five common methods compared honestly, what an attendance record actually needs to contain in Taiwan,
+      and where a tool like ClocDot fits.
+    </p>
+  </main>
+
+  <!-- ───── Table of contents ───── -->
+  <nav aria-label="On this page" class="relative max-w-4xl mx-auto px-6 pb-4">
+    <div class="relative bg-white p-6 md:p-7 paper-scrap" style="transform: rotate(-0.4deg); --paper-bg: #fffdf7;">
+      <div class="absolute -top-3 left-10 w-20 h-6 tape" style="transform: rotate(-3deg);"></div>
+      <div class="flex flex-wrap items-baseline justify-between gap-2 mb-4 mt-1">
+        <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700">On this page</p>
+        <p class="text-xs text-slate-400">Last updated: <time datetime="2026-08-12">August 2026</time></p>
+      </div>
+      <ol class="grid sm:grid-cols-2 gap-x-8 gap-y-2 text-sm text-slate-600 list-decimal list-inside">
+        <li><a href="#why" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">Why distributed teams need something different</a></li>
+        <li><a href="#comparison" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">Five clock-in methods compared</a></li>
+        <li><a href="#compliance" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">What attendance records need to contain</a></li>
+        <li><a href="#how" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">How ClocDot solves the three hard parts</a></li>
+        <li><a href="#who" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">Which teams this suits</a></li>
+        <li><a href="#start" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">Getting started in three steps</a></li>
+        <li><a href="#pricing" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">What it costs</a></li>
+        <li><a href="#faq" class="hover:text-cyan-700 underline underline-offset-4 decoration-dashed decoration-slate-300">FAQ</a></li>
+      </ol>
+    </div>
+  </nav>
+
+  <div class="wave-divider"></div>
+
+  <!-- ───── Why ───── -->
+  <section id="why" class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Why remote attendance</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 leading-tight">Why distributed teams need something different</h2>
+    </div>
+
+    <div class="space-y-6 text-slate-700 leading-relaxed">
+      <p>
+        Attendance used to be simple: people badged in on arrival, badged out on the way home,
+        and HR pulled a report at month-end. Once remote and hybrid work became normal,
+        that arrangement broke in three specific places:
+      </p>
+
+      <ul class="list-disc list-inside space-y-2 ml-2">
+        <li>The punch is tied to a device or a network — someone working from home simply cannot use it.</li>
+        <li>Self-reported hours — nobody can tell whether the numbers reflect what actually happened.</li>
+        <li>Office and remote hours land in the same bucket — impossible to separate at month-end.</li>
+      </ul>
+
+      <p>
+        Most teams patch this with a chat-group routine: post when you start, post when you finish.
+        It works for a while. It stops working somewhere around thirty people, or the first month
+        someone has to calculate overtime from it — the messages are scattered through a conversation,
+        awkward to total up, and they do not amount to a proper attendance record.
+      </p>
+
+      <p>
+        The point of a remote attendance system is not surveillance. It is
+        <strong>making the hours data automatic, trustworthy and traceable</strong>.
+        Employees stop announcing themselves in a channel, managers stop chasing, HR stops reconciling by hand.
+        For the remote employee it cuts both ways too — the time they actually worked is on the record,
+        rather than depending on a manager happening to notice.
+      </p>
+    </div>
+  </section>
+
+  <div class="wave-divider rotate-180"></div>
+
+  <!-- ───── Comparison ───── -->
+  <section id="comparison" class="relative max-w-5xl mx-auto px-6 py-20 bg-cyan-50/30">
+    <div class="text-center mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Comparison</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">Five clock-in methods compared</h2>
+    </div>
+
+    <div class="max-w-3xl mx-auto mb-10 text-slate-700 leading-relaxed">
+      <p>
+        Before choosing a system, it helps to see the whole field. None of these is universally better —
+        the deciding factor is usually just <strong>whether your people report to the same place every day</strong>.
+      </p>
+    </div>
+
+    <div class="overflow-x-auto mb-12 border-2 border-dashed border-slate-300 rounded-lg bg-white/80">
+      <table class="w-full min-w-[52rem] text-sm border-collapse">
+        <caption class="sr-only">Comparison of punch cards, biometric readers, chat-based reporting, GPS clock-in and WiFi/IP verification</caption>
+        <thead>
+          <tr class="bg-cyan-50/80 text-slate-800">
+            <th scope="col" class="text-left font-black px-4 py-3 border-b-2 border-dashed border-slate-300">Criterion</th>
+            <th scope="col" class="text-left font-black px-4 py-3 border-b-2 border-l border-dashed border-slate-300">Punch card clock</th>
+            <th scope="col" class="text-left font-black px-4 py-3 border-b-2 border-l border-dashed border-slate-300">Fingerprint / face</th>
+            <th scope="col" class="text-left font-black px-4 py-3 border-b-2 border-l border-dashed border-slate-300">Chat message</th>
+            <th scope="col" class="text-left font-black px-4 py-3 border-b-2 border-l border-dashed border-slate-300">App + GPS</th>
+            <th scope="col" class="text-left font-black px-4 py-3 border-b-2 border-l border-dashed border-slate-300">WiFi / IP</th>
+          </tr>
+        </thead>
+        <tbody class="text-slate-600">
+          <tr>
+            <th scope="row" class="text-left font-black text-slate-700 px-4 py-3 border-b border-dashed border-slate-200 align-top">Equipment cost</th>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Device plus ongoing consumables</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Expensive per unit, one per site</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">None — uses existing tools</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">None — uses employees' own phones</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">None — uses existing network</td>
+          </tr>
+          <tr class="bg-slate-50/60">
+            <th scope="row" class="text-left font-black text-slate-700 px-4 py-3 border-b border-dashed border-slate-200 align-top">Works from home</th>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✗ On-site only</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✗ On-site only</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✓ But on the honour system</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✓ Anywhere, with location tagged</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✗ Fails off the company network</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-left font-black text-slate-700 px-4 py-3 border-b border-dashed border-slate-200 align-top">Field work / multiple sites</th>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✗ One device per location</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✗ One device per location</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">△ Possible, but unverifiable</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">✓ Multiple sites, adjustable radius</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">△ Each site needs its own range</td>
+          </tr>
+          <tr class="bg-slate-50/60">
+            <th scope="row" class="text-left font-black text-slate-700 px-4 py-3 border-b border-dashed border-slate-200 align-top">Resistance to buddy punching</th>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Low — hard to detect</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">High — biometrics are hard to fake</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Low — anyone can post</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Medium — coordinates and time cross-check</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Medium — requires being on site</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-left font-black text-slate-700 px-4 py-3 border-b border-dashed border-slate-200 align-top">Completeness of the record</th>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Paper — hard to search or back up</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Depends on the device software</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Scattered through conversations</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Per-minute entries, exportable</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Per-minute entries, exportable</td>
+          </tr>
+          <tr class="bg-slate-50/60">
+            <th scope="row" class="text-left font-black text-slate-700 px-4 py-3 border-b border-dashed border-slate-200 align-top">Rollout effort</th>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Low, but month-end is manual</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Medium — install and enrol</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Lowest, but the cleanup is worst</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Low — employees open a link</td>
+            <td class="px-4 py-3 border-b border-l border-dashed border-slate-200 align-top">Low, needs stable IPs</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-left font-black text-slate-700 px-4 py-3 align-top">Best suited to</th>
+            <td class="px-4 py-3 border-l border-dashed border-slate-200 align-top">One site, small team, everyone on site</td>
+            <td class="px-4 py-3 border-l border-dashed border-slate-200 align-top">Facilities with strict access control</td>
+            <td class="px-4 py-3 border-l border-dashed border-slate-200 align-top">Very small, high-trust teams</td>
+            <td class="px-4 py-3 border-l border-dashed border-slate-200 align-top">Remote, hybrid, field and multi-site</td>
+            <td class="px-4 py-3 border-l border-dashed border-slate-200 align-top">Confirming attendance on office days</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="max-w-3xl mx-auto text-slate-700 leading-relaxed">
+      <p class="text-sm">
+        <strong>And the honest limits of GPS:</strong>
+        continuous positioning drains battery; accuracy degrades to tens of metres in basements,
+        inside industrial buildings or among high-rises; and some employees are legitimately uneasy about
+        their employer knowing where they are. So ClocDot takes a
+        <strong>single reading at the moment of the punch</strong> rather than tracking through the day,
+        and when positioning fails it flags the punch instead of blocking it — the record still gets made,
+        and a human decides what it means. In practice,
+        <strong>combining GPS with WiFi verification</strong> (network on office days, coordinates on remote days)
+        tends to be the most balanced setup.
+      </p>
+    </div>
+  </section>
+
+  <div class="wave-divider"></div>
+
+  <!-- ───── Compliance ───── -->
+  <section id="compliance" class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Compliance</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 leading-tight">What an attendance record needs to contain</h2>
+    </div>
+
+    <div class="space-y-6 text-slate-700 leading-relaxed">
+      <p>
+        One of the most common questions we get from overseas HR teams:
+        <strong>"our staff work from home and we measure output, so do we still need to track hours?"</strong>
+        In Taiwan the answer is yes — record-keeping obligations do not disappear because the work
+        happens off-site. Working from home, working remotely and working in the field all still need records.
+      </p>
+
+      <div class="relative bg-white p-7 paper-card my-8" style="transform: rotate(-0.6deg); --paper-bg: #fffdf7;">
+        <div class="absolute -top-3 left-10 w-20 h-6 tape" style="transform: rotate(-3deg);"></div>
+        <h3 class="font-black text-xl text-slate-800 mb-4 mt-2">Three things to get right</h3>
+        <ul class="space-y-3 text-sm text-slate-600">
+          <li><strong class="text-slate-800">Logged daily, down to the minute.</strong>
+            Not "present today" — it needs to be possible to reconstruct the actual start and end of each working day.
+            This is exactly why a chat message saying "starting now" falls short as a record.</li>
+          <li><strong class="text-slate-800">Retained for a number of years.</strong>
+            Records are not something to clear once payroll closes. Paper cards and chat logs carry the most risk here,
+            because you usually find out whether they still exist at the exact moment someone asks to see them.</li>
+          <li><strong class="text-slate-800">Available to the employee.</strong>
+            When an employee asks to review or copy their own attendance record, the employer is expected to provide it.
+            The system therefore has to show employees their own history — not just an HR back office.</li>
+        </ul>
+      </div>
+
+      <p>
+        As a buying checklist, that is three questions:
+        <strong>is the record granular enough, does it survive long enough, and can the employee retrieve it?</strong>
+      </p>
+
+      <h3 class="font-black text-xl text-slate-800 pt-4">How ClocDot handles it</h3>
+      <ul class="list-disc list-inside space-y-2 ml-2">
+        <li>Each punch is stored to the minute with its location source (Office / Remote / field) and originating IP.</li>
+        <li>Records live in the cloud — no dependency on a specific laptop, device or paper card.</li>
+        <li>Employees see their own complete punch history without going through HR.</li>
+        <li>One-click monthly CSV with daily detail and hours net of break time.</li>
+      </ul>
+
+      <p class="text-sm text-slate-500 border-l-4 border-dashed border-slate-300 pl-4 mt-8">
+        This is a general summary for orientation only and is not legal advice.
+        Actual obligations and how they apply to your company are determined by the Ministry of Labor
+        and your local labor authority. For your specific situation, please consult a qualified professional
+        or your local labor bureau.
+      </p>
+    </div>
+  </section>
+
+  <div class="wave-divider rotate-180"></div>
+
+  <!-- ───── How it works ───── -->
+  <section id="how" class="relative max-w-6xl mx-auto px-6 py-20 bg-cyan-50/30">
+    <div class="text-center mb-14">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">How it works</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">The three hard parts, solved</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <article class="relative bg-white p-7 paper-card hover:shadow-xl transition-shadow" style="transform: rotate(-1.2deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-2deg);"></div>
+        <h3 class="font-black text-lg text-slate-800 mb-3 mt-2">"How do we know they actually worked?"</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          Each punch carries a timestamp and coordinates, compared against your registered office sites,
+          and is tagged Office, Remote or field automatically. The goal is not monitoring people —
+          it is that Office and Remote hours separate themselves, so nobody has to self-report at month-end.
+        </p>
+      </article>
+
+      <article class="relative bg-white p-7 paper-card hover:shadow-xl transition-shadow" style="transform: rotate(0.8deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(3deg);"></div>
+        <h3 class="font-black text-lg text-slate-800 mb-3 mt-2">"How do we get it onto everyone's device?"</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          You do not. ClocDot is a PWA — employees open a link and add it to the home screen.
+          No app store, no MDM, no IT project. It works on phones, tablets and desktops,
+          keeps working offline, and syncs the queued punches when the connection comes back.
+        </p>
+      </article>
+
+      <article class="relative bg-white p-7 paper-card hover:shadow-xl transition-shadow" style="transform: rotate(-0.6deg);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-4deg);"></div>
+        <h3 class="font-black text-lg text-slate-800 mb-3 mt-2">"How does this reach payroll?"</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          Hours, break deductions and leave balances are calculated as punches come in, not reconstructed at month-end.
+          The monthly CSV carries daily detail and the Office / Remote split, and opens cleanly in Excel
+          without encoding problems.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <div class="wave-divider"></div>
+
+  <!-- ───── Who it's for ───── -->
+  <section id="who" class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Who it's for</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">Which teams this suits</h2>
+    </div>
+
+    <p class="mb-8 text-slate-700 leading-relaxed">
+      One-line test: <strong>if anyone on your team is not in the same place every day</strong>,
+      remote attendance is relevant. Whether that is fully distributed, two days a week in the office,
+      or a sales team permanently on the road, the underlying problem is the same —
+      no single device can be next to everybody.
+    </p>
+
+    <div class="space-y-5 text-slate-700">
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(-0.4deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">Fully remote teams</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">No physical office, or staff spread across cities. Punch locations are recorded so distributed attendance stays manageable, and people working from home never have to report in manually.</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(0.5deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">Hybrid teams</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Some days in the office, some days at home. The split is detected and counted separately without asking anyone to label their own days.</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(-0.3deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">Cross-border and multi-time-zone teams</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Staff in different countries and time zones. Punches record in the employee's local time, and exports can be presented in either local or headquarters time.</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(0.4deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">Field and sales teams</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">People who go straight to a client site instead of the office. GPS records where and when, so there is no badge to come back and press.</p>
+      </div>
+
+      <div class="bg-white p-5 paper-scrap" style="transform: rotate(-0.6deg);">
+        <h3 class="font-black text-lg text-slate-800 mb-1.5">Startups and small teams</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Free for 5 people or fewer, without the configuration burden of a full HR suite. Once approved, the whole team can start the same day.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave-divider rotate-180"></div>
+
+  <!-- ───── Get started ───── -->
+  <section id="start" class="relative max-w-5xl mx-auto px-6 py-20 bg-cyan-50/30">
+    <div class="text-center mb-12">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Get started</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">Three steps to start</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="relative bg-white p-6 paper-card" style="transform: rotate(-1deg);">
+        <div class="absolute -top-4 -left-2 w-10 h-10 bg-emerald-500 rounded-full text-white font-black grid place-items-center text-lg shadow-md" style="transform: rotate(-8deg);">1</div>
+        <h3 class="font-black text-lg text-slate-800 mb-2 mt-2">Register your company</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Company name and a contact email. No credit card. We notify you once the account is approved.</p>
+      </div>
+      <div class="relative bg-white p-6 paper-card" style="transform: rotate(0.6deg);">
+        <div class="absolute -top-4 -left-2 w-10 h-10 bg-amber-400 rounded-full text-white font-black grid place-items-center text-lg shadow-md" style="transform: rotate(8deg);">2</div>
+        <h3 class="font-black text-lg text-slate-800 mb-2 mt-2">Set up sites and hours</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Enter your office addresses (geocoded automatically), working hours, break times and leave rules.</p>
+      </div>
+      <div class="relative bg-white p-6 paper-card" style="transform: rotate(-0.6deg);">
+        <div class="absolute -top-4 -left-2 w-10 h-10 rounded-full text-white font-black grid place-items-center text-lg shadow-md" style="transform: rotate(-4deg); background: var(--color-ocean);">3</div>
+        <h3 class="font-black text-lg text-slate-800 mb-2 mt-2">Employees add the PWA</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Staff open the link on their phone and add it to the home screen. The first punch asks for location permission.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave-divider"></div>
+
+  <!-- ───── Pricing ───── -->
+  <section id="pricing" class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">Pricing</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">What a remote attendance system costs</h2>
+    </div>
+
+    <div class="space-y-6 text-slate-700 leading-relaxed">
+      <p>Attendance tooling is normally billed one of three ways, and the cost structures differ a lot:</p>
+
+      <div class="grid md:grid-cols-3 gap-6 my-8">
+        <article class="relative bg-white p-6 paper-card" style="transform: rotate(-1deg); --paper-bg: #fef3c7;">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-2deg);"></div>
+          <h3 class="font-black text-lg text-slate-800 mb-2 mt-2">One-off hardware</h3>
+          <p class="text-sm text-slate-600 leading-relaxed">Time clocks and biometric readers. Buying outright looks cheap until you add consumables, servicing, a unit per site, and the hidden labour of month-end totalling.</p>
+        </article>
+
+        <article class="relative bg-white p-6 paper-card" style="transform: rotate(0.8deg);">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(3deg);"></div>
+          <h3 class="font-black text-lg text-slate-800 mb-2 mt-2">Per-seat monthly</h3>
+          <p class="text-sm text-slate-600 leading-relaxed">How most cloud HR platforms charge, usually with a minimum seat count. Comprehensive, but small teams often end up paying for modules they never open.</p>
+        </article>
+
+        <article class="relative bg-white p-6 paper-card" style="transform: rotate(-0.6deg); --paper-bg: #ecfdf5;">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 tape" style="transform: rotate(-4deg);"></div>
+          <h3 class="font-black text-lg text-slate-800 mb-2 mt-2">ClocDot</h3>
+          <p class="text-sm text-slate-600 leading-relaxed"><strong class="text-slate-800">Free forever for teams of 5 or fewer</strong> — no time limit, no credit card. Apply now and once approved, <strong class="text-slate-800">your first 6 months are free</strong>.</p>
+        </article>
+      </div>
+
+      <p>
+        For remote and hybrid teams the maths is simpler, because there is no hardware to buy at all.
+        The number actually worth calculating is
+        <strong>the time someone spends every month tidying up hours</strong> —
+        chasing missing punches, working out overtime, assembling the report.
+        That usually costs more than the software, and unlike hardware, it recurs every month.
+      </p>
+
+      <p class="text-sm text-slate-500">
+        Larger headcount or an unusual setup? <a href="../../#apply" class="font-bold text-slate-700 hover:text-cyan-700 underline underline-offset-2 decoration-dashed">Tell us about your team</a> and we will work it out together.
+      </p>
+    </div>
+  </section>
+
+  <div class="wave-divider rotate-180"></div>
+
+  <!-- ───── FAQ ───── -->
+  <section id="faq" class="relative max-w-3xl mx-auto px-6 py-20">
+    <div class="mb-10">
+      <p class="text-[11px] font-black uppercase tracking-[0.3em] text-cyan-700 mb-3">FAQ</p>
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800">Remote attendance FAQ</h2>
+    </div>
+
+    <div class="space-y-4">
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.3deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">How is remote clock-in different from a traditional time clock?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">A traditional time clock is tied to a physical device or the company network, so employees have to be on site. Remote clock-in runs on the employee's own phone or laptop, so it works from home, from a client site or from another country — and each punch is tagged with where it came from.</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(0.3deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">Do employees working from home still need attendance records?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">Yes. Obligations do not disappear because the work happens off-site — records still need to be logged daily and to the minute, and retained for a number of years. Reporting in a chat group is generally not enough, because those messages are scattered through a conversation rather than kept as a reviewable record. See the <a href="#compliance" class="font-bold text-slate-700 hover:text-cyan-700 underline underline-offset-2 decoration-dashed">compliance section</a>. General information only, not legal advice.</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.35deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">Can employees see their own attendance records?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">Yes — employees see their complete punch history and hours after logging in, without filing a request with HR. Records live in the cloud, so they survive a replaced laptop, a broken time clock or a lost paper card, and HR can export the full history as CSV whenever it is needed.</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(0.25deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">Can we switch from a physical time clock to remote clock-in?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">Yes, and nothing needs replacing, because remote clock-in runs on devices your staff already own. Setup means registering office locations and working hours, then asking employees to add the PWA to their home screen. Most teams start the same day, and you can run one team in parallel before switching everyone.</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(-0.3deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">Can office days and remote days use different clock-in methods?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">Yes, and it is the most common hybrid setup: on office days require a connection to the company network, so the punch confirms someone is on site; on remote days use GPS to record the location and tag the punch as Remote. Both sources are stored per punch, and Office and Remote hours stay separate in the export.</p>
+      </details>
+
+      <details class="bg-white p-5 paper-scrap" style="transform: rotate(0.35deg);">
+        <summary class="font-black text-slate-800 cursor-pointer">Is there a cost for small teams?</summary>
+        <p class="text-sm text-slate-600 leading-relaxed mt-3">Teams of 5 or fewer are free forever, with no time limit and no credit card required. Apply now and once your account is approved, your first 6 months are free.</p>
+      </details>
+    </div>
+
+    <div class="mt-12 p-5 bg-cyan-50/50 paper-scrap" style="transform: rotate(-0.2deg);">
+      <p class="text-xs font-black uppercase tracking-widest text-cyan-700 mb-2">Read next</p>
+      <a href="../gps-clock-in/" class="font-bold text-slate-800 hover:text-emerald-600 underline underline-offset-2 decoration-dashed">
+        GPS clock-in explained — accuracy, multiple sites, buddy punching and privacy →
+      </a>
+    </div>
+  </section>
+
+  <!-- ───── CTA ───── -->
+  <section class="relative max-w-4xl mx-auto px-6 py-20">
+    <div class="relative bg-white paper-scrap p-12 md:p-16 text-center" style="transform: rotate(-0.8deg);">
+      <div class="absolute -top-4 left-1/4 w-24 h-7 tape" style="transform: rotate(-4deg);"></div>
+      <div class="absolute -top-4 right-1/4 w-24 h-7 tape" style="transform: rotate(3deg);"></div>
+
+      <span class="inline-flex items-center gap-1.5 stamp text-amber-600 px-3 py-1 mb-6 text-[10px] font-black uppercase tracking-[0.25em]" style="transform: rotate(2deg);">
+        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
+        First 6 months free
+      </span>
+
+      <h2 class="text-3xl md:text-4xl font-black text-slate-800 leading-tight mb-4">
+        Put your remote team's hours
+        <span class="relative inline-block">
+          <span class="absolute inset-x-0 bottom-1 h-3 bg-cyan-200/70 -z-10 -rotate-1"></span>
+          on autopilot
+        </span>
+      </h2>
+
+      <p class="text-slate-500 text-base max-w-lg mx-auto mb-8">
+        Free for teams of 5 or fewer. No credit card, no spam.
+      </p>
+
+      <a href="../../#apply" class="inline-block relative group active:scale-95 transition-transform">
+        <span class="absolute inset-0 bg-emerald-700 translate-y-[3px] rounded-md"></span>
+        <span class="relative inline-flex items-center gap-2 px-8 py-4 bg-emerald-500 text-white font-bold rounded-md group-hover:-translate-y-[1px] transition-transform">
+          Request access
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+
+      <p class="accent-handwritten text-2xl mt-10 -rotate-1" style="color: var(--color-coral-deep);">
+        See you soon.
+      </p>
+    </div>
+  </section>
+
+  <!-- ───── Footer ───── -->
+  <footer class="relative max-w-6xl mx-auto px-6 py-12 border-t border-dashed border-slate-300/60">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <img
+          src="../../../assets/logo.png"
+          alt="ClocDot logo"
+          width="1024"
+          height="1024"
+          loading="lazy"
+          decoding="async"
+          class="w-7 h-7 object-contain drop-shadow-sm"
+          style="transform: rotate(-4deg);"
+        />
+        <span class="text-sm text-slate-500">© 2026 ClocDot</span>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-slate-400">
+        <a href="../../" class="hover:text-slate-700">Home</a>
+        <a href="../gps-clock-in/" class="hover:text-slate-700">GPS clock-in</a>
+        <a href="../../../features/remote-work-attendance/" hreflang="zh-TW" class="hover:text-slate-700">中文版</a>
+        <a href="../../../privacy.html" class="hover:text-slate-700">Privacy</a>
+        <a href="../../../terms.html" class="hover:text-slate-700">Terms</a>
+        <a href="mailto:pm@clocdot.com" class="hover:text-slate-700">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
