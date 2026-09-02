@@ -1,26 +1,53 @@
 # ClocDot
 
-> ClocDot 是一套專為遠端與 Hybrid 團隊設計的雲端打卡系統。透過 GPS 自動分辨員工在公司 (Office) 或遠端 (Remote)，自動計算特休等假別額度，並可在月底一鍵匯出 CSV 工時報表。網頁式 PWA，支援 Web、iOS、Android，可離線打卡。主要面向台灣中小企業與新創團隊，介面與內容為繁體中文。
+> ClocDot 是一套專為遠端與 Hybrid 團隊設計的雲端打卡系統。透過 GPS 自動分辨員工在公司 (Office) 或遠端 (Remote)，也可要求實體辦公日連上公司 WiFi 才能打卡；補卡、請假、加班線上送單並依組織圖分層簽核；排班、薪資結算到實發金額，月底一鍵匯出 CSV 工時報表。網頁式 PWA，支援 Web、iOS、Android，可離線打卡。主要面向台灣中小企業與新創團隊，介面提供繁體中文與英文。
 
 ## 核心功能
 - GPS 打卡：定位並自動 geocode 辦公室地址，支援多個據點，自動標記 Office / Remote。
-- 假別自動計算：特休依員工到職日按比例計算，滿一年自動給滿，設定一次後自動套用。
+- WiFi 打卡：實體辦公日可要求連上公司網路才算數，由伺服器端驗證來源 IP，員工端零設定；允許清單支援多筆 IP 與 CIDR 網段，每張卡記錄來源 IP。
+- 補卡：忘記打卡可線上送出補卡申請，填寫應有時間與原因後送主管簽核。
+- 請假：支援特休、事假、病假、生理假、婚假、喪假、產假、陪產假、公假、補休共 10 種假別；額度即時顯示，可撤回或申請取消；送出前顯示同期間已請假人數。
+- 加班：時數由打卡紀錄自動推算，可少報不可多報；區分平日、休息日、國定假日、例假並套用對應費率；接近或超過月上限時提醒。
+- 分層簽核：補卡／請假／加班依組織圖逐層送審，每位主管只看到輪到自己審的單據。
+- 組織圖與權限：部門、職稱與後台管理權限分開設定。
+- 排班：班別可設上下班時間、休息時間與跨日夜班；月曆式塗抹排班，兩週以上輪班週期可指定 A 週起始日；未排班的日子由預設班自動接住；排班可能違反勞基法時於儲存前警告。
+- 薪資結算：底薪、時薪、津貼與加班費（×1.34／×1.67／×2.67 分段）計為應發，扣除遲到早退缺勤折算、無薪假、勞保、健保、勞退自提與所得稅後得出實發；可加減項調整、結算後鎖定、需要時解鎖重算。
+- 薪資單：員工在自己的帳號即可查看每月薪資單與各項明細。
+- 出勤總覽：應出勤／實出勤天數與時數，以及遲到、早退、缺勤天數。
+- 假別自動計算：特休依員工到職日按比例計算，滿一年自動給滿，設定一次後自動套用；年度基準可選曆年制或到職週年制。
 - PWA 安裝：從瀏覽器安裝到手機或電腦桌面，不需上架原生 App；斷線可離線打卡，恢復後自動同步。
 - CSV 工時匯出：每日明細含 Office/Remote 標記與扣除午休後的實際工時，Excel 開啟繁中不亂碼。
 
 ## 定價
 - 5 人以下團隊永久免費，不收信用卡。
-- 現在申請 享 6 個月免費。
+- 現在申請享 6 個月免費。
 
-## 主要頁面
-- [首頁 / 產品總覽](https://clocdot.com/): ClocDot 是什麼、核心功能與申請試用。
+## 線上 Demo（免註冊、免留 email）
+- [員工打卡 App Demo](https://clocdot.com/demo/client/): 以員工身分登入，可實際操作打卡、補卡、請假、加班、查班表與薪資單。
+- [管理後台 Demo](https://clocdot.com/demo/admin/): 以管理員身分登入，可操作出勤總覽、簽核、排班、員工與部門管理、薪資結算與 CSV 匯出。
+- 兩個 Demo 皆為展示用假資料，僅存在瀏覽器 localStorage，重新整理即可還原。
+
+## 主要頁面（繁體中文）
+- [首頁 / 產品總覽](https://clocdot.com/): ClocDot 是什麼、完整功能清單與申請試用。
+- [完整功能清單](https://clocdot.com/#all-features): 員工端、主管後台、月底結算三部分的逐項說明。
 - [GPS 打卡完整介紹](https://clocdot.com/features/gps-clock-in/): 準確度、多據點與隱私說明。
-- [遠端打卡完整指南](https://clocdot.com/features/remote-work-attendance/): Remote / Hybrid 團隊的打卡解法。
-- [常見問題 FAQ](https://clocdot.com/#faq): 收費、支援裝置、匯出報表、假別計算等常見問答。
+- [遠端打卡完整指南](https://clocdot.com/features/remote-work-attendance/): 五種打卡方式比較、出勤紀錄要求與 Remote / Hybrid 團隊的打卡解法。
+- [常見問題 FAQ](https://clocdot.com/#faq): 收費、GPS 與 WiFi 打卡、排班、簽核、加班計算、薪資結算、假別計算等問答。
+
+## 主要頁面（English）
+- [Home / product overview](https://clocdot.com/en/)
+- [GPS clock-in guide](https://clocdot.com/en/features/gps-clock-in/)
+- [Remote attendance guide](https://clocdot.com/en/features/remote-work-attendance/)
 
 ## 部落格
-- [GPS 打卡系統怎麼選？](https://clocdot.com/blog/2026-06-04-gps-attendance-taiwan/): 台灣老闆挑選 GPS 打卡系統的踩坑筆記。
+- [WiFi 打卡來了](https://clocdot.com/blog/wifi-attendance-update/): 實體辦公日必須連上公司網路才能打卡，伺服器端驗證來源 IP，支援多筆 IP 與 CIDR。
+- [排班功能來了](https://clocdot.com/blog/shift-scheduling-update/): 班別×排班行事曆，跨日夜班歸對天，正常班／排班制／兼職三種僱用類型。
+- [遲到早退也會算進薪水了](https://clocdot.com/blog/2026-06-29-late-early-deduction-update/): 工時類型切換、遲到早退缺勤自動折算、每種假別自訂扣日薪比例。
+- [ClocDot 有組織圖了](https://clocdot.com/blog/2026-06-25-org-chart-permissions-update/): 組織圖、分層簽核與後台權限一次補齊。
+- [ClocDot 幫你把薪水自動結算](https://clocdot.com/blog/2026-06-15-payroll-settlement-update/): 把工時一路接到實發金額。
+- [終端團隊打卡系統怎麼挑？](https://clocdot.com/blog/2026-06-09-terminal-team-attendance/): 團隊散在各地時的打卡選型。
 - [ClocDot 關心您肝的健康！加班合規提醒](https://clocdot.com/blog/2026-06-04-overtime-compliance-update/): 踩到勞基法加班紅線前先提醒。
+- [GPS 打卡系統怎麼選？](https://clocdot.com/blog/2026-06-04-gps-attendance-taiwan/): 台灣老闆挑選 GPS 打卡系統的踩坑筆記。
 - [ClocDot 新增加班功能](https://clocdot.com/blog/2026-06-02-overtime-settlement-update/): 加班時數自動結算。
 - [請假功能升級](https://clocdot.com/blog/2026-06-01-leave-update/): 請假流程更省心。
 - [ClocDot 部落格上線了](https://clocdot.com/blog/welcome-to-clocdot-blog/): 新功能釋出與維護公告。
